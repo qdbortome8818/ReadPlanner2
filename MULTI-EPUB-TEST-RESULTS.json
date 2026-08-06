@@ -1,0 +1,80 @@
+{
+  "build": 94,
+  "runtime": "Chromium mobile emulation, 390x844, touch enabled, service worker blocked for deterministic tests",
+  "exact_epubs": [
+    {
+      "title": "The Sea",
+      "words": 62015,
+      "chunks": 14,
+      "toc_entries": 12,
+      "media_blocks": 4,
+      "toc": "pass",
+      "continuous_free_reading": "pass",
+      "resume": "pass"
+    },
+    {
+      "title": "Dracula",
+      "words": 195703,
+      "chunks": 44,
+      "toc_entries": 43,
+      "media_blocks": 2,
+      "toc": "pass",
+      "chapter_I_destination": "day 4 paragraph 42",
+      "resume": "pass"
+    },
+    {
+      "title": "The Atlantic 2026-02-02",
+      "words": 32911,
+      "chunks": 8,
+      "toc_entries": 20,
+      "media_blocks": 85,
+      "toc": "pass",
+      "nested_parent": "Features"
+    },
+    {
+      "title": "The New Yorker 2026-06-29",
+      "words": 59160,
+      "chunks": 14,
+      "toc_entries": 30,
+      "media_blocks": 77,
+      "toc": "pass",
+      "nested_parent": "Goings On"
+    },
+    {
+      "title": "Nature 2026-08-01",
+      "words": 277439,
+      "chunks": 62,
+      "toc_entries": 43,
+      "media_blocks": 285,
+      "toc": "pass",
+      "resume": "pass"
+    },
+    {
+      "title": "The Economist 2026-08-01",
+      "words": 64033,
+      "chunks": 15,
+      "toc_entries": 92,
+      "media_blocks": 199,
+      "toc": "pass",
+      "nested_parent": "The world this week",
+      "publisher_business_style": "pass"
+    }
+  ],
+  "flows": {
+    "duplicate_import_confirm_cancel": "pass",
+    "unfinished_import_confirm_cancel": "pass",
+    "free_reading_no_daily_boundary": "pass",
+    "whole_book_progress_rail": "pass",
+    "page_by_page_swipe": "pass",
+    "page_by_page_section_boundary_forward_back": "pass",
+    "font_size_13_to_48": "pass",
+    "repeated_slider_drag": "pass",
+    "planned_30_day_regression": "pass"
+  },
+  "static": {
+    "javascript_syntax": "pass",
+    "manifest_json": "pass",
+    "zip_integrity": "pass"
+  },
+  "device_boundary": "Final iPhone Safari / installed-PWA validation remains required."
+}

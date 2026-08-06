@@ -1,0 +1,65 @@
+ReadPlanner Stable Build 94 — Multi-EPUB Stability
+==================================================
+
+Scope
+-----
+Build 94 is a targeted stability release based on the reported Build 91–93
+issues and six exact EPUB files supplied for validation. Stable planned-reading,
+highlighting, notes, bookmarks, speech, Journey, Tree, Growth Companion,
+Dashboard and check-in behaviour were not redesigned.
+
+Root-cause corrections
+----------------------
+1. Large, unplanned EPUBs now use a virtual continuous-reading stream. Nearby
+   sections are rendered while distant sections retain measured placeholders,
+   preventing the whole publication from blocking the browser main thread.
+2. EPUB images are decoded only as they approach the viewport instead of all at
+   once. Source EPUB Blob persistence is queued outside the critical import path.
+3. Virtual sections no longer use layout containment while rendered. The old
+   containment could report zero-height sections, overlap chapters, corrupt the
+   scroll range and restore a seemingly random location.
+4. Free reading remains one uninterrupted book. It contains no daily completion,
+   check-in or hidden reading-plan boundary.
+5. Exact TOC, search and publisher-link destinations survive Reader rerenders.
+   Duplicate short labels are disambiguated with their source word positions, so
+   labels such as “Business” do not jump to a different occurrence.
+6. Nested publisher TOC parents are preserved. The Reader TOC is independently
+   scrollable and no longer closes because a vertical pan is interpreted as a tap.
+7. The Sea Reader TOC suppresses leading decorative/front-matter rows and begins
+   at Chapter I. Back matter remains available after the chapters.
+8. Free Page-by-page mode paginates one internal section at a time and crosses
+   section boundaries invisibly. This avoids constructing one enormous CSS
+   multicolumn document for a magazine or long novel.
+9. The whole-book position rail remains visible, follows real continuous or paged
+   progress, and accepts position jumps.
+10. Duplicate-import and unfinished-import Confirm/Cancel paths are deterministic.
+11. AA sliders use direct pointer coordinates and the font-size range is 13–48 px.
+
+Exact EPUB validation set
+-------------------------
+- The Sea — John Banville
+- Dracula — Bram Stoker
+- The Atlantic, 2 February 2026
+- The New Yorker, 29 June 2026
+- Nature, 1 August 2026
+- The Economist, 1 August 2026
+
+Runtime validation covered import, duplicate handling, publisher TOC hierarchy,
+TOC scrolling, exact chapter/article destinations, continuous free reading,
+position restoration, large-file rendering, whole-book progress, Page-by-page
+swiping and section-boundary turns, AA controls, and planned-reading regression.
+See MULTI-EPUB-TEST-RESULTS.json and STABILITY-AUDIT.md for details.
+
+Deployment
+----------
+Upload every file in this folder together. After GitHub Pages finishes deploying,
+fully close and reopen the installed ReadPlanner web app. Re-import an EPUB when
+you need an already-stored book to receive the new parser output; accepting the
+existing-book confirmation refreshes its parsed representation while preserving
+its reading records.
+
+Validation boundary
+-------------------
+The automated runtime tests used mobile Chromium emulation. Real iPhone Safari,
+its installed-PWA lifecycle, memory pressure and touch behaviour still require the
+owner’s final device test with the supplied EPUBs.
