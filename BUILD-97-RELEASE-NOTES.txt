@@ -1,0 +1,62 @@
+ReadPlanner Stable Build 97 — Progress Geometry and Reading Controls
+===================================================================
+
+Scope
+-----
+Build 97 is intentionally limited to the final two issues reported after testing
+Build 96:
+
+1. inaccurate whole-book pages-left / percentage reporting in continuous
+   read-without-a-plan mode;
+2. AA reading-control ranges and reading-theme choices.
+
+No EPUB parsing, TOC navigation, library-card gesture, reading-plan, check-in,
+highlight, bookmark, note, speech, vocabulary, Journey, Reading Tree, Growth
+Companion or Dashboard logic was redesigned in this build.
+
+Corrections
+-----------
+1. Whole-book progress now measures only the rendered book span: from the actual
+   reading-body start to the explicit End-of-book marker. Fixed browser chrome,
+   toolbar space and trailing page padding are excluded.
+2. Pages remaining are calculated directly from the remaining physical scroll
+   distance divided by the current visual viewport height. This removes the old
+   word-count / whole-document estimate and the off-by-one behaviour seen after
+   many screenfuls of scrolling.
+3. When the End-of-book marker is reached, the pill is authoritative and reports
+   0 pages left · 100.0% (with the localized equivalent).
+4. A ResizeObserver remeasures the book geometry when rendered content changes,
+   including font/layout changes and virtualized EPUB sections settling.
+5. AA ranges are centralized in READER_SETTING_LIMITS for maintainability.
+   Visible upper ranges now match the supplied reference reader where the same
+   control exists:
+      - Character spacing: 4.0
+      - Word spacing: 8.0
+      - Line spacing: 3.0
+      - Paragraph spacing: 4.0 visual scale (64px internal range)
+      - First-line indent: 4.0
+      - Top / bottom / left / right margins: 88px
+   Font size is extended to 60px and brightness now reaches down to 10% while
+   retaining 100% as the supplied reference maximum.
+6. Added Sky Blue and Soft Pink reading themes.
+7. The former near-white theme is now a matte paper / E-ink-style light tone,
+   while the separate grey E-ink tone remains visibly darker so adjacent theme
+   chips no longer look almost identical.
+
+Validation
+----------
+- JavaScript syntax: passed (Node --check on inline application script).
+- Manifest JSON: valid.
+- Chromium mobile synthetic progress test: passed; pages-left decreases by
+  viewport movement and reaches 0 / 100% at End-of-book.
+- Actual EPUB smoke test: The Sea (62,015 words / 14 chunks) imported and opened
+  without page errors; pages-left decreased with screen-height scrolling and
+  reached “Book · 0 pages left · 100.0%” at the real end marker.
+- AA range test: passed for all expanded controls and seven reading themes.
+- Existing icons and vendor libraries remain byte-identical to Build 96.
+
+Final validation boundary
+-------------------------
+iPhone Safari remains the authoritative test for touch feel and visual colour
+preference. Build 97 deliberately avoids changes outside the two requested
+areas so any new observation can be isolated cleanly.

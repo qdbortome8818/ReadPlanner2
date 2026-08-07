@@ -1,0 +1,62 @@
+{
+  "build": 97,
+  "scope": [
+    "whole-book viewport progress",
+    "AA reading controls and themes"
+  ],
+  "javascriptSyntax": "pass",
+  "manifestJson": "pass",
+  "syntheticViewportProgress": {
+    "top": "10 pages left / 0.0% in 11-page synthetic book",
+    "afterScroll": "pages-left decreases with viewport movement",
+    "nearEnd": "1 page left / 97.2%",
+    "end": "0 pages left / 100.0%"
+  },
+  "actualEpubSmoke": {
+    "book": "The Sea",
+    "words": 62015,
+    "chunks": 14,
+    "pageErrors": 0,
+    "endPill": "Book · 0 pages left · 100.0%"
+  },
+  "aaMaxima": {
+    "brightness": "100% (minimum extended to 10%)",
+    "fontSize": "60px",
+    "characterSpacing": "4.0",
+    "wordSpacing": "8.0",
+    "lineSpacing": "3.00",
+    "paragraphSpacing": "4.0 visual scale / 64px internal",
+    "firstLineIndent": "4.0",
+    "topMargin": "88px",
+    "bottomMargin": "88px",
+    "leftMargin": "88px",
+    "rightMargin": "88px"
+  },
+  "themes": [
+    "sepia",
+    "paper-light",
+    "green",
+    "eink-grey",
+    "sky-blue",
+    "soft-pink",
+    "dark"
+  ],
+  "untouchedAreas": [
+    "EPUB parsing",
+    "TOC navigation",
+    "library card gestures",
+    "reading plans",
+    "check-ins",
+    "highlights",
+    "bookmarks",
+    "notes",
+    "speech",
+    "vocabulary",
+    "Journey",
+    "Reading Tree",
+    "Growth Companion",
+    "Dashboard",
+    "vendor libraries",
+    "icons"
+  ]
+}

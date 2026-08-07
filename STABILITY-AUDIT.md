@@ -45,3 +45,15 @@ See `BUILD-96-TEST-RESULTS.json`. JavaScript syntax, manifest parsing, service
 worker build identity, exact Economist TOC resolution, physical progress and
 card gesture tests passed. Final safe-area and iPhone Safari touch behaviour
 must be verified on the owner's device.
+
+## Build 97 scoped audit
+
+Build 97 changes only whole-book viewport progress geometry and AA reading
+controls/themes. The Build 96 shared TOC resolver and deliberate library-card
+opening gate were inspected but not modified. EPUB import/parsing, planned-day
+segmentation, highlights, notes, bookmarks, speech, vocabulary, check-ins,
+Journey, Reading Tree, Growth Companion and Dashboard code paths are outside the
+Build 97 diff.
+
+For future maintenance, AA range limits now live in `READER_SETTING_LIMITS`, and
+whole-book physical progress remains isolated in `viewportMeasuredBookProgress`.
