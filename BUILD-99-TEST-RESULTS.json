@@ -1,0 +1,29 @@
+{
+  "build": 99,
+  "scope": [
+    "contrast-safe brightness implementation",
+    "calibrated reading theme palettes"
+  ],
+  "javascriptSyntax": "pass",
+  "manifestJson": "pass",
+  "serviceWorkerCache": "v99",
+  "brightness": {
+    "range": "10%-250%",
+    "below100": "black overlay dimmer",
+    "at100": "neutral/native palette",
+    "above100": "background and UI surface palette interpolation only",
+    "foregroundFilter": "none",
+    "textWhitening": "none",
+    "geometryImpact": "none"
+  },
+  "themes": {
+    "sepia": "#F3E6C9",
+    "light_eink_paper": "#F3F1E9",
+    "green": "#E7F0DF",
+    "eink_grey": "#D8D9D5",
+    "sky": "#E1F1F4",
+    "pink": "#F5E6EB",
+    "dark": "#17191B"
+  },
+  "untouched": "all other Build 98 behaviour"
+}

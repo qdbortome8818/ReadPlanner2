@@ -159,14 +159,15 @@
   }
   input[type=range]::-webkit-slider-thumb:active{ transform:scale(1.08); box-shadow:0 1px 4px rgba(0,0,0,.3), 0 0 0 7px color-mix(in srgb, var(--gold) 22%, transparent); }
   input[type=range]::-webkit-slider-runnable-track{ height:5px; border-radius:3px; }
-  /* reading themes */
-  .theme-sepia{ --r-bg:#F5EFE0; --r-text:#3B3226; --r-muted:#8A7E6A; --r-surface:#EDE5D2; --r-line:rgba(59,50,38,0.14); --bg:#F5EFE0; --text:#3B3226; --muted:#8A7E6A; --surface:#EDE5D2; --surface2:#E4DAC4; --line:rgba(59,50,38,0.14); }
-  .theme-light{ --r-bg:#ECEAE3; --r-text:#252522; --r-muted:#77766F; --r-surface:#E2E0D9; --r-line:rgba(37,37,34,0.13); --bg:#ECEAE3; --text:#252522; --muted:#77766F; --surface:#E2E0D9; --surface2:#D8D6CE; --line:rgba(37,37,34,0.13); }
-  .theme-eink{ --r-bg:#D2D3D0; --r-text:#20211F; --r-muted:#686B66; --r-surface:#C8C9C6; --r-line:rgba(32,33,31,0.17); --bg:#D2D3D0; --text:#20211F; --muted:#686B66; --surface:#C8C9C6; --surface2:#BEC0BC; --line:rgba(32,33,31,0.17); }
-  .theme-dark{ --r-bg:#15181B; --r-text:#D8DAD5; --r-muted:#7E837D; --r-surface:#1F2326; --r-line:rgba(216,218,213,0.12); --bg:#15181B; --text:#D8DAD5; --muted:#7E837D; --surface:#1F2326; --surface2:#282D30; --line:rgba(216,218,213,0.12); }
-  .theme-green{ --r-bg:#E3EDDF; --r-text:#2A362B; --r-muted:#6F7F6F; --r-surface:#D8E4D3; --r-line:rgba(42,54,43,0.14); --bg:#E3EDDF; --text:#2A362B; --muted:#6F7F6F; --surface:#D8E4D3; --surface2:#CCDBC6; --line:rgba(42,54,43,0.14); }
-  .theme-sky{ --r-bg:#DDEBF3; --r-text:#26363E; --r-muted:#6E7E86; --r-surface:#D2E2EB; --r-line:rgba(38,54,62,0.14); --bg:#DDEBF3; --text:#26363E; --muted:#6E7E86; --surface:#D2E2EB; --surface2:#C7D8E2; --line:rgba(38,54,62,0.14); }
-  .theme-pink{ --r-bg:#F2E0E4; --r-text:#422F34; --r-muted:#8C7379; --r-surface:#E9D4D9; --r-line:rgba(66,47,52,0.14); --bg:#F2E0E4; --text:#422F34; --muted:#8C7379; --surface:#E9D4D9; --surface2:#DFC7CE; --line:rgba(66,47,52,0.14); }
+  /* reading themes — Build 99 calibrated as coordinated palettes.
+     Backgrounds are intentionally distinct while body/UI text remains high contrast. */
+  .theme-sepia{ --r-bg:#F3E6C9; --r-text:#3A2E23; --r-muted:#786A58; --r-surface:#E9DABB; --r-line:rgba(58,46,35,0.16); --bg:#F3E6C9; --text:#3A2E23; --muted:#786A58; --surface:#E9DABB; --surface2:#DDCBA8; --line:rgba(58,46,35,0.16); }
+  .theme-light{ --r-bg:#F3F1E9; --r-text:#232420; --r-muted:#74736C; --r-surface:#EAE8E0; --r-line:rgba(35,36,32,0.14); --bg:#F3F1E9; --text:#232420; --muted:#74736C; --surface:#EAE8E0; --surface2:#DFDDD4; --line:rgba(35,36,32,0.14); }
+  .theme-eink{ --r-bg:#D8D9D5; --r-text:#20221F; --r-muted:#666963; --r-surface:#CDCECA; --r-line:rgba(32,34,31,0.17); --bg:#D8D9D5; --text:#20221F; --muted:#666963; --surface:#CDCECA; --surface2:#C1C3BD; --line:rgba(32,34,31,0.17); }
+  .theme-dark{ --r-bg:#17191B; --r-text:#DADCD7; --r-muted:#858985; --r-surface:#222629; --r-line:rgba(218,220,215,0.13); --bg:#17191B; --text:#DADCD7; --muted:#858985; --surface:#222629; --surface2:#2B3033; --line:rgba(218,220,215,0.13); }
+  .theme-green{ --r-bg:#E7F0DF; --r-text:#26342A; --r-muted:#697968; --r-surface:#DCE8D4; --r-line:rgba(38,52,42,0.15); --bg:#E7F0DF; --text:#26342A; --muted:#697968; --surface:#DCE8D4; --surface2:#D0DEC7; --line:rgba(38,52,42,0.15); }
+  .theme-sky{ --r-bg:#E1F1F4; --r-text:#22343A; --r-muted:#687D82; --r-surface:#D5E8EC; --r-line:rgba(34,52,58,0.15); --bg:#E1F1F4; --text:#22343A; --muted:#687D82; --surface:#D5E8EC; --surface2:#C8DDE2; --line:rgba(34,52,58,0.15); }
+  .theme-pink{ --r-bg:#F5E6EB; --r-text:#3B2A30; --r-muted:#826D74; --r-surface:#EBD9E0; --r-line:rgba(59,42,48,0.15); --bg:#F5E6EB; --text:#3B2A30; --muted:#826D74; --surface:#EBD9E0; --surface2:#DFC9D1; --line:rgba(59,42,48,0.15); }
   #dim-overlay{ position:fixed; inset:0; background:#000; pointer-events:none; z-index:9999; opacity:0; -webkit-backdrop-filter:none; backdrop-filter:none; will-change:opacity,-webkit-backdrop-filter,backdrop-filter; }
   .word{ cursor:pointer; border-radius:3px; }
   .hl-yellow{ background:rgba(255,214,64,0.4); border-radius:2px; }
@@ -1738,14 +1739,9 @@
   #read-toolbar button:focus-visible,#read-toolbar button:hover{opacity:1!important;}
   .reading-end-actions{padding-top:12px;border-top:1px solid color-mix(in srgb,var(--r-line,var(--line)) 48%,transparent);}
 
-  /* Every reading theme has its own surfaces; white cards never leak into it. */
-  .theme-sepia #settings-sheet,.theme-sepia #toc-sheet,.theme-sepia #dict-sheet{background:#EDE5D2;}
-  .theme-green #settings-sheet,.theme-green #toc-sheet,.theme-green #dict-sheet{background:#D8E4D3;}
-  .theme-eink #settings-sheet,.theme-eink #toc-sheet,.theme-eink #dict-sheet{background:#C8C9C6;}
-  .theme-light #settings-sheet,.theme-light #toc-sheet,.theme-light #dict-sheet{background:#E2E0D9;}
-  .theme-sky #settings-sheet,.theme-sky #toc-sheet,.theme-sky #dict-sheet{background:#D2E2EB;}
-  .theme-pink #settings-sheet,.theme-pink #toc-sheet,.theme-pink #dict-sheet{background:#E9D4D9;}
-  .theme-dark #settings-sheet,.theme-dark #toc-sheet,.theme-dark #dict-sheet{background:#1F2326;}
+  /* Theme surfaces stay bound to the live palette so a brightness adjustment can
+     lighten the page without bleaching text, icons, borders or slider controls. */
+  html.reading-mode #settings-sheet,html.reading-mode #toc-sheet,html.reading-mode #dict-sheet{background:var(--r-surface,var(--surface));}
 
   /* Responsive and fallback behaviour. */
   @supports not ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
@@ -3509,27 +3505,74 @@ function initAppLocalization(){
 // The reading page needs one continuous, opaque canvas. iOS can reveal the
 // root element during elastic scrolling, so the reading theme is applied to the
 // entire browser canvas and the brightness overlay is oversized beyond the viewport.
-const READING_THEME_BACKGROUNDS = {
-  sepia:'#F5EFE0', light:'#ECEAE3', eink:'#D2D3D0', dark:'#15181B', green:'#E3EDDF', sky:'#DDEBF3', pink:'#F2E0E4'
-};
+const READING_THEME_PALETTES = Object.freeze({
+  // Palette structure follows the reading-system model used by Readium: the
+  // page background, text and UI surfaces are treated as one coordinated theme.
+  // The bright* values are used only above 100% brightness and lift surfaces
+  // toward a brighter paper tone without filtering/bleaching foreground content.
+  sepia:{bg:'#F3E6C9',text:'#3A2E23',muted:'#786A58',surface:'#E9DABB',surface2:'#DDCBA8',line:'rgba(58,46,35,0.16)',brightBg:'#FFFBEE',brightSurface:'#F8F0DD',brightSurface2:'#E8D7B5'},
+  light:{bg:'#F3F1E9',text:'#232420',muted:'#74736C',surface:'#EAE8E0',surface2:'#DFDDD4',line:'rgba(35,36,32,0.14)',brightBg:'#FFFFFF',brightSurface:'#F5F4EF',brightSurface2:'#E5E3DC'},
+  eink:{bg:'#D8D9D5',text:'#20221F',muted:'#666963',surface:'#CDCECA',surface2:'#C1C3BD',line:'rgba(32,34,31,0.17)',brightBg:'#FCFCF9',brightSurface:'#F0F0EC',brightSurface2:'#DDDED8'},
+  green:{bg:'#E7F0DF',text:'#26342A',muted:'#697968',surface:'#DCE8D4',surface2:'#D0DEC7',line:'rgba(38,52,42,0.15)',brightBg:'#FAFFF7',brightSurface:'#EFF8E9',brightSurface2:'#DCEAD4'},
+  sky:{bg:'#E1F1F4',text:'#22343A',muted:'#687D82',surface:'#D5E8EC',surface2:'#C8DDE2',line:'rgba(34,52,58,0.15)',brightBg:'#F8FEFF',brightSurface:'#EEF8FA',brightSurface2:'#D8E9ED'},
+  pink:{bg:'#F5E6EB',text:'#3B2A30',muted:'#826D74',surface:'#EBD9E0',surface2:'#DFC9D1',line:'rgba(59,42,48,0.15)',brightBg:'#FFF9FB',brightSurface:'#F8EDF1',brightSurface2:'#EAD7DE'},
+  dark:{bg:'#17191B',text:'#DADCD7',muted:'#858985',surface:'#222629',surface2:'#2B3033',line:'rgba(218,220,215,0.13)',brightBg:'#303336',brightSurface:'#383C3F',brightSurface2:'#44494C'}
+});
+const READING_THEME_ORDER=['sepia','light','green','eink','sky','pink','dark'];
 function setBrowserThemeColor(color){
   const meta=document.querySelector('meta[name="theme-color"]');
   if(meta) meta.setAttribute('content',color);
 }
+function normalizeHex(hex){
+  const raw=String(hex||'#000000').replace('#','').trim();
+  return raw.length===3?raw.split('').map(c=>c+c).join(''):raw.padEnd(6,'0').slice(0,6);
+}
+function mixHexColor(from,to,amount){
+  const a=normalizeHex(from),b=normalizeHex(to),t=Math.max(0,Math.min(1,Number(amount)||0));
+  const out=[0,2,4].map(i=>Math.round(parseInt(a.slice(i,i+2),16)+(parseInt(b.slice(i,i+2),16)-parseInt(a.slice(i,i+2),16))*t));
+  return '#'+out.map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase();
+}
 function dimHexColor(hex,brightness){
-  const raw=String(hex||'#000000').replace('#','');
-  const full=raw.length===3?raw.split('').map(c=>c+c).join(''):raw;
+  const raw=normalizeHex(hex);
   const factor=Math.max(.15,Math.min(1,Number(brightness)||1));
-  const parts=[0,2,4].map(i=>Math.round(parseInt(full.slice(i,i+2),16)*factor));
+  const parts=[0,2,4].map(i=>Math.round(parseInt(raw.slice(i,i+2),16)*factor));
   return '#'+parts.map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase();
+}
+function effectiveReadingPalette(themeKey,brightness=settings.brightness){
+  const key=READING_THEME_PALETTES[themeKey]?themeKey:'sepia';
+  const p=READING_THEME_PALETTES[key],level=Math.max(.10,Math.min(2.50,Number(brightness)||1));
+  if(level<=1)return {...p};
+  const t=(level-1)/1.5;
+  return {...p,
+    bg:mixHexColor(p.bg,p.brightBg,t),
+    surface:mixHexColor(p.surface,p.brightSurface,t),
+    surface2:mixHexColor(p.surface2,p.brightSurface2,t)
+  };
+}
+function setThemeVariable(target,name,value){target.style.setProperty(name,value);}
+function applyReadingPaletteVariables(themeKey){
+  const p=effectiveReadingPalette(themeKey,settings.brightness);
+  [document.documentElement,document.body].forEach(target=>{
+    setThemeVariable(target,'--r-bg',p.bg);setThemeVariable(target,'--bg',p.bg);
+    setThemeVariable(target,'--r-text',p.text);setThemeVariable(target,'--text',p.text);
+    setThemeVariable(target,'--r-muted',p.muted);setThemeVariable(target,'--muted',p.muted);
+    setThemeVariable(target,'--r-surface',p.surface);setThemeVariable(target,'--surface',p.surface);
+    setThemeVariable(target,'--surface2',p.surface2);setThemeVariable(target,'--r-line',p.line);setThemeVariable(target,'--line',p.line);
+  });
+  return p;
+}
+function clearReadingPaletteVariables(){
+  const names=['--r-bg','--bg','--r-text','--text','--r-muted','--muted','--r-surface','--surface','--surface2','--r-line','--line'];
+  [document.documentElement,document.body].forEach(target=>names.forEach(name=>target.style.removeProperty(name)));
 }
 function syncReadingCanvasColor(themeKey){
   const key=themeKey||settings.theme||'sepia';
-  const base=READING_THEME_BACKGROUNDS[key]||READING_THEME_BACKGROUNDS.sepia;
-  const dimmed=dimHexColor(base,settings.brightness);
-  document.documentElement.style.setProperty('--reader-canvas-bg',base);
-  document.body.style.setProperty('--reader-canvas-bg',base);
-  setBrowserThemeColor(dimmed);
+  const palette=applyReadingPaletteVariables(key);
+  const level=Math.max(.10,Math.min(2.50,Number(settings.brightness)||1));
+  const browserColor=level<1?dimHexColor(palette.bg,level):palette.bg;
+  document.documentElement.style.setProperty('--reader-canvas-bg',palette.bg);
+  document.body.style.setProperty('--reader-canvas-bg',palette.bg);
+  setBrowserThemeColor(browserColor);
 }
 function setPageTheme(themeKey){
   const cls = 'theme-'+themeKey;
@@ -3544,6 +3587,7 @@ function setPageTheme(themeKey){
 function clearPageTheme(){
   document.documentElement.className = '';
   document.body.className = '';
+  clearReadingPaletteVariables();
   document.documentElement.style.removeProperty('--reader-canvas-bg');
   document.body.style.removeProperty('--reader-canvas-bg');
   document.documentElement.style.background = 'var(--bg)';
@@ -3567,6 +3611,7 @@ function resolvedIsDark(){
 }
 function applyAppearance(){
   const dark=resolvedIsDark();
+  clearReadingPaletteVariables();
   document.documentElement.className = dark ? 'dark' : '';
   document.documentElement.style.removeProperty('--reader-canvas-bg');
   document.body.style.removeProperty('--reader-canvas-bg');
@@ -4968,30 +5013,17 @@ document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState=
 // ================= dim overlay =================
 function applyBrightness(){
   const overlay=document.getElementById('dim-overlay');
-  // 100% is the neutral/native rendering point. Below it we retain the proven
-  // black dimmer; above it we brighten the already-rendered reading surface
-  // with a compositor-only backdrop filter, which changes no layout geometry.
-  // This keeps the AA control visually powerful without disturbing scrolling,
-  // TOC targets, pagination/progress measurements or touch hit-testing.
+  // Brightness must never run a filter over rendered text or controls. In Build 98
+  // the >100% backdrop-filter multiplied every pixel, washing out glyphs, icons and
+  // slider tracks. Build 99 keeps foreground rendering untouched: below 100% a black
+  // overlay dims the page; above 100% only the theme's background/surface palette is
+  // lifted toward its calibrated bright-paper targets.
   const level=Math.max(.10,Math.min(2.50,Number(settings.brightness)||1));
   if(overlay){
-    if(level<1){
-      overlay.style.background='#000';
-      overlay.style.opacity=String(Math.min(.85,1-level));
-      overlay.style.webkitBackdropFilter='none';
-      overlay.style.backdropFilter='none';
-    }else if(level>1){
-      overlay.style.background='rgba(255,255,255,.001)';
-      overlay.style.opacity='1';
-      const boost=`brightness(${level.toFixed(2)})`;
-      overlay.style.webkitBackdropFilter=boost;
-      overlay.style.backdropFilter=boost;
-    }else{
-      overlay.style.background='#000';
-      overlay.style.opacity='0';
-      overlay.style.webkitBackdropFilter='none';
-      overlay.style.backdropFilter='none';
-    }
+    overlay.style.background='#000';
+    overlay.style.opacity=level<1?String(Math.min(.85,1-level)):'0';
+    overlay.style.webkitBackdropFilter='none';
+    overlay.style.backdropFilter='none';
   }
   if(state.view==='read' || document.documentElement.classList.contains('reading-mode')){
     syncReadingCanvasColor(settings.theme);
@@ -6612,7 +6644,7 @@ function renderSettingsSheet(){
     ${range('s-firstlineindent','First line indent',L.firstLineIndent,Number.isFinite(Number(s.firstLineIndent))?Number(s.firstLineIndent):1.4,(Number.isFinite(Number(s.firstLineIndent))?Number(s.firstLineIndent):1.4).toFixed(1))}
     <div class="row"><span style="opacity:.78;">Paragraph style</span><div style="display:flex;gap:8px;width:55%;"><button data-parastyle="none" class="small-btn" style="flex:1;border:1px solid ${s.paragraphStyle!=='indent'?'var(--gold)':'var(--line)'};background:${s.paragraphStyle!=='indent'?'color-mix(in srgb,var(--gold) 10%,transparent)':'transparent'};color:${s.paragraphStyle!=='indent'?'var(--gold)':'var(--muted)'};">None</button><button data-parastyle="indent" class="small-btn" style="flex:1;border:1px solid ${s.paragraphStyle==='indent'?'var(--gold)':'var(--line)'};background:${s.paragraphStyle==='indent'?'color-mix(in srgb,var(--gold) 10%,transparent)':'transparent'};color:${s.paragraphStyle==='indent'?'var(--gold)':'var(--muted)'};">Indent</button></div></div>
     <div class="row"><span style="opacity:.78;">Font</span><select id="s-font" style="width:58%;">${Object.entries(FONTS).map(([k,v])=>`<option value="${k}" ${s.font===k?'selected':''}>${v.label}</option>`).join('')}</select></div>
-    <div class="row"><span style="opacity:.78;">Color theme</span><div style="display:flex;gap:9px;">${[['sepia','#F5EFE0'],['light','#ECEAE3'],['green','#E3EDDF'],['eink','#D2D3D0'],['sky','#DDEBF3'],['pink','#F2E0E4'],['dark','#15181B']].map(([t,c])=>`<button class="theme-chip ${s.theme===t?'sel':''}" data-theme="${t}" style="background:${c};"></button>`).join('')}</div></div>
+    <div class="row"><span style="opacity:.78;">Color theme</span><div style="display:flex;gap:9px;">${READING_THEME_ORDER.map(t=>{const c=READING_THEME_PALETTES[t].bg;return `<button class="theme-chip ${s.theme===t?'sel':''}" data-theme="${t}" style="background:${c};" aria-label="${t} reading theme"></button>`;}).join('')}</div></div>
     <div class="label">Page</div>
     ${range('s-margintop','Top margin',L.marginTop,s.marginTop||14,(s.marginTop||14)+'px')}
     ${range('s-marginbottom','Bottom margin',L.marginBottom,s.marginBottom||14,(s.marginBottom||14)+'px')}

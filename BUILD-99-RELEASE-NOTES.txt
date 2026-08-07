@@ -1,0 +1,66 @@
+ReadPlanner Stable Build 99 — Contrast-Safe Brightness + Calibrated Themes
+==========================================================================
+
+Scope
+-----
+Build 99 changes only the two final visual items reported after Build 98:
+1. the >100% Reading Settings brightness behaviour;
+2. the seven reading-theme palettes.
+All navigation, progress, EPUB parsing, reading-plan, library, notes, highlights,
+bookmarks, speech, TOC, card gesture, and other Build 98 behaviour is unchanged.
+
+1. Brightness root cause and correction
+---------------------------------------
+Root cause:
+Build 98 used a backdrop CSS brightness() filter above 100%. A filter multiplies
+all rendered pixels, so text, icons, borders and slider tracks were brightened
+along with the background. At high values, pale foreground colors approached
+white and contrast collapsed. This produced the washed-out/blurred appearance
+seen in the iPhone screenshots.
+
+Correction:
+- The >100% CSS brightness/backdrop filter has been removed completely.
+- 10%–100% keeps the existing black-overlay dimmer.
+- 100% remains the neutral/native theme point.
+- 100%–250% now brightens only the reading theme's background and UI surfaces,
+  progressively interpolating toward calibrated bright-paper targets.
+- Foreground text, publisher colors, toolbar icons, borders and slider controls
+  are not filtered or whitened.
+- The dark theme uses a separate brighter-dark surface target so its contrast is
+  preserved instead of being pushed toward white.
+- The browser/PWA still cannot raise the iPhone's physical display backlight;
+  iOS hardware brightness remains the actual luminance ceiling.
+
+2. Theme calibration
+--------------------
+The themes are now coordinated palettes rather than near-identical background
+swatches. Each theme has its own background, body/UI text, muted text, surface,
+secondary surface and divider values, plus a safe bright-paper target.
+
+Calibrated base backgrounds:
+- Sepia / warm paper: #F3E6C9
+- E-ink paper:        #F3F1E9
+- Pale green:         #E7F0DF
+- E-ink grey:         #D8D9D5
+- Sky blue:           #E1F1F4
+- Soft pink:          #F5E6EB
+- Dark:               #17191B
+
+The settings/TOC/dictionary sheets now follow the live theme surface variable,
+so they also remain readable while brightness is adjusted.
+
+Maintenance
+-----------
+Theme definitions are centralized in READING_THEME_PALETTES and
+READING_THEME_ORDER. Brightness adjustment is isolated in effectiveReadingPalette(),
+applyReadingPaletteVariables(), syncReadingCanvasColor() and applyBrightness().
+
+Validation
+----------
+- Inline application JavaScript syntax: passed with Node --check.
+- Manifest JSON: valid.
+- Service-worker cache version advanced to Build 99.
+- Static source audit confirms no backdrop brightness() filter remains.
+- Palette interpolation test confirms body/UI text colors remain unchanged from
+  100% through 250%, while background/surface colors move toward brighter targets.
+- Dimmer path remains active only below 100%.
