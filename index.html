@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <title>ReadPlanner</title>
-<!-- Build 95 Reader Precision Polish: restores baseline-aligned EPUB bullets, exact TOC destinations, live whole-book progress, transient scroll feedback, complete interface localization, and continuous-only reading. -->
-<!-- Build 95: targeted reader corrections. Existing planned-reading, highlighting, speech, Journey, Tree, Growth Companion, Dashboard, notes, bookmarks, and check-in behaviour remain unchanged outside the reported defects. -->
+<!-- Build 96 Navigation and Viewport Precision: preserves Build 95 reader polish while unifying every TOC destination, measuring progress from the rendered scroll surface, and requiring intentional book-card taps. -->
+<!-- Build 96: three narrowly scoped corrections only. Existing import, planned-reading, highlighting, speech, Journey, Tree, Growth Companion, Dashboard, notes, bookmarks, check-ins and stable reader styling remain unchanged. -->
 <!-- Polished visual build: hierarchy, typography, motion, surfaces, and immersive reading refined without changing application behaviour.
      Version 56 / Build 77 stabilization pass: freezes the working reading-position, in-place highlighting, and isolated speech controllers. PWA updates no longer reload an active reading session, cache cleanup is restricted to ReadPlanner-owned caches, boot rendering is serialized, repeated iOS press events are de-duplicated, and diagnostics expose a safe maintenance snapshot for future debugging. -->
 <meta name="application-name" content="ReadPlanner">
@@ -15,7 +15,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#1F2A24">
 <meta name="format-detection" content="telephone=no">
-<link rel="manifest" href="./manifest.json?v=95">
+<link rel="manifest" href="./manifest.json?v=96">
 <!-- iOS uses the Apple touch icon for Home Screen web clips. A versioned,
      opaque 180px PNG avoids Safari reusing the old generic-letter icon. -->
 <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon-v80.png">
@@ -2896,6 +2896,11 @@
 
 <style id="readplanner-build-92-overrides">
 /* Build 95: reader precision, list alignment, exact TOC navigation and localization polish. */
+/* Build 96: shared TOC targets, viewport-measured progress, and deliberate library taps. */
+#toc-sheet .toc-tree-icon[data-toc-toggle]{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+#toc-sheet .toc-tree-row.is-parent .toc-tree-copy{cursor:pointer;}
+.home-book-card button[data-action="open"],.home-book-card button[data-action="openTodayOverview"]{-webkit-tap-highlight-color:rgba(0,0,0,.035);}
+
 #toc-sheet{padding:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;}
 #toc-sheet .toc-tree-shell{display:flex;flex-direction:column;min-height:0;height:100%;width:100%;}
 #toc-sheet .toc-tree-list{flex:1;min-height:0;overflow-y:scroll!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:contain;touch-action:pan-y!important;scrollbar-gutter:stable;}
@@ -5296,15 +5301,33 @@ function mapContentLocationToChunks(location,chunks){
 }
 function mapOriginalTocToChunks(sourceToc,chunks){
   if(!Array.isArray(sourceToc)||!sourceToc.length||!Array.isArray(chunks)||!chunks.length)return [];
-  return sourceToc.map((entry,entryIndex)=>{
-    const mapped=mapContentLocationToChunks(entry,chunks);
-    if(!mapped)return null;
+  const rows=sourceToc.map((entry,entryIndex)=>{
+    const level=Math.max(0,Number(entry.level)||0),publisherHasNoOwnTarget=entry.leaf===false&&Number(entry.globalPara)<0;
+    const mapped=publisherHasNoOwnTarget?null:mapContentLocationToChunks(entry,chunks);
     return {
-      title:String(entry.title||`Section ${entryIndex+1}`),level:Math.max(0,Number(entry.level)||0),
-      leaf:entry.leaf!==false,day:mapped.day,para:mapped.para,anchorText:entry.anchorText||'',href:entry.href||'',path:entry.path||'',fragment:entry.fragment||'',
-      globalPara:Number(entry.globalPara)||0,wordOffset:Number(entry.wordOffset)||0,index:Number.isFinite(Number(entry.index))?Number(entry.index):entryIndex
+      title:String(entry.title||`Section ${entryIndex+1}`),level,leaf:entry.leaf!==false,
+      day:mapped?mapped.day:null,para:mapped?mapped.para:null,anchorText:entry.anchorText||'',href:entry.href||'',path:entry.path||'',fragment:entry.fragment||'',
+      globalPara:Number.isFinite(Number(entry.globalPara))?Number(entry.globalPara):-1,wordOffset:Number(entry.wordOffset)||0,index:Number.isFinite(Number(entry.index))?Number(entry.index):entryIndex,
+      resolvedFromChild:false
     };
-  }).filter(row=>row&&row.day>=1&&row.day<=chunks.length);
+  });
+  // Some EPUB navigation files intentionally make a first-level heading a
+  // structural parent rather than a hyperlink. Give that parent one stable,
+  // useful destination: the first valid descendant. This prevents parent taps
+  // from falling through to paragraph zero / the cover while preserving the
+  // publisher's hierarchy.
+  rows.forEach((row,i)=>{
+    if(Number.isFinite(Number(row.day))&&Number(row.day)>=1)return;
+    for(let j=i+1;j<rows.length;j++){
+      if(Number(rows[j].level)<=Number(row.level))break;
+      if(Number.isFinite(Number(rows[j].day))&&Number(rows[j].day)>=1){row.day=rows[j].day;row.para=rows[j].para;row.anchorText=row.anchorText||rows[j].anchorText||rows[j].title;row.resolvedFromChild=true;break;}
+    }
+    if(!Number.isFinite(Number(row.day))||Number(row.day)<1){
+      const next=rows.slice(i+1).find(candidate=>Number.isFinite(Number(candidate.day))&&Number(candidate.day)>=1);
+      if(next){row.day=next.day;row.para=next.para;row.anchorText=row.anchorText||next.anchorText||next.title;row.resolvedFromChild=true;}
+    }
+  });
+  return rows.filter(row=>Number.isFinite(Number(row.day))&&row.day>=1&&row.day<=chunks.length).map(row=>({...row,para:Math.max(0,Number(row.para)||0)}));
 }
 function mapInlineTocLinksToChunks(sourceLinks,chunks){
   if(!Array.isArray(sourceLinks)||!sourceLinks.length||!Array.isArray(chunks)||!chunks.length)return [];
@@ -5384,11 +5407,34 @@ function buildOriginalTocTree(entries){
   if(nodes.length===1&&nodes[0].children.length&&(generic.test(String(nodes[0].title||'').trim())||normaliseTocMatch(nodes[0].title)===bookKey))nodes=nodes[0].children;
   return nodes;
 }
+const _originalTocRuntimeCache=new WeakMap();
 function originalTocEntries(book){
   if(!book)return [];
-  if(Array.isArray(book.originalToc)&&book.originalToc.length)return book.originalToc;
-  if(Array.isArray(book.sourceToc)&&book.sourceToc.length)return mapOriginalTocToChunks(book.sourceToc,book.chunks||[]);
-  return [];
+  const cached=_originalTocRuntimeCache.get(book);
+  if(cached&&cached.source===book.sourceToc&&cached.chunks===book.chunks)return cached.entries;
+  // Always remap the preserved publisher TOC against the current chunks. This
+  // repairs books imported by earlier builds and keeps targets correct after a
+  // reading plan is edited, without requiring a destructive re-import.
+  const entries=Array.isArray(book.sourceToc)&&book.sourceToc.length?mapOriginalTocToChunks(book.sourceToc,book.chunks||[]):(Array.isArray(book.originalToc)?book.originalToc:[]);
+  _originalTocRuntimeCache.set(book,{source:book.sourceToc,chunks:book.chunks,entries});
+  return entries;
+}
+function resolveBookTocTarget(book,candidate){
+  const fallback={day:Math.max(1,Number(candidate&&candidate.day)||Number(candidate&&candidate.targetDay)||1),para:Math.max(0,Number(candidate&&candidate.para)||Number(candidate&&candidate.targetPara)||0),title:String(candidate&&candidate.title||''),anchorText:String(candidate&&candidate.anchorText||'')};
+  const entries=originalTocEntries(book);if(!entries.length)return fallback;
+  const wantedTitle=normaliseTocMatch(candidate&&candidate.title||candidate&&candidate.anchorText||''),wantedPath=String(candidate&&candidate.path||''),wantedFragment=String(candidate&&candidate.fragment||''),wantedLevel=Number(candidate&&candidate.level!=null?candidate.level:candidate&&candidate.tocLevel),fallbackDay=fallback.day,fallbackPara=fallback.para;
+  const scored=entries.map((entry,index)=>{
+    let score=0;const title=normaliseTocMatch(entry.title||entry.anchorText||'');
+    if(wantedTitle&&title===wantedTitle)score+=1000;
+    else if(wantedTitle&&title&&(title.startsWith(wantedTitle)||wantedTitle.startsWith(title)))score+=180;
+    if(wantedPath&&String(entry.path||'')===wantedPath)score+=500;
+    if(wantedFragment&&String(entry.fragment||'')===wantedFragment)score+=260;
+    if(Number.isFinite(wantedLevel)&&Number(entry.level)===wantedLevel)score+=90;
+    const distance=Math.abs((Number(entry.day)||1)-fallbackDay)*10000+Math.abs((Number(entry.para)||0)-fallbackPara);
+    return {entry,index,score,distance};
+  }).filter(row=>row.score>0).sort((a,b)=>b.score-a.score||a.distance-b.distance||a.index-b.index);
+  const chosen=scored[0]&&scored[0].entry;if(!chosen)return fallback;
+  return {day:Math.max(1,Number(chosen.day)||1),para:Math.max(0,Number(chosen.para)||0),title:String(chosen.title||fallback.title),anchorText:String(chosen.anchorText||chosen.title||fallback.anchorText),level:Math.max(0,Number(chosen.level)||0),resolvedFromChild:chosen.resolvedFromChild===true};
 }
 function originalTocSeenKey(bookId){return 'spine_original_toc_seen_'+String(bookId||'');}
 function hasSeenOriginalToc(bookId){try{return localStorage.getItem(originalTocSeenKey(bookId))==='1';}catch(_){return false;}}
@@ -6399,7 +6445,8 @@ function renderReadingChunkHtml(book,data,day){
   const mediaHtml=list=>(list||[]).map(renderEpubMediaBlock).join('');
   return (chunk.paras||[]).map((p,pi)=>{
     const paraHls=hls.filter(h=>Number(h.paraIndex)===pi),meta=metaByPara.get(pi)||null,inlineLink=inlineTocByPara.get(pi)||null;
-    let links=(meta&&meta.links||[]).slice();if(inlineLink&&!links.length)links=[{title:inlineLink.title||p,start:0,end:String(p||'').length,external:false,targetDay:inlineLink.targetDay,targetPara:inlineLink.targetPara}];
+    let links=(meta&&meta.links||[]).slice();if(inlineLink&&!links.length)links=[{title:inlineLink.title||p,start:0,end:String(p||'').length,external:false,targetDay:inlineLink.targetDay,targetPara:inlineLink.targetPara,path:inlineLink.path||'',fragment:inlineLink.fragment||''}];
+    if(inlineLink){const sharedTarget=resolveBookTocTarget(book,{title:inlineLink.title||p,tocLevel:inlineLink.tocLevel,path:inlineLink.path,fragment:inlineLink.fragment,targetDay:inlineLink.targetDay,targetPara:inlineLink.targetPara});links=links.map(link=>link.external?link:{...link,targetDay:sharedTarget.day,targetPara:sharedTarget.para,title:link.title||inlineLink.title||p});}
     const words=renderParagraphWithDecorations(p,paraHls,links,settings.wordLookup==='click',meta&&meta.formatSpans||[]),fullParagraphLink=links.length===1&&Number(links[0].start)<=0&&Number(links[0].end)>=String(p||'').length;
     const cls=epubParagraphClass(meta,fullParagraphLink,inlineLink),publisherStyle=publisherStyleForRender(meta),listDepthStyle=meta&&meta.kind==='list'?`--epub-list-indent:${Math.max(0,(Number(meta.listDepth)||1)-1)*1.05}em`:'',combinedPublisherStyle=[publisherStyle,listDepthStyle].filter(Boolean).join(';');
     const publisherAttrs=(combinedPublisherStyle?` style="${esc(combinedPublisherStyle)}"`:'')+(meta&&meta.publisherDir?` dir="${esc(meta.publisherDir)}"`:'')+(meta&&meta.publisherLang?` lang="${esc(meta.publisherLang)}"`:'');
@@ -6611,7 +6658,7 @@ async function openToc(searchMode){
 
   async function navigateEntry(entry){
     closeSheets();stopReadAloud();
-    const targetDay=Math.max(1,Number(entry.day)||1),targetPara=Math.max(0,Number(entry.para)||0),targetText=String(entry.anchorText||entry.title||'').replace(/\s+/g,' ').trim();
+    const target=resolveBookTocTarget(book,entry),targetDay=target.day,targetPara=target.para,targetText=String(target.anchorText||target.title||entry.title||'').replace(/\s+/g,' ').trim();
     await navigateToDay(book.id,targetDay,{forceTop:true,entryMode:'target',targetPara,targetText});
   }
   function renderRows(nodes,depth=0){
@@ -6619,18 +6666,21 @@ async function openToc(searchMode){
       const hasChildren=Array.isArray(node.children)&&node.children.length>0;
       const open=hasChildren&&expanded.has(String(node._tocId));
       const isCurrent=!!(current&&String(current.node._tocId)===String(node._tocId));
-      return `<div class="toc-accordion-group"><button type="button" class="toc-tree-row${isCurrent?' is-current':''}${hasChildren?' is-parent':' is-leaf'}${depth===0?' toc-depth-root':' toc-depth-child'}" data-toc-node="${node._tocId}" style="--toc-depth:${depth};" ${isCurrent?'aria-current="location"':''}><span class="toc-tree-icon">${hasChildren?(open?'⌄':'›'):''}</span><span class="toc-tree-copy"><span class="toc-tree-title">${esc(node.title||'Untitled section')}</span></span></button>${hasChildren&&open?`<div class="toc-tree-children">${renderRows(node.children,depth+1)}</div>`:''}</div>`;
+      return `<div class="toc-accordion-group"><button type="button" class="toc-tree-row${isCurrent?' is-current':''}${hasChildren?' is-parent':' is-leaf'}${depth===0?' toc-depth-root':' toc-depth-child'}" data-toc-node="${node._tocId}" style="--toc-depth:${depth};" ${isCurrent?'aria-current="location"':''}><span class="toc-tree-icon"${hasChildren?` data-toc-toggle="${node._tocId}" role="button" aria-label="${open?'Collapse':'Expand'} ${esc(node.title||'section')}"`:''}>${hasChildren?(open?'⌄':'›'):''}</span><span class="toc-tree-copy"><span class="toc-tree-title">${esc(node.title||'Untitled section')}</span></span></button>${hasChildren&&open?`<div class="toc-tree-children">${renderRows(node.children,depth+1)}</div>`:''}</div>`;
     }).join('');
   }
   let tocGestureMoved=false,tocGestureStartY=0,tocSuppressUntil=0;
   function bindRows(){
     const list=document.getElementById('toc-list');if(list){list.addEventListener('touchstart',e=>{tocGestureMoved=false;tocGestureStartY=e.touches&&e.touches[0]?e.touches[0].clientY:0;},{passive:true});list.addEventListener('touchmove',e=>{const y=e.touches&&e.touches[0]?e.touches[0].clientY:tocGestureStartY;if(Math.abs(y-tocGestureStartY)>7){tocGestureMoved=true;tocSuppressUntil=Date.now()+350;}},{passive:true});}
-    sheet.querySelectorAll('[data-toc-node]').forEach(el=>el.addEventListener('click',()=>{
+    sheet.querySelectorAll('[data-toc-node]').forEach(el=>el.addEventListener('click',event=>{
       if(tocGestureMoved||Date.now()<tocSuppressUntil)return;
       const found=all.find(x=>String(x.node._tocId)===String(el.dataset.tocNode));if(!found)return;
       const node=found.node,hasChildren=node.children&&node.children.length;
-      if(hasChildren){const list=document.getElementById('toc-list'),savedScroll=list?list.scrollTop:0,key=String(node._tocId);expanded.has(key)?expanded.delete(key):expanded.add(key);renderContents(savedScroll);}
-      else navigateEntry(node);
+      // The chevron is the disclosure control. The title area always navigates,
+      // including first-level parents, so the reader sheet and the publisher's
+      // opening contents page expose the same destination.
+      if(hasChildren&&event.target.closest&&event.target.closest('[data-toc-toggle]')){event.preventDefault();event.stopPropagation();const list=document.getElementById('toc-list'),savedScroll=list?list.scrollTop:0,key=String(node._tocId);expanded.has(key)?expanded.delete(key):expanded.add(key);renderContents(savedScroll);return;}
+      navigateEntry(node);
     }));
   }
   function buildSearchRows(query){
@@ -6940,7 +6990,7 @@ function createUnplannedBookFromParsed(p,createdAt){
   const chunks=rawChunks.map((chunk,index)=>({day:index+1,paras:chunk.paras,wordCount:chunk.wordCount}));
   return {
     id:uid(),title:(p.title||'Untitled').trim(),author,fileType:p.fileType||null,coverImage:p.coverImage||null,sourceFileName:p.sourceFileName||'',
-    sourceFingerprint:p.sourceFingerprint||parsedFingerprint(p),allowDuplicate:p._allowDuplicate===true,epubParserVersion:p.fileType==='EPUB'?95:null,createdAt:createdAt||Date.now(),startDate:new Date().toISOString(),totalWords:wc,hasPlan:false,readingMode:'continuous',
+    sourceFingerprint:p.sourceFingerprint||parsedFingerprint(p),allowDuplicate:p._allowDuplicate===true,epubParserVersion:p.fileType==='EPUB'?96:null,createdAt:createdAt||Date.now(),startDate:new Date().toISOString(),totalWords:wc,hasPlan:false,readingMode:'continuous',
     sourceToc:(p.sourceToc||[]).map(entry=>({...entry})),sourceInlineTocLinks:(p.inlineTocLinks||[]).map(entry=>({...entry})),sourceTocStart:p.tocStart?{...p.tocStart}:null,sourceParagraphMeta:(p.sourceParagraphMeta||[]).map(entry=>({...entry,links:(entry.links||[]).map(link=>({...link})),formatSpans:(entry.formatSpans||[]).map(span=>({...span}))})),sourceMediaBlocks:(p.sourceMediaBlocks||[]).map(entry=>({...entry})),sourceHrefTargets:(p.sourceHrefTargets||[]).map(entry=>({...entry})),publisherFontCss:p.publisherFontCss||'',originalToc:mapOriginalTocToChunks(p.sourceToc||[],chunks),inlineTocLinks:mapInlineTocLinksToChunks(p.inlineTocLinks||[],chunks),tocStart:mapTocStartToChunks(p.tocStart,chunks),paragraphMeta:mapParagraphMetaToChunks(p.sourceParagraphMeta||[],chunks),mediaBlocks:mapMediaBlocksToChunks(p.sourceMediaBlocks||[],chunks),hrefTargets:mapHrefTargetsToChunks(p.sourceHrefTargets||[],chunks),
     growthMode:'tree',growthName:'My Growth Companion',growthImage:null,growthOrigin:{side:'left',x:2,y:52},journeyTheme:'auto',journeyPhraseTemplate:'destination',journeyPhraseCustom:'',journeyStyle:'road',journeyStartImage:null,journeyEndImage:null,
     reminder:{enabled:false,time:'19:00',template:'gentle',custom:''},chunks
@@ -6997,7 +7047,7 @@ async function refreshExistingBookContent(existing,source){
   if(!cleanAuthorName(existing.author)&&cleanAuthorName(source.author))existing.author=cleanAuthorName(source.author);
   existing.fileType=source.fileType||existing.fileType||'EPUB';
   if(source.sourceFileName)existing.sourceFileName=source.sourceFileName;
-  existing.epubParserVersion=95;existing.lastContentRefreshAt=Date.now();
+  existing.epubParserVersion=96;existing.lastContentRefreshAt=Date.now();
   await dbPutBook(existing);
   const idx=(state.books||[]).findIndex(book=>String(book.id)===String(existing.id));if(idx>=0)state.books[idx]=existing;
   return existing;
@@ -7141,7 +7191,7 @@ function wirePlanView(){
     const submit=document.getElementById('f-submit');if(submit){submit.disabled=true;submit.textContent='Creating reading plan…';}
     await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
     const days=effDays(),chunks=chunkText(state.pendingImport.text,days),growth=growthCtl.getValue();
-    const plannedChunks=chunks.map((c,i)=>({day:i+1,paras:c.paras,wordCount:c.wordCount}));const book={id:uid(),title:titleEl.value.trim()||state.pendingImport.title||'Untitled',author:cleanAuthorName(authorEl.value)||inferAuthorFromTitle(titleEl.value||state.pendingImport.title),fileType:state.pendingImport.fileType||null,coverImage:state.pendingImport.coverImage||null,sourceFileName:state.pendingImport.sourceFileName||'',sourceFingerprint:state.pendingImport.sourceFingerprint||parsedFingerprint(state.pendingImport),allowDuplicate:state.pendingImport._allowDuplicate===true,epubParserVersion:state.pendingImport.fileType==='EPUB'?95:null,createdAt:Date.now(),startDate:new Date().toISOString(),totalWords:wc,hasPlan:true,readingMode:'plan',sourceToc:(state.pendingImport.sourceToc||[]).map(entry=>({...entry})),sourceInlineTocLinks:(state.pendingImport.inlineTocLinks||[]).map(entry=>({...entry})),sourceTocStart:state.pendingImport.tocStart?{...state.pendingImport.tocStart}:null,sourceParagraphMeta:(state.pendingImport.sourceParagraphMeta||[]).map(entry=>({...entry,links:(entry.links||[]).map(link=>({...link})),formatSpans:(entry.formatSpans||[]).map(span=>({...span}))})),sourceMediaBlocks:(state.pendingImport.sourceMediaBlocks||[]).map(entry=>({...entry})),sourceHrefTargets:(state.pendingImport.sourceHrefTargets||[]).map(entry=>({...entry})),publisherFontCss:state.pendingImport.publisherFontCss||'',originalToc:mapOriginalTocToChunks(state.pendingImport.sourceToc||[],plannedChunks),inlineTocLinks:mapInlineTocLinksToChunks(state.pendingImport.inlineTocLinks||[],plannedChunks),tocStart:mapTocStartToChunks(state.pendingImport.tocStart,plannedChunks),paragraphMeta:mapParagraphMetaToChunks(state.pendingImport.sourceParagraphMeta||[],plannedChunks),mediaBlocks:mapMediaBlocksToChunks(state.pendingImport.sourceMediaBlocks||[],plannedChunks),hrefTargets:mapHrefTargetsToChunks(state.pendingImport.sourceHrefTargets||[],plannedChunks),growthMode:growth.mode,growthName:growth.name,growthImage:growth.image,growthOrigin:growth.origin,growthImages:growth.image?[growth.image]:[],journeyTheme:journeyTheme.value,journeyPhraseTemplate:journeyPhraseSelect.value,journeyPhraseCustom:journeyCustom.value.trim(),journeyStyle:'road',journeyStartImage:startImage,journeyEndImage:endImage,reminder:{enabled:reminderEnabled.checked,time:reminderTime.value||'19:00',template:reminderTemplate.value,custom:reminderCustom.value.trim()},chunks:plannedChunks};
+    const plannedChunks=chunks.map((c,i)=>({day:i+1,paras:c.paras,wordCount:c.wordCount}));const book={id:uid(),title:titleEl.value.trim()||state.pendingImport.title||'Untitled',author:cleanAuthorName(authorEl.value)||inferAuthorFromTitle(titleEl.value||state.pendingImport.title),fileType:state.pendingImport.fileType||null,coverImage:state.pendingImport.coverImage||null,sourceFileName:state.pendingImport.sourceFileName||'',sourceFingerprint:state.pendingImport.sourceFingerprint||parsedFingerprint(state.pendingImport),allowDuplicate:state.pendingImport._allowDuplicate===true,epubParserVersion:state.pendingImport.fileType==='EPUB'?96:null,createdAt:Date.now(),startDate:new Date().toISOString(),totalWords:wc,hasPlan:true,readingMode:'plan',sourceToc:(state.pendingImport.sourceToc||[]).map(entry=>({...entry})),sourceInlineTocLinks:(state.pendingImport.inlineTocLinks||[]).map(entry=>({...entry})),sourceTocStart:state.pendingImport.tocStart?{...state.pendingImport.tocStart}:null,sourceParagraphMeta:(state.pendingImport.sourceParagraphMeta||[]).map(entry=>({...entry,links:(entry.links||[]).map(link=>({...link})),formatSpans:(entry.formatSpans||[]).map(span=>({...span}))})),sourceMediaBlocks:(state.pendingImport.sourceMediaBlocks||[]).map(entry=>({...entry})),sourceHrefTargets:(state.pendingImport.sourceHrefTargets||[]).map(entry=>({...entry})),publisherFontCss:state.pendingImport.publisherFontCss||'',originalToc:mapOriginalTocToChunks(state.pendingImport.sourceToc||[],plannedChunks),inlineTocLinks:mapInlineTocLinksToChunks(state.pendingImport.inlineTocLinks||[],plannedChunks),tocStart:mapTocStartToChunks(state.pendingImport.tocStart,plannedChunks),paragraphMeta:mapParagraphMetaToChunks(state.pendingImport.sourceParagraphMeta||[],plannedChunks),mediaBlocks:mapMediaBlocksToChunks(state.pendingImport.sourceMediaBlocks||[],plannedChunks),hrefTargets:mapHrefTargetsToChunks(state.pendingImport.sourceHrefTargets||[],plannedChunks),growthMode:growth.mode,growthName:growth.name,growthImage:growth.image,growthOrigin:growth.origin,growthImages:growth.image?[growth.image]:[],journeyTheme:journeyTheme.value,journeyPhraseTemplate:journeyPhraseSelect.value,journeyPhraseCustom:journeyCustom.value.trim(),journeyStyle:'road',journeyStartImage:startImage,journeyEndImage:endImage,reminder:{enabled:reminderEnabled.checked,time:reminderTime.value||'19:00',template:reminderTemplate.value,custom:reminderCustom.value.trim()},chunks:plannedChunks};
     if(book.reminder&&book.reminder.enabled)await requestReminderPermission();
     const saved=await persistImportedBook(book,state.pendingImport._sourceFile||null);
     state.pendingImport=null;
@@ -8860,6 +8910,22 @@ function readingDayFractionLive(){
   if(isPagedReading()){const v=pagedReadingViewport();const max=v?Math.max(0,v.scrollWidth-v.clientWidth):0;return max>0?Math.min(1,Math.max(0,v.scrollLeft/max)):0;}
   const metrics=documentReadingScrollMetrics();return metrics.max>0?Math.min(1,Math.max(0,metrics.top/metrics.max)):0;
 }
+function isContinuousWholeBookReading(){
+  const book=state.books.find(b=>b.id===state.activeBookId),body=document.getElementById('reading-body');
+  return !!(book&&!hasReadingPlan(book)&&body&&body.dataset.freeReading==='1'&&!isPagedReading());
+}
+function viewportMeasuredBookProgress(){
+  const metrics=documentReadingScrollMetrics(),viewport=Math.max(1,metrics.viewport),max=Math.max(0,metrics.max),top=Math.min(max,Math.max(0,metrics.top)),remainingPx=Math.max(0,max-top);
+  const totalPages=Math.max(1,Math.ceil(max/viewport)+1),endMarker=document.querySelector('.free-reading-end'),endRect=endMarker&&endMarker.getBoundingClientRect?endMarker.getBoundingClientRect():null;
+  // Virtualised magazines can replace estimated chunk heights with measured
+  // heights while the reader is moving. The visible End-of-book marker is the
+  // authoritative completion signal: once it has entered the usable viewport,
+  // no later placeholder re-measurement may claim that unread pages remain.
+  const endVisible=!!(endRect&&endRect.bottom>0&&endRect.top<=viewport-Math.min(118,viewport*.14));
+  const atPhysicalEnd=remainingPx<=2||endVisible;
+  const pagesLeft=atPhysicalEnd?0:Math.min(totalPages-1,Math.ceil(remainingPx/viewport)),currentPage=atPhysicalEnd?totalPages:Math.max(1,totalPages-pagesLeft),fraction=atPhysicalEnd||max<=2?1:Math.min(1,Math.max(0,top/max));
+  return {viewport,max,top,totalPages,pagesLeft,currentPage,fraction,endVisible};
+}
 function resizePagedReading(){
   const v=pagedReadingViewport();if(!v||!isPagedReading())return;const step=Math.max(220,v.clientWidth);v.style.setProperty('--reader-page-width',step+'px');v.style.setProperty('--reader-page-step',step+'px');const body=document.getElementById('reading-body');if(body)body.style.setProperty('--reader-page-width',step+'px');requestAnimationFrame(buildPagedSnapLayer);
 }
@@ -8898,6 +8964,7 @@ function liveReadingContentPosition(){
 }
 function overallReadingFraction(){
   const book=state.books.find(b=>b.id===state.activeBookId);if(!book)return 0;
+  if(isContinuousWholeBookReading())return viewportMeasuredBookProgress().fraction;
   const weights=readingChunkWeights(book),total=Math.max(1,weights.reduce((sum,value)=>sum+value,0)),live=liveReadingContentPosition();
   if(live){const dayIndex=Math.max(0,Math.min(weights.length-1,live.day-1)),before=weights.slice(0,dayIndex).reduce((sum,value)=>sum+value,0),current=weights[dayIndex]||1,within=readingDayContentFraction(book,live);return Math.min(1,Math.max(0,(before+within*current)/total));}
   const dayIndex=Math.max(0,Math.min(weights.length-1,(Number(state.viewDay)||1)-1)),before=weights.slice(0,dayIndex).reduce((sum,value)=>sum+value,0),current=weights[dayIndex]||1;
@@ -8976,7 +9043,13 @@ function mountReadChromePortal(){
   });
 }
 function updatePagePill(){
-  const pill=document.getElementById('page-pill');if(!pill||state.view!=='read')return;const totalPages=parseInt(pill.dataset.totalPages)||1,day=parseInt(pill.dataset.day)||1,totalDays=parseInt(pill.dataset.totalDays)||1,free=pill.dataset.freeReading==='1',dayFrac=readingDayFractionLive(),bookFrac=overallReadingFraction(),pageFrac=free?bookFrac:dayFrac,page=Math.min(totalPages,Math.max(1,Math.floor(pageFrac*totalPages)+1)),pagesLeft=Math.max(0,totalPages-page),overallPct=free?bookFrac*100:Math.min(100,Math.max(0,((day-1+dayFrac)/totalDays)*100)),pagesText=pagesLeft>0?(pagesLeft+' page'+(pagesLeft===1?'':'s')+' left'):'Last page',english=(free?'Book':('Day '+day))+' · '+pagesText+' · '+overallPct.toFixed(1)+'%';pill.textContent=uiTranslateString(english);
+  const pill=document.getElementById('page-pill');if(!pill||state.view!=='read')return;
+  const day=parseInt(pill.dataset.day)||1,totalDays=parseInt(pill.dataset.totalDays)||1,free=pill.dataset.freeReading==='1';
+  if(free&&isContinuousWholeBookReading()){
+    const measured=viewportMeasuredBookProgress();pill.dataset.totalPages=String(measured.totalPages);
+    const pagesText=measured.pagesLeft>0?(measured.pagesLeft+' page'+(measured.pagesLeft===1?'':'s')+' left'):'Last page',english='Book · '+pagesText+' · '+(measured.fraction*100).toFixed(1)+'%';pill.textContent=uiTranslateString(english);return;
+  }
+  const totalPages=parseInt(pill.dataset.totalPages)||1,dayFrac=readingDayFractionLive(),bookFrac=overallReadingFraction(),pageFrac=free?bookFrac:dayFrac,page=Math.min(totalPages,Math.max(1,Math.floor(pageFrac*totalPages)+1)),pagesLeft=Math.max(0,totalPages-page),overallPct=free?bookFrac*100:Math.min(100,Math.max(0,((day-1+dayFrac)/totalDays)*100)),pagesText=pagesLeft>0?(pagesLeft+' page'+(pagesLeft===1?'':'s')+' left'):'Last page',english=(free?'Book':('Day '+day))+' · '+pagesText+' · '+overallPct.toFixed(1)+'%';pill.textContent=uiTranslateString(english);
 }
 let _scrollTicking = false;
 window.addEventListener('scroll', ()=>{
@@ -9000,6 +9073,11 @@ window.addEventListener('scroll', ()=>{
   }
 }, {passive:true});
 window.addEventListener('touchmove',e=>{noteReadingUserScrollIntent(e);if(state.view==='read'){showReaderProgressRail();updateReaderProgressRail();}},{passive:true});
+let _readerViewportRecalcTimer=0;
+function scheduleReaderViewportProgressRecalculation(){clearTimeout(_readerViewportRecalcTimer);_readerViewportRecalcTimer=setTimeout(()=>{if(state.view==='read'){updatePagePill();updateReaderProgressRail();}},90);}
+window.addEventListener('resize',scheduleReaderViewportProgressRecalculation,{passive:true});
+window.addEventListener('orientationchange',scheduleReaderViewportProgressRecalculation,{passive:true});
+if(window.visualViewport)window.visualViewport.addEventListener('resize',scheduleReaderViewportProgressRecalculation,{passive:true});
 window.addEventListener('wheel',noteReadingUserScrollIntent,{passive:true});
 window.addEventListener('keydown',e=>{if(['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' '].includes(e.key))noteReadingUserScrollIntent();});
 window.addEventListener('pagehide',()=>{
@@ -9284,6 +9362,28 @@ async function openEpubExternalSafely(url){
   flushReadingPositionDbWrites().catch(()=>{});
 }
 
+// ================= deliberate library card opening =================
+// A book opens only after a short press-and-release on the same button without
+// meaningful finger movement. Merely brushing a card while scrolling or swiping
+// cannot synthesize a valid open action. Keyboard activation remains available.
+let _bookOpenPress=null,_bookOpenApproval=null;
+function bookOpenActionElement(target){const el=target&&target.closest&&target.closest('[data-action="open"],[data-action="openTodayOverview"]');return el&&el.closest('.home-book-card')?el:null;}
+function beginBookOpenPress(el,x,y,pointerId){_bookOpenPress=el?{el,x,y,pointerId,time:Date.now(),moved:false}:null;}
+function moveBookOpenPress(x,y,pointerId){const press=_bookOpenPress;if(!press||(press.pointerId!=null&&pointerId!=null&&press.pointerId!==pointerId))return;if(Math.hypot(x-press.x,y-press.y)>11)press.moved=true;}
+function finishBookOpenPress(el,x,y,pointerId){const press=_bookOpenPress;_bookOpenPress=null;if(!press||press.el!==el||press.moved||(press.pointerId!=null&&pointerId!=null&&press.pointerId!==pointerId)||Math.hypot(x-press.x,y-press.y)>11||Date.now()-press.time>850){_bookOpenApproval=null;return;}_bookOpenApproval={el,time:Date.now()};}
+function consumeBookOpenApproval(el,clickEvent){if(clickEvent&&clickEvent.detail===0)return true;const ok=!!(_bookOpenApproval&&_bookOpenApproval.el===el&&Date.now()-_bookOpenApproval.time<900);_bookOpenApproval=null;return ok;}
+if(window.PointerEvent){
+  document.addEventListener('pointerdown',e=>{const el=bookOpenActionElement(e.target);if(!el||e.button>0){_bookOpenPress=null;return;}beginBookOpenPress(el,e.clientX,e.clientY,e.pointerId);},{capture:true,passive:true});
+  document.addEventListener('pointermove',e=>moveBookOpenPress(e.clientX,e.clientY,e.pointerId),{capture:true,passive:true});
+  document.addEventListener('pointerup',e=>finishBookOpenPress(bookOpenActionElement(document.elementFromPoint(e.clientX,e.clientY)),e.clientX,e.clientY,e.pointerId),{capture:true,passive:true});
+  document.addEventListener('pointercancel',()=>{_bookOpenPress=null;_bookOpenApproval=null;},{capture:true,passive:true});
+}else{
+  document.addEventListener('touchstart',e=>{if(e.touches.length!==1){_bookOpenPress=null;return;}const t=e.touches[0];beginBookOpenPress(bookOpenActionElement(e.target),t.clientX,t.clientY,null);},{capture:true,passive:true});
+  document.addEventListener('touchmove',e=>{if(e.touches.length===1){const t=e.touches[0];moveBookOpenPress(t.clientX,t.clientY,null);}},{capture:true,passive:true});
+  document.addEventListener('touchend',e=>{const t=e.changedTouches[0];finishBookOpenPress(bookOpenActionElement(document.elementFromPoint(t.clientX,t.clientY)),t.clientX,t.clientY,null);},{capture:true,passive:true});
+  document.addEventListener('touchcancel',()=>{_bookOpenPress=null;_bookOpenApproval=null;},{capture:true,passive:true});
+}
+
 async function handleAppClick(e){
   const rawEpubLink=e.target.closest&&e.target.closest('[data-epub-href],[data-epub-external]');
   if(rawEpubLink&&!rawEpubLink.dataset.action){
@@ -9327,8 +9427,8 @@ async function handleAppClick(e){
   if(a==='back'){if(state.pendingImport&&(state.view==='importChoice'||state.view==='plan'))await leavePendingImportWithChoice();else go('library',{confirmDelete:false,pendingImport:null,libraryEditMode:false,selectedBookIds:[],confirmBulkDelete:false,confirmDeleteBookId:null});}
   else if(a==='openImportSheet') openImportSheet();
   else if(a==='pickFile') document.getElementById('file-input').click();
-  else if(a==='open') go('overview', {activeBookId:el.dataset.id, viewDay:null, confirmDelete:false, pendingImport:null, importing:false});
-  else if(a==='openTodayOverview') go('overview', {activeBookId:el.dataset.id, viewDay:null, confirmDelete:false, pendingImport:null, importing:false});
+  else if(a==='open'){if(!consumeBookOpenApproval(el,e))return;go('overview', {activeBookId:el.dataset.id, viewDay:null, confirmDelete:false, pendingImport:null, importing:false});}
+  else if(a==='openTodayOverview'){if(!consumeBookOpenApproval(el,e))return;go('overview', {activeBookId:el.dataset.id, viewDay:null, confirmDelete:false, pendingImport:null, importing:false});}
   else if(a==='openSettings') openSettings();
   else if(a==='openAppSettings') openAppSettings();
   else if(a==='openAppearancePicker') openAppearancePicker();
@@ -9445,8 +9545,7 @@ async function handleAppClick(e){
   else if(a==='jumpOriginalTocLink'){
     stopReadAloud();
     const targetDay=Math.max(1,Number(el.dataset.targetDay)||1),targetPara=Math.max(0,Number(el.dataset.targetPara)||0);
-    await navigateToDay(state.activeBookId,targetDay,{entryMode:'top'});
-    scrollToParagraphAndHighlight(targetPara,'',targetDay);
+    await navigateToDay(state.activeBookId,targetDay,{forceTop:true,entryMode:'target',targetPara});
   }
   else if(a==='scrollTop'){ scrollReaderToTopFromToolbar(); }
   else if(a==='toggleBookmark'){
@@ -9533,7 +9632,7 @@ document.addEventListener('click',e=>{
 });
 
 // ================= boot =================
-const READPLANNER_BUILD='95';
+const READPLANNER_BUILD='96';
 const readPlannerDiagnostics=(()=>{
   try{
     const saved=JSON.parse(sessionStorage.getItem('readplanner_diagnostics')||'[]');

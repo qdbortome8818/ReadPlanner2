@@ -1,33 +1,47 @@
-# ReadPlanner Build 95 stability audit
+# ReadPlanner Build 96 stability audit
 
 ## Scope control
 
-Build 95 modifies only EPUB list layout, transient progress-rail visibility,
-Reader TOC destination handling, live pages-left calculation, preservation of
-publisher styling for unresolved internal links, interface localization for the
-unplanned-book overview, and removal of the page-by-page option.
+Build 96 modifies only:
 
-No storage schema, reading-plan calculation, check-in, highlight, note, bookmark,
-read-aloud, Journey, Tree, Growth Companion or Dashboard behavior was redesigned.
+- continuous free-reading whole-book progress measurement;
+- shared EPUB TOC target resolution and parent-title interaction;
+- intentional-tap protection for library book cards.
+
+No storage schema, import workflow, reading-plan calculation, check-in,
+highlight, note, bookmark, read-aloud, typography, Journey, Tree, Growth
+Companion or Dashboard behaviour was redesigned.
 
 ## Root causes
 
-- Build 94 wrapped free-reading content in `.free-reading-chunk`, while the list
-  layout selectors still required paragraphs to be direct children of
-  `#reading-body`. Those rules therefore stopped applying.
-- Build 94 contained an override forcing the progress rail permanently visible.
-- Contents taps first navigated to the top and then launched a second paragraph
-  scroll, allowing render/layout retries to race the requested destination.
-- The pages-left chip used viewport geometry rather than the live paragraph and
-  whole-book word position.
-- Publisher links whose internal target file was absent were discarded before
-  rendering, taking their red/bold/underline metadata with them.
-- Several overview strings had no exact localization keys.
-- The paged setting remained user-selectable despite unreliable CSS-column
-  behavior on iPhone Safari.
+- Build 95 translated a word-weighted location into a fixed 260-words-per-page
+  estimate. That number could not match the actual rendered page count after
+  font, margin, image and viewport changes, and could therefore remain non-zero
+  at the visible end of a book.
+- The opening publisher TOC and Reader Contents used separate navigation paths.
+  Opening-page links performed a top navigation followed by a second scroll,
+  while parent rows in Reader Contents used their entire tap area only to expand.
+  In addition, structural EPUB parent entries without an independent href could
+  be mapped to paragraph zero.
+- Library cards trusted the browser's synthesized click. On touch devices, very
+  slight contact during a scroll or swipe could occasionally produce an open
+  action.
+
+## Containment and maintainability
+
+- Physical progress is centralized in `viewportMeasuredBookProgress`; the
+  visible `.free-reading-end` marker is the authoritative 100% boundary.
+- TOC mapping, cached runtime entries and shared target selection are separated
+  into `mapOriginalTocToChunks`, `originalTocEntries` and
+  `resolveBookTocTarget`.
+- Parent disclosure is isolated to the chevron; title navigation remains one
+  atomic target transaction.
+- Book-card press/move/release validation is isolated from the main action
+  dispatcher.
 
 ## Automated evidence
 
-See `BUILD-95-TEST-RESULTS.json`. JavaScript syntax, manifest parsing and exact
-EPUB runtime checks passed. Final touch, safe-area and installed-PWA behavior
-must be verified on the owner's iPhone.
+See `BUILD-96-TEST-RESULTS.json`. JavaScript syntax, manifest parsing, service
+worker build identity, exact Economist TOC resolution, physical progress and
+card gesture tests passed. Final safe-area and iPhone Safari touch behaviour
+must be verified on the owner's device.

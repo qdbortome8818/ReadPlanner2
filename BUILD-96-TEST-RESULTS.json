@@ -1,0 +1,84 @@
+{
+  "build": 96,
+  "source_build": 95,
+  "scope": [
+    "viewport-based whole-book progress in continuous free reading",
+    "shared first- and second-level EPUB TOC navigation",
+    "deliberate library-card opening gesture"
+  ],
+  "static_checks": {
+    "javascript_syntax": "passed",
+    "manifest_json": "passed",
+    "service_worker_build": "96",
+    "html_build_marker": "96",
+    "archive_structure": "repository-root files, no enclosing folder"
+  },
+  "browser_checks": {
+    "mobile_viewport": "390 x 844",
+    "page_errors": [],
+    "viewport_progress": {
+      "top": {
+        "pages_left": 6,
+        "percentage": "0.0%"
+      },
+      "middle": {
+        "pages_left": 3,
+        "percentage": "50.0%"
+      },
+      "physical_end": {
+        "pages_left": 0,
+        "label": "Last page",
+        "percentage": "100.0%"
+      }
+    },
+    "structural_parent_fallback": {
+      "parent_target": "day 1, paragraph 1",
+      "first_child_target": "day 1, paragraph 1",
+      "resolved_from_child": true,
+      "result": "passed"
+    },
+    "library_card_gesture": {
+      "drag_or_brush_approved": false,
+      "deliberate_tap_approved": true,
+      "result": "passed"
+    }
+  },
+  "economist_epub_check": {
+    "file": "TheEconomist.经济学人_2026.08.01.epub",
+    "parsed_chunks": 15,
+    "publisher_toc_entries": 92,
+    "middle_east_and_africa": {
+      "shared_target": "day 7, paragraph 12",
+      "opening_contents_target": "day 7, paragraph 12",
+      "reader_contents_target": "day 7, paragraph 12",
+      "target_text": "Middle East & Africa | Doom loop in the Gulf",
+      "target_visible_after_reader_toc_navigation": true
+    },
+    "page_errors": [],
+    "result": "passed"
+  },
+  "regression_boundary": {
+    "unchanged_assets": [
+      "manifest.json content",
+      "icons/",
+      "vendor/",
+      "apple touch icons",
+      "favicons"
+    ],
+    "not_redesigned": [
+      "EPUB import workflow",
+      "reading-plan calculations",
+      "check-ins",
+      "highlights",
+      "notes",
+      "bookmarks",
+      "read aloud",
+      "typography",
+      "Journey",
+      "Reading Tree",
+      "Growth Companion",
+      "Dashboard"
+    ]
+  },
+  "device_validation_remaining": "Final touch sensitivity, safe-area placement and installed-PWA behaviour require confirmation on the owner's iPhone Safari environment."
+}

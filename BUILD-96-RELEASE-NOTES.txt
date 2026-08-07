@@ -1,0 +1,53 @@
+ReadPlanner Stable Build 96 — Navigation and Viewport Precision
+================================================================
+
+Scope
+-----
+Build 96 is a narrowly targeted correction pass on Build 95. It changes only
+three reported areas: whole-book pages-left calculation in continuous free
+reading, shared first- and second-level EPUB TOC navigation, and accidental
+opening of library cards. Existing import, reading plans, check-ins, highlights,
+notes, bookmarks, speech, typography, Journey, Tree, Growth Companion, Dashboard
+and established reader styling were not redesigned.
+
+Corrections
+-----------
+1. The free-reading progress chip now measures the rendered scroll surface. One
+   page equals one current visual viewport height. Pages remaining and percentage
+   are recalculated from the live scroll position, and the exact end reports
+   “Last page · 100.0%” / the localized equivalent. The visible End-of-book
+   marker is treated as the authoritative completion boundary even while
+   virtualised chunk heights are settling. Font, viewport and orientation
+   changes trigger a fresh measurement.
+2. The publisher's opening contents page and the Reader Contents sheet now use
+   one shared TOC target resolver. A first-level parent and its matching title in
+   either location resolve to the same EPUB day and paragraph. Structural parents
+   without their own hyperlink inherit the first valid child destination instead
+   of falling back to the cover.
+3. Parent titles in Reader Contents are navigable. Their chevron alone expands or
+   collapses the child list, so hierarchy browsing and exact parent navigation no
+   longer compete for the same tap.
+4. Opening-page TOC links now use one atomic target navigation transaction. The
+   previous top-then-scroll sequence, which could race on large EPUBs, has been
+   removed.
+5. Library book cards require a completed press and release on the same card with
+   no meaningful movement. A brush, vertical scroll or horizontal swipe is
+   rejected, while keyboard activation remains available.
+
+Code organization
+-----------------
+- `mapOriginalTocToChunks` owns hierarchy-aware parent fallback.
+- `originalTocEntries` remaps preserved source TOC data and caches it per current
+  book/chunk arrays.
+- `resolveBookTocTarget` is the single destination resolver used by both TOCs.
+- `viewportMeasuredBookProgress` is the single physical-page calculation.
+- The deliberate card-opening gate is isolated in its own event section before
+  the main delegated click handler.
+
+Validation boundary
+-------------------
+Automated checks used Chromium mobile emulation and the supplied Economist EPUB.
+They verified the shared “Middle East & Africa” destination, structural-parent
+fallback, viewport progress at top/middle/end, and deliberate-card gesture
+rejection. Final iPhone Safari / installed-PWA touch behaviour should still be
+confirmed by the owner.
