@@ -1,0 +1,51 @@
+ReadPlanner Stable Build 95 — Reader Precision Polish
+=====================================================
+
+Scope
+-----
+Build 95 is a narrowly targeted correction pass based on the nine iPhone
+screenshots reported after Build 94. It changes only the seven requested reader
+areas. Planned-reading, highlights, notes, bookmarks, speech, Journey, Tree,
+Growth Companion, Dashboard, check-ins, import persistence and library storage
+were not redesigned.
+
+Corrections
+-----------
+1. EPUB bullets now remain immediately beside the first line of their associated
+   title or paragraph. Build 94's continuous-reading section wrappers had caused
+   the old direct-child CSS selectors to stop matching; Build 95 applies the same
+   grid/baseline rule inside every rendered section.
+2. The whole-book progress rail starts hidden, appears during active scrolling or
+   dragging, follows the current position and fades out after scrolling stops.
+3. Reader Contents destinations are now one atomic navigation transaction. The
+   selected publisher title, day and paragraph are restored together, eliminating
+   the former top-of-section/second-scroll race.
+4. The pages-left chip now uses the live word-weighted paragraph position across
+   the whole book. Its page count and percentage update as reading advances.
+5. Broken internal links in publisher contents pages retain their publisher
+   typography as non-clickable styled text. This fixes isolated entries such as
+   The New Yorker's “Cartoons” becoming plain black while adjacent entries remain
+   red, bold and underlined.
+6. The unplanned-book overview and its buttons are fully localized, including
+   Book overview, Ready when you are, the explanatory copy, Total words, Whole
+   book, Read/Continue without a plan and Share book. The dynamic progress chip is
+   also localized after every update.
+7. Page-by-page mode has been removed from Reading Settings. Existing saved paged
+   preferences migrate once to continuous scrolling, and the paged reader cannot
+   activate.
+
+Exact EPUB validation set
+-------------------------
+- The Sea — John Banville
+- Dracula — Bram Stoker
+- The Atlantic, 2 February 2026
+- The New Yorker, 29 June 2026
+- Nature, 1 August 2026
+- The Economist, 1 August 2026
+
+Validation boundary
+-------------------
+Automated checks used mobile Chromium emulation at 390×844. Final iPhone Safari
+and installed-PWA touch behaviour must still be confirmed by the owner with the
+same EPUBs. Books imported by an older parser should be re-imported once and the
+existing-book refresh confirmed so they receive Build 95 paragraph metadata.

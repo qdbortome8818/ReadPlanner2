@@ -1,0 +1,74 @@
+{
+  "build": 95,
+  "runtime": "Chromium mobile emulation, 390x844; service worker disabled only inside deterministic runtime tests",
+  "reported_issues": {
+    "epub_bullet_first_line_alignment": {
+      "status": "pass",
+      "nature_list_items": 79,
+      "nature_first_20_max_vertical_difference_px": 0,
+      "atlantic_first_8_max_vertical_difference_px": 0
+    },
+    "progress_rail_active_scroll_only": {
+      "status": "pass",
+      "initial": "hidden",
+      "during_scroll_event": "visible",
+      "after_1200ms_idle": "hidden"
+    },
+    "reader_toc_exact_destination": {
+      "status": "pass",
+      "epub": "The Economist 2026-08-01",
+      "entry": "Politics",
+      "destination": "day 1 paragraph 30",
+      "destination_text_match": true
+    },
+    "live_pages_left": {
+      "status": "pass",
+      "epub": "Nature 2026-08-01",
+      "start": "Book · 1066 pages left · 0.0%",
+      "middle": "Book · 548 pages left · 48.6%",
+      "near_end": "Book · Last page · 100.0%"
+    },
+    "isolated_publisher_toc_style": {
+      "status": "pass",
+      "epub": "The New Yorker 2026-06-29",
+      "entry": "Cartoons",
+      "matches_adjacent_style": "red, 700 weight, underlined",
+      "broken_target_behavior": "styled non-clickable text"
+    },
+    "unplanned_overview_localization": {
+      "status": "pass",
+      "language": "Simplified Chinese",
+      "verified": [
+        "图书概览",
+        "准备好了即可开始",
+        "开始前先创建阅读计划。",
+        "总词数",
+        "全书",
+        "不设计划直接阅读",
+        "分享图书"
+      ],
+      "reported_english_leaks_remaining": false
+    },
+    "page_by_page_removed": {
+      "status": "pass",
+      "settings_control_present": false,
+      "reader_paged_class_active": false,
+      "old_saved_setting_migrates_to": "continuous"
+    }
+  },
+  "epub_smoke": {
+    "The Sea": "pass, no JavaScript errors",
+    "Dracula": "pass, 133 rendered paragraphs, no JavaScript errors",
+    "The Atlantic": "pass, 151 rendered paragraphs, list baseline pass, no JavaScript errors",
+    "The New Yorker": "pass, publisher style regression pass, no JavaScript errors",
+    "Nature": "pass, list baseline and progress tests pass, no JavaScript errors",
+    "The Economist": "pass, nested TOC and exact destination pass, no JavaScript errors"
+  },
+  "static": {
+    "javascript_syntax": "pass",
+    "manifest_json": "pass",
+    "service_worker_build": "95",
+    "zip_integrity": "pass"
+  },
+  "device_boundary": "Final iPhone Safari / installed-PWA validation remains required."
+}

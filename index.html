@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <title>ReadPlanner</title>
-<!-- Build 94 Multi-EPUB Stability: makes duplicate import checks deterministic, restores Confirm/Cancel import completion, preserves nested publisher TOCs, makes free reading one uninterrupted book, repairs exact chapter navigation and page swiping, extends font size, stabilizes AA sliders, and keeps the whole-book position rail visible. -->
-<!-- Build 94: multi-EPUB stability validation. Existing planned-reading, highlighting, speech, Journey, Tree, Growth Companion, Dashboard, notes, bookmarks, and check-in behaviour remain frozen except for narrow compatibility hooks required by the reported defects. -->
+<!-- Build 95 Reader Precision Polish: restores baseline-aligned EPUB bullets, exact TOC destinations, live whole-book progress, transient scroll feedback, complete interface localization, and continuous-only reading. -->
+<!-- Build 95: targeted reader corrections. Existing planned-reading, highlighting, speech, Journey, Tree, Growth Companion, Dashboard, notes, bookmarks, and check-in behaviour remain unchanged outside the reported defects. -->
 <!-- Polished visual build: hierarchy, typography, motion, surfaces, and immersive reading refined without changing application behaviour.
      Version 56 / Build 77 stabilization pass: freezes the working reading-position, in-place highlighting, and isolated speech controllers. PWA updates no longer reload an active reading session, cache cleanup is restricted to ReadPlanner-owned caches, boot rendering is serialized, repeated iOS press events are de-duplicated, and diagnostics expose a safe maintenance snapshot for future debugging. -->
 <meta name="application-name" content="ReadPlanner">
@@ -15,7 +15,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#1F2A24">
 <meta name="format-detection" content="telephone=no">
-<link rel="manifest" href="./manifest.json?v=92">
+<link rel="manifest" href="./manifest.json?v=95">
 <!-- iOS uses the Apple touch icon for Home Screen web clips. A versioned,
      opaque 180px PNG avoids Safari reusing the old generic-letter icon. -->
 <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon-v80.png">
@@ -434,14 +434,15 @@
   #reading-body>p.epub-inline-toc-link{color:inherit;}
   #reading-body>p.epub-inline-toc-link{cursor:pointer;text-decoration:inherit;border-radius:0;touch-action:manipulation;}
   #reading-body>p.epub-inline-toc-link:active{opacity:.72;background:transparent;}
-  #reading-body>p.epub-list-item{display:grid!important;grid-template-columns:1.35em minmax(0,1fr);column-gap:.42em;align-items:start;padding-left:var(--epub-list-indent,0em)!important;padding-right:0!important;text-indent:0!important;list-style:none!important;max-width:100%!important;box-sizing:border-box!important;}
-  #reading-body>p.epub-list-item::before{content:none!important;}
-  .epub-list-marker{display:block;width:1.35em;min-width:0;text-align:right;color:currentColor;font:inherit;line-height:inherit;white-space:nowrap;overflow:visible;user-select:none;-webkit-user-select:none;}
-  .epub-list-content{display:block;min-width:0;max-width:100%;overflow-wrap:anywhere;word-break:normal;text-align:inherit;}
+  #reading-body p.epub-list-item{display:grid!important;grid-template-columns:1.35em minmax(0,1fr)!important;column-gap:.42em!important;align-items:baseline!important;padding-left:var(--epub-list-indent,0em)!important;padding-right:0!important;text-indent:0!important;list-style:none!important;max-width:100%!important;box-sizing:border-box!important;}
+  #reading-body p.epub-list-item::before{content:none!important;}
+  .epub-list-marker{display:block;grid-column:1;align-self:baseline;width:1.35em;min-width:0;text-align:right;color:currentColor;font:inherit;line-height:inherit;white-space:nowrap;overflow:visible;user-select:none;-webkit-user-select:none;transform:none!important;}
+  .epub-list-content{display:block;grid-column:2;align-self:baseline;min-width:0;max-width:100%;overflow-wrap:anywhere;word-break:normal;text-align:inherit;}
   #reading-body>p.epub-quote{border:0;padding-left:0;font-style:inherit;}
   #reading-body>p.epub-pre{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;}
   a.epub-rich-link{color:inherit;text-decoration:underline;text-decoration-thickness:.06em;text-underline-offset:.14em;cursor:pointer;font-weight:inherit;}
   a.epub-rich-link:active{opacity:.65;}
+.epub-rich-link-unresolved{color:inherit;text-decoration:inherit;font-weight:inherit;}
   #toc-sheet .toc-tree-row .toc-tree-title{color:var(--r-text,var(--text));font-size:17px;line-height:1.38;font-weight:560;}
   #toc-sheet .toc-tree-row.is-parent .toc-tree-title{font-weight:650;}
   #toc-sheet .toc-tree-row.is-current .toc-tree-title{color:var(--gold);font-weight:700;}
@@ -2894,11 +2895,12 @@
 </style>
 
 <style id="readplanner-build-92-overrides">
-/* Build 94: multi-EPUB reader stability, continuous-reading, pagination and TOC corrections. */
+/* Build 95: reader precision, list alignment, exact TOC navigation and localization polish. */
 #toc-sheet{padding:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;}
 #toc-sheet .toc-tree-shell{display:flex;flex-direction:column;min-height:0;height:100%;width:100%;}
 #toc-sheet .toc-tree-list{flex:1;min-height:0;overflow-y:scroll!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:contain;touch-action:pan-y!important;scrollbar-gutter:stable;}
-#reader-progress-rail{opacity:1!important;pointer-events:auto!important;}
+#reader-progress-rail{opacity:0!important;pointer-events:none!important;}
+#reader-progress-rail.visible,#reader-progress-rail.dragging{opacity:1!important;pointer-events:auto!important;}
 .free-reading-chunk{content-visibility:visible;contain:none;}
 .free-reading-chunk+ .free-reading-chunk{margin-top:0;}
 .free-reading-chunk.rp-virtual-chunk{display:block;position:relative;content-visibility:visible;contain:none;}
@@ -3384,6 +3386,7 @@ let settings = loadSettings();
 // "on" state is reset once so navigation can never unexpectedly dim a whole book.
 if(Number(settings.focusSafetyVersion||0)<88){settings.focusMode=false;settings.focusSafetyVersion=88;saveSettings();}
 if(Number(settings.publisherLayoutVersion||0)<91){settings.layoutMode='reader';settings.readingFlow=settings.readingFlow||'continuous';settings.publisherLayoutVersion=91;saveSettings();}
+if(Number(settings.continuousOnlyVersion||0)<95||settings.readingFlow!=='continuous'){settings.readingFlow='continuous';settings.continuousOnlyVersion=95;saveSettings();}
 
 // ================= app interface language (never changes EPUB content) =================
 const APP_UI_ZH={
@@ -3410,6 +3413,9 @@ Object.assign(APP_UI_ZH,{
   'Select books':'选择书籍','Tap books in any section':'轻点任意区域中的书籍','Select as many books as you need across Today’s Reading, Current Reading, My Library, and Books Completed. Then use the Delete button below.':'可在“今日阅读”“正在阅读”“我的书库”和“已完成书籍”中选择多本书，然后使用下方的删除按钮。','Keep books':'保留书籍','Book selection':'书籍选择','Delete books':'删除书籍','Finish managing books':'完成书籍管理','Select':'选择','Deselect':'取消选择','Original contents':'原始目录','Generated contents':'生成的目录','Search':'搜索','Search within this book':'在本书中搜索','Type a title, word, or phrase.':'输入标题、单词或短语。','Book position':'全书位置','Reading page':'阅读页面','Close book, back to library':'关闭书籍并返回书库','Return to ReadPlanner':'返回 ReadPlanner','Creating reading plan…':'正在创建阅读计划……','Adding book…':'正在添加书籍……','This reading day could not be opened.':'无法打开此阅读内容。','No publisher table of contents was found. ReadPlanner will use the safest available section structure inside the Reader.':'未找到出版社目录。ReadPlanner 将在阅读器中使用最可靠的章节结构。','Book added to My Library':'书籍已添加到“我的书库”','Open book overview':'打开书籍概览','Reading EPUB…':'正在读取 EPUB……'
 });
 Object.assign(APP_UI_ZH,{
+  'Book overview':'图书概览','Ready when you are':'准备好了即可开始','Create the reading plan before you begin.':'开始前先创建阅读计划。','This book was added directly to My Library, so it does not have daily reading sections yet. Set the number of days, a finish date, or a daily word target here—without entering the reading page first.':'本书已直接添加到“我的书库”，目前尚未划分每日阅读内容。你可以在这里设置阅读天数、完成日期或每日词数目标，无需先进入阅读页面。','Total words':'总词数','Whole book':'全书','Read without a plan':'不设置阅读计划直接阅读','Share book':'分享图书','Book':'全书','End of book':'全书结束',
+});
+Object.assign(APP_UI_ZH,{
   'Back to the book':'返回书籍','Books and learning':'书籍与学习','By a date':'按日期','Check':'完成','Choose finished image':'选择完成图片','Choose image':'选择图片','Close reading record':'关闭阅读记录','Companion name':'成长伙伴名称','Continue to Book Journey':'继续设置书籍旅程','Create reading plan':'创建阅读计划','Delete this entry':'删除此条目','Destination theme':'目的地主题','Dismiss':'关闭','Enter the author':'输入作者','Enter the author if it was not detected':'若未识别作者，请手动输入','Finish it in…':'计划在……内读完','Go to →':'前往 →','Highlight blue':'蓝色高亮','Highlight green':'绿色高亮','Highlight pink':'粉色高亮','Highlight yellow':'黄色高亮','Install':'安装','Journey encouragement':'旅程鼓励语','Journey title':'旅程标题','Next':'下一步','Notification message':'通知内容','Number of days':'阅读天数','Open this page in the book →':'在书中打开此页 →','Preparing complete backup…':'正在准备完整备份……','Read Again from Day 1':'从第 1 天重新阅读','Read completion card aloud':'朗读完成卡片','Read selection aloud':'朗读所选内容','Remaining days':'剩余天数','Reminder time':'提醒时间','Remove':'移除','Remove highlight':'移除高亮','Restore complete backup file':'恢复完整备份文件','Save Book Journey':'保存书籍旅程','Save Reminder':'保存提醒','Save to Vocabulary':'保存到生词本','Text selection tools':'文本选择工具','Title (editable)':'标题（可编辑）','Type the missing word…':'输入缺少的单词……','Welcome back':'欢迎回来','What should grow?':'你想培养什么？','Words / day':'每日词数','Words per day':'每日词数','Write anything, in any language':'可使用任何语言填写','Choose when and what ReadPlanner should say.':'选择 ReadPlanner 的提醒时间和内容。','Daily reading reminder':'每日阅读提醒','Reminder time':'提醒时间','Complete backup':'完整备份','Back to My Library':'返回我的书库','Confirm':'确认','Continue uploading?':'是否继续上传？','This book':'本书'
 });
 const APP_UI_ZH_LOWER=Object.fromEntries(Object.entries(APP_UI_ZH).map(([k,v])=>[k.toLowerCase(),v]));
@@ -3433,6 +3439,8 @@ function uiTranslateString(original){
     .replace(/^(\d[\d,]*) of (\d[\d,]*) words · (\d+)%$/i,'已完成 $1 / $2 词 · $3%')
     .replace(/^Day (\d+) · (\d+) pages? left · ([\d.]+)%$/i,'第 $1 天 · 剩余 $2 页 · $3%')
     .replace(/^Day (\d+) · Last page · ([\d.]+)%$/i,'第 $1 天 · 最后一页 · $2%')
+    .replace(/^Book · (\d+) pages? left · ([\d.]+)%$/i,'全书 · 剩余 $1 页 · $2%')
+    .replace(/^Book · Last page · ([\d.]+)%$/i,'全书 · 最后一页 · $1%')
     .replace(/^Part (\d+) · (\d+) pages? left · ([\d.]+)%$/i,'第 $1 部分 · 剩余 $2 页 · $3%')
     .replace(/^Part (\d+) · Last page · ([\d.]+)%$/i,'第 $1 部分 · 最后一页 · $2%')
     .replace(/^([A-Z0-9 +.-]+) · ([\d.]+)% read$/i,'$1 · 已读 $2%')
@@ -3851,10 +3859,15 @@ function renderParagraphWithDecorations(rawText,paraHighlights,links,enableWordL
     if(activeFormats.length){const classes=[...new Set(activeFormats.map(type=>'epub-inline-'+String(type).replace(/[^a-z-]/gi,'')))].join(' ');part='<span class="'+classes+'">'+part+'</span>';}
     if(h)part='<mark class="hl-'+esc(h.color)+'" data-hlid="'+esc(h.id)+'">'+part+'</mark>';
     if(link){
-      const attrs=link.external
-        ? ' data-action="openEpubExternalLink" data-url="'+esc(link.url||'')+'"'
-        : ' data-action="jumpOriginalTocLink" data-target-day="'+Math.max(1,Number(link.targetDay)||1)+'" data-target-para="'+Math.max(0,Number(link.targetPara)||0)+'"';
-      const linkStyle=publisherLinkStyleForRender(link);part='<a href="#" class="epub-rich-link" role="link"'+attrs+(linkStyle?' style="'+esc(linkStyle)+'"':'')+'>'+part+'</a>';
+      const linkStyle=publisherLinkStyleForRender(link);
+      if(link.unresolved){
+        part='<span class="epub-rich-link epub-rich-link-unresolved"'+(linkStyle?' style="'+esc(linkStyle)+'"':'')+'>'+part+'</span>';
+      }else{
+        const attrs=link.external
+          ? ' data-action="openEpubExternalLink" data-url="'+esc(link.url||'')+'"'
+          : ' data-action="jumpOriginalTocLink" data-target-day="'+Math.max(1,Number(link.targetDay)||1)+'" data-target-para="'+Math.max(0,Number(link.targetPara)||0)+'"';
+        part='<a href="#" class="epub-rich-link" role="link"'+attrs+(linkStyle?' style="'+esc(linkStyle)+'"':'')+'>'+part+'</a>';
+      }
     }
     out+=part;
   }
@@ -4590,7 +4603,7 @@ async function parseEpub(file){
       const mappedLinks=(meta.links||[]).map(link=>{
         if(link.external)return {...link};
         const target=resolveTarget(link.path,link.fragment,link.title);
-        return target?{...link,targetGlobalPara:target.globalPara,targetAnchorText:target.anchorText,targetWordOffset:target.wordOffset}:null;
+        return target?{...link,targetGlobalPara:target.globalPara,targetAnchorText:target.anchorText,targetWordOffset:target.wordOffset}:{...link,unresolved:true};
       }).filter(Boolean);
       sourceParagraphMeta.push({globalPara,wordOffset:paragraphWordOffsets[globalPara]||0,anchorText:globalParas[globalPara]||meta.text,text:meta.text,tag:meta.tag,kind:meta.kind,publisherStyle:meta.publisherStyle||'',publisherDir:meta.publisherDir||'',publisherLang:meta.publisherLang||'',listMarker:meta.listMarker||'',listStyleType:meta.listStyleType||'',listDepth:Number(meta.listDepth)||0,links:mappedLinks,formatSpans:(meta.formatSpans||[]).map(span=>({...span}))});
     });
@@ -5335,7 +5348,7 @@ function mapParagraphMetaToChunks(sourceMeta,chunks){
         const ls=Math.max(0,Number(link.start)||0),le=Math.max(ls,Number(link.end)||ls),ps=offset,pe=offset+piece.length;
         if(le<=ps||ls>=pe)return null;
         const mappedLink={...link,start:Math.max(0,ls-ps),end:Math.min(piece.length,le-ps)};
-        if(!mappedLink.external){const target=mapContentLocationToChunks({globalPara:link.targetGlobalPara,anchorText:link.targetAnchorText,title:link.title,wordOffset:link.targetWordOffset},chunks);if(!target)return null;mappedLink.targetDay=target.day;mappedLink.targetPara=target.para;}
+        if(!mappedLink.external){const target=mapContentLocationToChunks({globalPara:link.targetGlobalPara,anchorText:link.targetAnchorText,title:link.title,wordOffset:link.targetWordOffset},chunks);if(!target){mappedLink.unresolved=true;delete mappedLink.targetDay;delete mappedLink.targetPara;}else{mappedLink.targetDay=target.day;mappedLink.targetPara=target.para;}}
         return mappedLink;
       }).filter(Boolean);
       if((meta.links||[]).length&&!links.length&&needsMultiple)return;
@@ -6474,7 +6487,7 @@ async function renderRead(){
   const book=state.books.find(b=>b.id===state.activeBookId);if(!book){go('library');return '';}
   const data=await getCheckins(book.id),planned=hasReadingPlan(book),completed=new Set((data.completedDays||[]).map(Number)),bookmarks=data.bookmarks||[],total=Math.max(1,book.chunks.length);
   const scheduledDay=planned?Math.min(Math.max(daysBetween(book.startDate,new Date())+1,1),total):1;let viewDay=Math.min(Math.max(Number(state.viewDay)||scheduledDay,1),total);state.viewDay=viewDay;
-  const loadedPosition=planned?await loadReadingPositionReliable(book.id,viewDay):await loadLastPositionReliable(book.id);setPageTheme(settings.theme);document.documentElement.classList.toggle('reader-paged',settings.readingFlow==='paged');const font=FONTS[settings.font]||FONTS.original;
+  const loadedPosition=planned?await loadReadingPositionReliable(book.id,viewDay):await loadLastPositionReliable(book.id);setPageTheme(settings.theme);document.documentElement.classList.remove('reader-paged');const font=FONTS[settings.font]||FONTS.original;
   const freePaged=!planned&&settings.readingFlow==='paged';
   const requestedDay=Math.max(1,Math.min(total,Number(state.pendingDayEntry&&state.pendingDayEntry.day)||Number(loadedPosition&&loadedPosition.day)||Number(state.viewDay)||1));
   if(freePaged){viewDay=requestedDay;state.viewDay=viewDay;}
@@ -6488,7 +6501,7 @@ async function renderRead(){
   const wordsForPageCount=(planned||freePaged)?(Number(chunk.wordCount)||0):(Number(book.totalWords)||readingChunkWeights(book).reduce((a,b)=>a+b,0)),totalPages=Math.max(1,Math.round(wordsForPageCount/260));
   const dayHeader=planned?`<div class="reader-day-header" style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;"><div class="display" style="font-size:var(--fs-2xl);font-weight:700;color:var(--gold);">Day ${viewDay}<span style="font-size:var(--fs-md-b);opacity:.55;color:var(--r-text);font-weight:400;"> / ${total}</span></div><div style="font-size:var(--fs-md);opacity:.6;">${chunk.wordCount.toLocaleString()} words · ~${Math.max(1,Math.round(chunk.wordCount/200))} min</div></div>`:'';
   const endActions=planned?`<div class="reading-end-actions" style="margin-top:26px;">${isDone?(viewDay<total?`<button type="button" data-action="readNextDay" data-reading-nav="next" data-book-id="${book.id}" data-day="${viewDay+1}" class="gold-btn" style="border-radius:999px;display:flex;align-items:center;justify-content:center;gap:8px;">${ic.check}&nbsp; Read Next</button>`:`<div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:var(--radius-note);background:color-mix(in srgb,var(--gold) 15%,transparent);color:var(--gold);font-size:var(--fs-base);font-weight:600;">${ic.check} You've completed the book!</div>`):`<button type="button" data-action="finishDay" class="gold-btn checkin-btn" style="border-radius:999px;">${ic.check}&nbsp; Finish today’s reading</button>`}</div><div class="reading-record-link" style="text-align:center;margin-top:12px;"><button type="button" data-action="openCheckin" class="gold-btn" style="width:100%;border-radius:999px;">View reading record</button></div><div class="reading-day-nav" style="display:flex;justify-content:space-between;margin-top:14px;"><button type="button" data-action="prevDay" data-reading-nav="prev" data-book-id="${book.id}" class="small-btn" style="background:var(--r-surface);box-shadow:var(--shadow-card);color:var(--r-text);${viewDay<=1?'opacity:.3;pointer-events:none;':''}">${viewDay<=1?'Beginning':`&larr; Day ${viewDay-1}`}</button><button type="button" data-action="nextDay" data-reading-nav="next" data-book-id="${book.id}" class="small-btn" style="background:var(--r-surface);box-shadow:var(--shadow-card);color:var(--r-text);${viewDay>=total?'opacity:.3;pointer-events:none;':''}">${viewDay>=total?'Final day':`Day ${viewDay+1} &rarr;`}</button></div>`:`<div class="free-reading-end" aria-label="End of book">End of book</div>`;
-  return `<button id="read-back" class="${state.readChromeHidden?'chrome-hidden':''}" data-action="exitToLibrary" aria-label="Close book, back to library">${ic.close}</button><div id="read-page-wrap" style="padding:calc(56px + ${settings.marginTop||14}px + env(safe-area-inset-top)) ${settings.marginRight||20}px calc(178px + ${settings.marginBottom||14}px + env(safe-area-inset-bottom)) ${settings.marginLeft||20}px;"><div class="reader-book-header" style="display:flex;align-items:center;margin-bottom:12px;gap:8px;padding-left:46px;"><div style="font-size:var(--fs-2xl);font-weight:700;opacity:.7;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(book.title)}</div></div>${dayHeader}${book.publisherFontCss?`<style id="epub-publisher-fonts">${String(book.publisherFontCss).replace(/<\/style/gi,'<\\/style')}</style>`:''}<div id="reading-flow-viewport" aria-label="Reading page"><div id="reading-body" data-book-id="${book.id}" data-day="${viewDay}" data-free-reading="${planned?'0':'1'}" data-virtual-free="${virtualFree?'1':'0'}" data-paged-free-segment="${freePaged?'1':'0'}" class="${settings.wordLookup==='click'?'lookup-tap':'lookup-select'} reader-adjusted${settings.font&&settings.font!=='original'?' reader-font-override':''}${planned?'':' free-reading-stream'}" style="--reader-font-family:${font.css||'serif'};--reader-font-size:${settings.fontSize}px;--reader-line-height:${settings.lineHeight};--reader-letter-spacing:${settings.letterSpacing||0}px;--reader-text-align:${settings.justify?'justify':'left'};--reader-para-spacing:${settings.paraSpacing+'px'};--reader-text-indent:${settings.paragraphStyle==='indent'?'1.4em':'0'};-webkit-hyphens:auto;hyphens:auto;">${readingHtml}</div></div>${endActions}</div><div id="reader-progress-rail" class="visible" aria-label="Book position" title="Book position" role="scrollbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="reader-progress-track"><div id="reader-progress-thumb"></div></div></div><div id="page-pill" class="${state.readChromeHidden?'chrome-hidden':''}" data-total-pages="${totalPages}" data-day="${viewDay}" data-total-days="${total}" data-free-reading="${planned?'0':'1'}" style="position:fixed;left:50%;transform:translateX(-50%) translateZ(0);-webkit-transform:translateX(-50%) translateZ(0);bottom:calc(64px + env(safe-area-inset-bottom));z-index:290;background:color-mix(in srgb, var(--r-surface) 78%, transparent);color:var(--r-text);font-size:var(--fs-xs);font-weight:600;letter-spacing:.1px;padding:5px 13px;border-radius:var(--radius-badge);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);will-change:transform;pointer-events:none;white-space:nowrap;">${planned?'Day '+viewDay:'Book'} · ${Math.max(0,totalPages-1)} page${totalPages-1===1?'':'s'} left · ${planned?(((viewDay-1)/total)*100).toFixed(1):'0.0'}%</div><div id="read-toolbar" class="${state.readChromeHidden?'chrome-hidden':''}" style="position:fixed;left:0;right:0;bottom:0;z-index:300;background:var(--r-surface);border-top:1px solid var(--r-line);padding:10px 8px calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-around;transform:translateZ(0);-webkit-transform:translateZ(0);will-change:transform;"><button type="button" data-action="openToc" style="background:none;border:none;color:inherit;opacity:.75;cursor:pointer;padding:8px 12px;display:flex;">${ic.toc}</button><button type="button" data-action="backToOverview" style="background:none;border:none;color:inherit;opacity:.75;cursor:pointer;padding:8px 12px;display:flex;">${ic.cal}</button><button type="button" data-action="openBookSearch" style="background:none;border:none;color:inherit;opacity:.75;cursor:pointer;padding:8px 12px;display:flex;" aria-label="Search this book">${ic.search}</button><button type="button" data-action="toggleBookmark" style="background:none;border:none;color:${isBm?'var(--gold)':'inherit'};opacity:${isBm?'1':'.75'};cursor:pointer;padding:8px 12px;display:flex;">${isBm?ic.bmOn:ic.bm}</button><button type="button" data-action="toggleReadAloud" id="read-aloud-btn" style="background:none;border:none;color:${(_ttsSpeaking||_ttsPaused)?'var(--gold)':'inherit'};opacity:${(_ttsSpeaking||_ttsPaused)?'1':'.85'};cursor:pointer;padding:8px 12px;display:flex;" aria-pressed="${(_ttsSpeaking||_ttsPaused)?'true':'false'}" aria-label="${_ttsSpeaking?'Pause reading aloud':(_ttsPaused?'Resume reading aloud':'Read this page aloud')}">${_ttsSpeaking?ic.pause:ic.play}</button><button type="button" data-action="showHighlights" style="background:none;border:none;color:inherit;opacity:.75;cursor:pointer;padding:8px 12px;font-size:var(--fs-md-b);">✏️</button><button type="button" data-action="showStats" style="background:none;border:none;color:inherit;opacity:.75;cursor:pointer;padding:8px 12px;font-size:var(--fs-md-b);">📊</button><button type="button" data-action="openSettings" style="background:none;border:none;color:inherit;opacity:.75;cursor:pointer;padding:8px 12px;display:flex;">${ic.aa}</button><button type="button" data-action="scrollTop" aria-label="Back to the beginning of this reading page" style="background:none;border:none;color:inherit;opacity:.75;cursor:pointer;padding:10px 13px;min-width:44px;min-height:44px;align-items:center;justify-content:center;touch-action:manipulation;display:flex;font-size:var(--fs-lg);line-height:1;">&uarr;</button></div>`;
+  return `<button id="read-back" class="${state.readChromeHidden?'chrome-hidden':''}" data-action="exitToLibrary" aria-label="Close book, back to library">${ic.close}</button><div id="read-page-wrap" style="padding:calc(56px + ${settings.marginTop||14}px + env(safe-area-inset-top)) ${settings.marginRight||20}px calc(178px + ${settings.marginBottom||14}px + env(safe-area-inset-bottom)) ${settings.marginLeft||20}px;"><div class="reader-book-header" style="display:flex;align-items:center;margin-bottom:12px;gap:8px;padding-left:46px;"><div style="font-size:var(--fs-2xl);font-weight:700;opacity:.7;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(book.title)}</div></div>${dayHeader}${book.publisherFontCss?`<style id="epub-publisher-fonts">${String(book.publisherFontCss).replace(/<\/style/gi,'<\\/style')}</style>`:''}<div id="reading-flow-viewport" aria-label="Reading page"><div id="reading-body" data-book-id="${book.id}" data-day="${viewDay}" data-free-reading="${planned?'0':'1'}" data-virtual-free="${virtualFree?'1':'0'}" data-paged-free-segment="${freePaged?'1':'0'}" class="${settings.wordLookup==='click'?'lookup-tap':'lookup-select'} reader-adjusted${settings.font&&settings.font!=='original'?' reader-font-override':''}${planned?'':' free-reading-stream'}" style="--reader-font-family:${font.css||'serif'};--reader-font-size:${settings.fontSize}px;--reader-line-height:${settings.lineHeight};--reader-letter-spacing:${settings.letterSpacing||0}px;--reader-text-align:${settings.justify?'justify':'left'};--reader-para-spacing:${settings.paraSpacing+'px'};--reader-text-indent:${settings.paragraphStyle==='indent'?'1.4em':'0'};-webkit-hyphens:auto;hyphens:auto;">${readingHtml}</div></div>${endActions}</div><div id="reader-progress-rail" aria-label="Book position" title="Book position" role="scrollbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="reader-progress-track"><div id="reader-progress-thumb"></div></div></div><div id="page-pill" class="${state.readChromeHidden?'chrome-hidden':''}" data-total-pages="${totalPages}" data-day="${viewDay}" data-total-days="${total}" data-free-reading="${planned?'0':'1'}" style="position:fixed;left:50%;transform:translateX(-50%) translateZ(0);-webkit-transform:translateX(-50%) translateZ(0);bottom:calc(64px + env(safe-area-inset-bottom));z-index:290;background:color-mix(in srgb, var(--r-surface) 78%, transparent);color:var(--r-text);font-size:var(--fs-xs);font-weight:600;letter-spacing:.1px;padding:5px 13px;border-radius:var(--radius-badge);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);will-change:transform;pointer-events:none;white-space:nowrap;">${planned?'Day '+viewDay:'Book'} · ${Math.max(0,totalPages-1)} page${totalPages-1===1?'':'s'} left · ${planned?(((viewDay-1)/total)*100).toFixed(1):'0.0'}%</div><div id="read-toolbar" class="${state.readChromeHidden?'chrome-hidden':''}" style="position:fixed;left:0;right:0;bottom:0;z-index:300;background:var(--r-surface);border-top:1px solid var(--r-line);padding:10px 8px calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-around;transform:translateZ(0);-webkit-transform:translateZ(0);will-change:transform;"><button type="button" data-action="openToc" style="background:none;border:none;color:inherit;opacity:.75;cursor:pointer;padding:8px 12px;display:flex;">${ic.toc}</button><button type="button" data-action="backToOverview" style="background:none;border:none;color:inherit;opacity:.75;cursor:pointer;padding:8px 12px;display:flex;">${ic.cal}</button><button type="button" data-action="openBookSearch" style="background:none;border:none;color:inherit;opacity:.75;cursor:pointer;padding:8px 12px;display:flex;" aria-label="Search this book">${ic.search}</button><button type="button" data-action="toggleBookmark" style="background:none;border:none;color:${isBm?'var(--gold)':'inherit'};opacity:${isBm?'1':'.75'};cursor:pointer;padding:8px 12px;display:flex;">${isBm?ic.bmOn:ic.bm}</button><button type="button" data-action="toggleReadAloud" id="read-aloud-btn" style="background:none;border:none;color:${(_ttsSpeaking||_ttsPaused)?'var(--gold)':'inherit'};opacity:${(_ttsSpeaking||_ttsPaused)?'1':'.85'};cursor:pointer;padding:8px 12px;display:flex;" aria-pressed="${(_ttsSpeaking||_ttsPaused)?'true':'false'}" aria-label="${_ttsSpeaking?'Pause reading aloud':(_ttsPaused?'Resume reading aloud':'Read this page aloud')}">${_ttsSpeaking?ic.pause:ic.play}</button><button type="button" data-action="showHighlights" style="background:none;border:none;color:inherit;opacity:.75;cursor:pointer;padding:8px 12px;font-size:var(--fs-md-b);">✏️</button><button type="button" data-action="showStats" style="background:none;border:none;color:inherit;opacity:.75;cursor:pointer;padding:8px 12px;font-size:var(--fs-md-b);">📊</button><button type="button" data-action="openSettings" style="background:none;border:none;color:inherit;opacity:.75;cursor:pointer;padding:8px 12px;display:flex;">${ic.aa}</button><button type="button" data-action="scrollTop" aria-label="Back to the beginning of this reading page" style="background:none;border:none;color:inherit;opacity:.75;cursor:pointer;padding:10px 13px;min-width:44px;min-height:44px;align-items:center;justify-content:center;touch-action:manipulation;display:flex;font-size:var(--fs-lg);line-height:1;">&uarr;</button></div>`;
 }
 
 // ================= settings sheet =================
@@ -6500,7 +6513,6 @@ function renderSettingsSheet(){
     <div style="text-align:center;font-weight:700;font-size:var(--fs-md-b);letter-spacing:-.2px;margin-bottom:6px;">Reading Settings</div>
     <div class="label" style="margin-top:12px;">Display</div>
     ${range('s-brightness','Brightness',.25,1,.05,s.brightness,Math.round(s.brightness*100)+'%')}
-    <div class="row"><span style="opacity:.78;">Reading mode</span><div style="display:flex;gap:7px;width:62%;"><button data-flow="continuous" class="small-btn" style="flex:1;border:1px solid ${s.readingFlow!=='paged'?'var(--gold)':'var(--line)'};background:${s.readingFlow!=='paged'?'color-mix(in srgb,var(--gold) 10%,transparent)':'transparent'};color:${s.readingFlow!=='paged'?'var(--gold)':'var(--muted)'};">Continuous scroll</button><button data-flow="paged" class="small-btn" style="flex:1;border:1px solid ${s.readingFlow==='paged'?'var(--gold)':'var(--line)'};background:${s.readingFlow==='paged'?'color-mix(in srgb,var(--gold) 10%,transparent)':'transparent'};color:${s.readingFlow==='paged'?'var(--gold)':'var(--muted)'};">Page by page</button></div></div>
     <div class="label">Typography</div>
     ${range('s-fontsize','Font size',13,48,1,s.fontSize,s.fontSize+'px')}
     ${range('s-letterspacing','Letter spacing',-.4,2,.1,s.letterSpacing||0,(s.letterSpacing||0).toFixed(1))}
@@ -6535,7 +6547,6 @@ function renderSettingsSheet(){
   const live=(id,key)=>{const el=document.getElementById(id);if(!el)return;let active=false,pointerId=null;const start=()=>{if(active)return;active=true;beginAdjust();};const commitValue=()=>{start();const value=parseFloat(el.value);if(Number.isFinite(value))settings[key]=value;updateValue(id,value);schedulePreview(key);};const valueFromX=x=>{const r=el.getBoundingClientRect(),min=parseFloat(el.min)||0,max=parseFloat(el.max)||100,step=parseFloat(el.step)||1,ratio=Math.min(1,Math.max(0,(x-r.left)/Math.max(1,r.width))),raw=min+ratio*(max-min),value=Math.min(max,Math.max(min,Math.round((raw-min)/step)*step+min));el.value=String(Number(value.toFixed(6)));commitValue();};const finish=()=>{if(!active)return;active=false;pointerId=null;endAdjust(key);};el.addEventListener('pointerdown',e=>{start();pointerId=e.pointerId;try{el.setPointerCapture(pointerId);}catch(_){}valueFromX(e.clientX);e.preventDefault();},{passive:false});el.addEventListener('pointermove',e=>{if(!active||pointerId!==e.pointerId)return;valueFromX(e.clientX);e.preventDefault();},{passive:false});el.addEventListener('pointerup',e=>{if(pointerId===e.pointerId)valueFromX(e.clientX);finish();e.preventDefault();},{passive:false});el.addEventListener('pointercancel',finish,{passive:true});el.addEventListener('input',commitValue,{passive:true});el.addEventListener('change',finish);if(!window.PointerEvent){el.addEventListener('touchstart',e=>{if(e.touches.length!==1)return;start();valueFromX(e.touches[0].clientX);e.preventDefault();},{passive:false});el.addEventListener('touchmove',e=>{if(!active||e.touches.length!==1)return;valueFromX(e.touches[0].clientX);e.preventDefault();},{passive:false});el.addEventListener('touchend',finish,{passive:true});}};
   live('s-brightness','brightness');live('s-fontsize','fontSize');live('s-letterspacing','letterSpacing');live('s-lineheight','lineHeight');live('s-paraspacing','paraSpacing');live('s-margintop','marginTop');live('s-marginbottom','marginBottom');live('s-marginleft','marginLeft');live('s-marginright','marginRight');
   document.getElementById('s-font').addEventListener('change',e=>{settings.font=e.target.value;saveSettings();liveApply(true);});
-  sheet.querySelectorAll('[data-flow]').forEach(b=>b.addEventListener('click',()=>{const checkpoint=captureInternalReadingCheckpoint();settings.readingFlow=b.dataset.flow;saveSettings();preserveInternalReadingCheckpoint(checkpoint);render().then(openSettings);}));
   sheet.querySelectorAll('.theme-chip').forEach(ch=>ch.addEventListener('click',()=>{settings.theme=ch.dataset.theme;saveSettings();sheet.querySelectorAll('.theme-chip').forEach(x=>x.classList.toggle('sel',x===ch));setPageTheme(settings.theme);}));
   sheet.querySelectorAll('[data-parastyle]').forEach(b=>b.addEventListener('click',()=>{settings.paragraphStyle=b.dataset.parastyle;saveSettings();liveApply();renderSettingsSheet();localizeAppDom(sheet);}));
   sheet.querySelectorAll('[data-align]').forEach(b=>b.addEventListener('click',()=>{settings.justify=b.dataset.align==='justify';saveSettings();liveApply();renderSettingsSheet();localizeAppDom(sheet);}));
@@ -6600,8 +6611,8 @@ async function openToc(searchMode){
 
   async function navigateEntry(entry){
     closeSheets();stopReadAloud();
-    await navigateToDay(book.id,Number(entry.day)||1,{entryMode:'top'});
-    scrollToParagraphAndHighlight(Math.max(0,Number(entry.para)||0),'',Number(entry.day)||1);
+    const targetDay=Math.max(1,Number(entry.day)||1),targetPara=Math.max(0,Number(entry.para)||0),targetText=String(entry.anchorText||entry.title||'').replace(/\s+/g,' ').trim();
+    await navigateToDay(book.id,targetDay,{forceTop:true,entryMode:'target',targetPara,targetText});
   }
   function renderRows(nodes,depth=0){
     return (nodes||[]).map(node=>{
@@ -6929,7 +6940,7 @@ function createUnplannedBookFromParsed(p,createdAt){
   const chunks=rawChunks.map((chunk,index)=>({day:index+1,paras:chunk.paras,wordCount:chunk.wordCount}));
   return {
     id:uid(),title:(p.title||'Untitled').trim(),author,fileType:p.fileType||null,coverImage:p.coverImage||null,sourceFileName:p.sourceFileName||'',
-    sourceFingerprint:p.sourceFingerprint||parsedFingerprint(p),allowDuplicate:p._allowDuplicate===true,epubParserVersion:p.fileType==='EPUB'?93:null,createdAt:createdAt||Date.now(),startDate:new Date().toISOString(),totalWords:wc,hasPlan:false,readingMode:'continuous',
+    sourceFingerprint:p.sourceFingerprint||parsedFingerprint(p),allowDuplicate:p._allowDuplicate===true,epubParserVersion:p.fileType==='EPUB'?95:null,createdAt:createdAt||Date.now(),startDate:new Date().toISOString(),totalWords:wc,hasPlan:false,readingMode:'continuous',
     sourceToc:(p.sourceToc||[]).map(entry=>({...entry})),sourceInlineTocLinks:(p.inlineTocLinks||[]).map(entry=>({...entry})),sourceTocStart:p.tocStart?{...p.tocStart}:null,sourceParagraphMeta:(p.sourceParagraphMeta||[]).map(entry=>({...entry,links:(entry.links||[]).map(link=>({...link})),formatSpans:(entry.formatSpans||[]).map(span=>({...span}))})),sourceMediaBlocks:(p.sourceMediaBlocks||[]).map(entry=>({...entry})),sourceHrefTargets:(p.sourceHrefTargets||[]).map(entry=>({...entry})),publisherFontCss:p.publisherFontCss||'',originalToc:mapOriginalTocToChunks(p.sourceToc||[],chunks),inlineTocLinks:mapInlineTocLinksToChunks(p.inlineTocLinks||[],chunks),tocStart:mapTocStartToChunks(p.tocStart,chunks),paragraphMeta:mapParagraphMetaToChunks(p.sourceParagraphMeta||[],chunks),mediaBlocks:mapMediaBlocksToChunks(p.sourceMediaBlocks||[],chunks),hrefTargets:mapHrefTargetsToChunks(p.sourceHrefTargets||[],chunks),
     growthMode:'tree',growthName:'My Growth Companion',growthImage:null,growthOrigin:{side:'left',x:2,y:52},journeyTheme:'auto',journeyPhraseTemplate:'destination',journeyPhraseCustom:'',journeyStyle:'road',journeyStartImage:null,journeyEndImage:null,
     reminder:{enabled:false,time:'19:00',template:'gentle',custom:''},chunks
@@ -6986,7 +6997,7 @@ async function refreshExistingBookContent(existing,source){
   if(!cleanAuthorName(existing.author)&&cleanAuthorName(source.author))existing.author=cleanAuthorName(source.author);
   existing.fileType=source.fileType||existing.fileType||'EPUB';
   if(source.sourceFileName)existing.sourceFileName=source.sourceFileName;
-  existing.epubParserVersion=93;existing.lastContentRefreshAt=Date.now();
+  existing.epubParserVersion=95;existing.lastContentRefreshAt=Date.now();
   await dbPutBook(existing);
   const idx=(state.books||[]).findIndex(book=>String(book.id)===String(existing.id));if(idx>=0)state.books[idx]=existing;
   return existing;
@@ -7130,7 +7141,7 @@ function wirePlanView(){
     const submit=document.getElementById('f-submit');if(submit){submit.disabled=true;submit.textContent='Creating reading plan…';}
     await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
     const days=effDays(),chunks=chunkText(state.pendingImport.text,days),growth=growthCtl.getValue();
-    const plannedChunks=chunks.map((c,i)=>({day:i+1,paras:c.paras,wordCount:c.wordCount}));const book={id:uid(),title:titleEl.value.trim()||state.pendingImport.title||'Untitled',author:cleanAuthorName(authorEl.value)||inferAuthorFromTitle(titleEl.value||state.pendingImport.title),fileType:state.pendingImport.fileType||null,coverImage:state.pendingImport.coverImage||null,sourceFileName:state.pendingImport.sourceFileName||'',sourceFingerprint:state.pendingImport.sourceFingerprint||parsedFingerprint(state.pendingImport),allowDuplicate:state.pendingImport._allowDuplicate===true,epubParserVersion:state.pendingImport.fileType==='EPUB'?92:null,createdAt:Date.now(),startDate:new Date().toISOString(),totalWords:wc,hasPlan:true,readingMode:'plan',sourceToc:(state.pendingImport.sourceToc||[]).map(entry=>({...entry})),sourceInlineTocLinks:(state.pendingImport.inlineTocLinks||[]).map(entry=>({...entry})),sourceTocStart:state.pendingImport.tocStart?{...state.pendingImport.tocStart}:null,sourceParagraphMeta:(state.pendingImport.sourceParagraphMeta||[]).map(entry=>({...entry,links:(entry.links||[]).map(link=>({...link})),formatSpans:(entry.formatSpans||[]).map(span=>({...span}))})),sourceMediaBlocks:(state.pendingImport.sourceMediaBlocks||[]).map(entry=>({...entry})),sourceHrefTargets:(state.pendingImport.sourceHrefTargets||[]).map(entry=>({...entry})),publisherFontCss:state.pendingImport.publisherFontCss||'',originalToc:mapOriginalTocToChunks(state.pendingImport.sourceToc||[],plannedChunks),inlineTocLinks:mapInlineTocLinksToChunks(state.pendingImport.inlineTocLinks||[],plannedChunks),tocStart:mapTocStartToChunks(state.pendingImport.tocStart,plannedChunks),paragraphMeta:mapParagraphMetaToChunks(state.pendingImport.sourceParagraphMeta||[],plannedChunks),mediaBlocks:mapMediaBlocksToChunks(state.pendingImport.sourceMediaBlocks||[],plannedChunks),hrefTargets:mapHrefTargetsToChunks(state.pendingImport.sourceHrefTargets||[],plannedChunks),growthMode:growth.mode,growthName:growth.name,growthImage:growth.image,growthOrigin:growth.origin,growthImages:growth.image?[growth.image]:[],journeyTheme:journeyTheme.value,journeyPhraseTemplate:journeyPhraseSelect.value,journeyPhraseCustom:journeyCustom.value.trim(),journeyStyle:'road',journeyStartImage:startImage,journeyEndImage:endImage,reminder:{enabled:reminderEnabled.checked,time:reminderTime.value||'19:00',template:reminderTemplate.value,custom:reminderCustom.value.trim()},chunks:plannedChunks};
+    const plannedChunks=chunks.map((c,i)=>({day:i+1,paras:c.paras,wordCount:c.wordCount}));const book={id:uid(),title:titleEl.value.trim()||state.pendingImport.title||'Untitled',author:cleanAuthorName(authorEl.value)||inferAuthorFromTitle(titleEl.value||state.pendingImport.title),fileType:state.pendingImport.fileType||null,coverImage:state.pendingImport.coverImage||null,sourceFileName:state.pendingImport.sourceFileName||'',sourceFingerprint:state.pendingImport.sourceFingerprint||parsedFingerprint(state.pendingImport),allowDuplicate:state.pendingImport._allowDuplicate===true,epubParserVersion:state.pendingImport.fileType==='EPUB'?95:null,createdAt:Date.now(),startDate:new Date().toISOString(),totalWords:wc,hasPlan:true,readingMode:'plan',sourceToc:(state.pendingImport.sourceToc||[]).map(entry=>({...entry})),sourceInlineTocLinks:(state.pendingImport.inlineTocLinks||[]).map(entry=>({...entry})),sourceTocStart:state.pendingImport.tocStart?{...state.pendingImport.tocStart}:null,sourceParagraphMeta:(state.pendingImport.sourceParagraphMeta||[]).map(entry=>({...entry,links:(entry.links||[]).map(link=>({...link})),formatSpans:(entry.formatSpans||[]).map(span=>({...span}))})),sourceMediaBlocks:(state.pendingImport.sourceMediaBlocks||[]).map(entry=>({...entry})),sourceHrefTargets:(state.pendingImport.sourceHrefTargets||[]).map(entry=>({...entry})),publisherFontCss:state.pendingImport.publisherFontCss||'',originalToc:mapOriginalTocToChunks(state.pendingImport.sourceToc||[],plannedChunks),inlineTocLinks:mapInlineTocLinksToChunks(state.pendingImport.inlineTocLinks||[],plannedChunks),tocStart:mapTocStartToChunks(state.pendingImport.tocStart,plannedChunks),paragraphMeta:mapParagraphMetaToChunks(state.pendingImport.sourceParagraphMeta||[],plannedChunks),mediaBlocks:mapMediaBlocksToChunks(state.pendingImport.sourceMediaBlocks||[],plannedChunks),hrefTargets:mapHrefTargetsToChunks(state.pendingImport.sourceHrefTargets||[],plannedChunks),growthMode:growth.mode,growthName:growth.name,growthImage:growth.image,growthOrigin:growth.origin,growthImages:growth.image?[growth.image]:[],journeyTheme:journeyTheme.value,journeyPhraseTemplate:journeyPhraseSelect.value,journeyPhraseCustom:journeyCustom.value.trim(),journeyStyle:'road',journeyStartImage:startImage,journeyEndImage:endImage,reminder:{enabled:reminderEnabled.checked,time:reminderTime.value||'19:00',template:reminderTemplate.value,custom:reminderCustom.value.trim()},chunks:plannedChunks};
     if(book.reminder&&book.reminder.enabled)await requestReminderPermission();
     const saved=await persistImportedBook(book,state.pendingImport._sourceFile||null);
     state.pendingImport=null;
@@ -8568,7 +8579,7 @@ async function resolveDayEntryPolicy(bookId,day,entryMode='smart'){
     : {policy:'top',position:null};
 }
 
-async function navigateToDay(bookId,day,{forceTop=false,entryMode='smart'}={}){
+async function navigateToDay(bookId,day,{forceTop=false,entryMode='smart',targetPara=0,targetText=''}={}){
   // Do not discard a chapter tap while the initial Reader mount is still
   // finishing. Large EPUBs can expose the reading DOM before the first
   // navigation transaction has fully settled; the old early return made a TOC
@@ -8594,6 +8605,10 @@ async function navigateToDay(bookId,day,{forceTop=false,entryMode='smart'}={}){
         target=Math.min(Math.max(Number(last.day)||1,1),Math.max(1,book.chunks.length));
         resolved={policy:'resume',position:last};
       }
+    }
+    if(!resolved&&entryMode==='target'){
+      const chunk=book.chunks[target-1]||{paras:[]},para=Math.max(0,Math.min(Math.max(0,(chunk.paras||[]).length-1),Number(targetPara)||0)),text=String(targetText||(chunk.paras||[])[para]||'').replace(/\s+/g,' ').trim().slice(0,120);
+      resolved={policy:'target',position:{bookId:id,day:target,anchorPara:para,anchorFrac:0,anchorOffsetPx:0,anchorViewportY:110,anchorText:text,scrollY:0,pageX:0,pct:0,scrollPct:0,forceTarget:true}};
     }
     if(!resolved)resolved=forceTop?{policy:'top',position:null}:await resolveDayEntryPolicy(id,target,entryMode);
     if(!hasReadingPlan(book)&&resolved.policy==='top'){
@@ -8745,7 +8760,7 @@ function startReadingEntryScroll(mode,pos){
   const expectedDay=Number((pos&&pos.day)||state.viewDay||1);
   const expectedKey=readingPageKey(expectedBook,expectedDay);
   const normalized=mode==='resume'?normalizeReadingPosition(pos,expectedBook,expectedDay):null;
-  const shouldResume=mode==='resume'&&hasMeaningfulReadingPosition(normalized);
+  const shouldResume=mode==='resume'&&!!(normalized&&(normalized.forceTarget===true||hasMeaningfulReadingPosition(normalized)));
   _activeReadingRestoreKey=shouldResume?expectedKey:null;
   _readingEntryTransaction={generation,key:expectedKey,mode:shouldResume?'resume':'top',position:normalized,startedAt:Date.now()};
   _suppressScrollHideUntil=Date.now()+1250;
@@ -8798,7 +8813,7 @@ function scrollReaderToTopFromToolbar(){
   scheduleProgrammaticScroll(()=>{if(generation!==_programmaticScrollGeneration)return;_positionSaveSuppressedUntil=0;_lastStableReadingY=0;saveReadingPosition({force:true,durable:true});setReadChromeHidden(false);},220,generation);
 }
 function restoreReadingPosition(pos){
-  if(!hasMeaningfulReadingPosition(pos)){scrollToTopRobust();return;}
+  if(!(pos&&pos.forceTarget===true)&&!hasMeaningfulReadingPosition(pos)){scrollToTopRobust();return;}
   startReadingEntryScroll('resume',pos);
 }
 
@@ -8832,7 +8847,7 @@ async function jumpToSavedReadingPosition(){
   restoreReadingPosition(pos);
 }
 
-function isPagedReading(){return state.view==='read'&&settings.readingFlow==='paged';}
+function isPagedReading(){return false;}
 function pagedReadingViewport(){return document.getElementById('reading-flow-viewport');}
 function documentReadingScrollMetrics(){
   const scrolling=document.scrollingElement||document.documentElement,html=document.documentElement,body=document.body;
@@ -8875,8 +8890,20 @@ async function turnFreePagedSegment(delta){
 }
 let _progressRailTimer=0,_progressRailDragging=false,_progressRailFrame=0;
 function readingChunkWeights(book){return (book&&book.chunks||[]).map(chunk=>Math.max(1,Number(chunk.wordCount)||countWords((chunk.paras||[]).join(' '))||1));}
-function overallReadingFraction(){const book=state.books.find(b=>b.id===state.activeBookId);if(book&&!hasReadingPlan(book)&&!isSegmentedFreePaged())return readingDayFractionLive();const weights=readingChunkWeights(book),dayIndex=Math.max(0,Math.min(weights.length-1,(Number(state.viewDay)||1)-1)),total=Math.max(1,weights.reduce((sum,value)=>sum+value,0)),before=weights.slice(0,dayIndex).reduce((sum,value)=>sum+value,0),current=weights[dayIndex]||1;return Math.min(1,Math.max(0,(before+readingDayFractionLive()*current)/total));}
-function showReaderProgressRail(){const rail=document.getElementById('reader-progress-rail');if(!rail)return;rail.classList.add('visible');clearTimeout(_progressRailTimer);}
+function liveReadingContentPosition(){
+  const body=document.getElementById('reading-body');if(!body)return null;
+  const anchorY=Math.min(220,Math.max(100,(window.innerHeight||700)*.28)),anchor=findReadingAnchorParagraph(body,anchorY);if(!anchor)return null;
+  const r=anchor.getBoundingClientRect(),day=Math.max(1,Number(anchor.dataset.day)||Number(state.viewDay)||1),anchorPara=Math.max(0,Number(anchor.dataset.pi)||0),anchorFrac=r.height?Math.max(0,Math.min(1,(anchorY-r.top)/r.height)):0;
+  return {day,anchorPara,anchorFrac,anchorText:(anchor.textContent||'').replace(/\s+/g,' ').trim().slice(0,120),pct:0};
+}
+function overallReadingFraction(){
+  const book=state.books.find(b=>b.id===state.activeBookId);if(!book)return 0;
+  const weights=readingChunkWeights(book),total=Math.max(1,weights.reduce((sum,value)=>sum+value,0)),live=liveReadingContentPosition();
+  if(live){const dayIndex=Math.max(0,Math.min(weights.length-1,live.day-1)),before=weights.slice(0,dayIndex).reduce((sum,value)=>sum+value,0),current=weights[dayIndex]||1,within=readingDayContentFraction(book,live);return Math.min(1,Math.max(0,(before+within*current)/total));}
+  const dayIndex=Math.max(0,Math.min(weights.length-1,(Number(state.viewDay)||1)-1)),before=weights.slice(0,dayIndex).reduce((sum,value)=>sum+value,0),current=weights[dayIndex]||1;
+  return Math.min(1,Math.max(0,(before+readingDayFractionLive()*current)/total));
+}
+function showReaderProgressRail(){const rail=document.getElementById('reader-progress-rail');if(!rail)return;rail.classList.add('visible');clearTimeout(_progressRailTimer);if(!_progressRailDragging)_progressRailTimer=setTimeout(()=>{if(!_progressRailDragging)rail.classList.remove('visible');},950);}
 function setReaderProgressThumbPosition(pct){const rail=document.getElementById('reader-progress-rail'),track=document.getElementById('reader-progress-track'),thumb=document.getElementById('reader-progress-thumb');if(!rail||!track||!thumb)return;const clamped=Math.min(1,Math.max(0,Number(pct)||0)),travel=Math.max(0,track.clientHeight-thumb.offsetHeight);thumb.style.transform=`translate3d(-50%,${Math.round(clamped*travel)}px,0)`;rail.setAttribute('aria-valuenow',String(Math.round(clamped*100)));}
 function updateReaderProgressRail(){if(_progressRailFrame)return;_progressRailFrame=requestAnimationFrame(()=>{_progressRailFrame=0;setReaderProgressThumbPosition(overallReadingFraction());});}
 async function jumpReaderToOverallFraction(frac){
@@ -8949,7 +8976,7 @@ function mountReadChromePortal(){
   });
 }
 function updatePagePill(){
-  const pill=document.getElementById('page-pill');if(!pill||state.view!=='read')return;const totalPages=parseInt(pill.dataset.totalPages)||1,day=parseInt(pill.dataset.day)||1,totalDays=parseInt(pill.dataset.totalDays)||1,free=pill.dataset.freeReading==='1',frac=readingDayFractionLive(),page=Math.min(totalPages,Math.max(1,Math.round(frac*(totalPages-1))+1)),pagesLeft=Math.max(0,totalPages-page),overallPct=free?overallReadingFraction()*100:Math.min(100,Math.max(0,((day-1+frac)/totalDays)*100)),pagesText=pagesLeft>0?(pagesLeft+' page'+(pagesLeft===1?'':'s')+' left'):'Last page';pill.textContent=(free?'Book':('Day '+day))+' · '+pagesText+' · '+overallPct.toFixed(1)+'%';
+  const pill=document.getElementById('page-pill');if(!pill||state.view!=='read')return;const totalPages=parseInt(pill.dataset.totalPages)||1,day=parseInt(pill.dataset.day)||1,totalDays=parseInt(pill.dataset.totalDays)||1,free=pill.dataset.freeReading==='1',dayFrac=readingDayFractionLive(),bookFrac=overallReadingFraction(),pageFrac=free?bookFrac:dayFrac,page=Math.min(totalPages,Math.max(1,Math.floor(pageFrac*totalPages)+1)),pagesLeft=Math.max(0,totalPages-page),overallPct=free?bookFrac*100:Math.min(100,Math.max(0,((day-1+dayFrac)/totalDays)*100)),pagesText=pagesLeft>0?(pagesLeft+' page'+(pagesLeft===1?'':'s')+' left'):'Last page',english=(free?'Book':('Day '+day))+' · '+pagesText+' · '+overallPct.toFixed(1)+'%';pill.textContent=uiTranslateString(english);
 }
 let _scrollTicking = false;
 window.addEventListener('scroll', ()=>{
@@ -9506,7 +9533,7 @@ document.addEventListener('click',e=>{
 });
 
 // ================= boot =================
-const READPLANNER_BUILD='94';
+const READPLANNER_BUILD='95';
 const readPlannerDiagnostics=(()=>{
   try{
     const saved=JSON.parse(sessionStorage.getItem('readplanner_diagnostics')||'[]');
