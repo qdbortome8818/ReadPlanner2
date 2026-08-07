@@ -1,0 +1,17 @@
+{
+  "build": 98,
+  "scope": ["AA brightness range only"],
+  "javascriptSyntax": "pass",
+  "manifestJson": "pass",
+  "brightness": {
+    "minimum": "10%",
+    "neutral": "100%",
+    "maximum": "250%",
+    "step": "5%",
+    "below100": "existing black-overlay dimmer",
+    "above100": "compositor backdrop brightness boost",
+    "geometryImpact": "none"
+  },
+  "serviceWorkerCache": "v98",
+  "untouched": "all other Build 97 behaviour"
+}

@@ -1,0 +1,45 @@
+ReadPlanner Stable Build 98 — Extended Reading Brightness
+==========================================================
+
+Scope
+-----
+Build 98 changes one item only: the AA Reading Settings brightness control.
+Everything else remains Build 97 behaviour.
+
+Root cause
+----------
+The previous Brightness slider was implemented only as a dimmer. Its range was
+10%–100%, where 100% simply meant “remove the black dim overlay”. Therefore the
+control could make the reading page darker, but could never make the rendered
+page visually brighter than its neutral 100% appearance.
+
+Correction
+----------
+1. Brightness now ranges from 10% to 250%, in 5% steps.
+2. 100% remains the neutral/native rendering point so existing saved settings
+   retain exactly the same appearance after upgrading.
+3. Below 100%, ReadPlanner keeps the existing black-overlay dimming path.
+4. Above 100%, ReadPlanner uses a compositor-only backdrop brightness boost.
+   This does not alter document dimensions, scroll positions, TOC targets,
+   progress geometry, or touch hit areas.
+5. The boost is deliberately isolated inside applyBrightness() and the central
+   READER_SETTING_LIMITS brightness entry for future maintenance.
+
+Important platform boundary
+---------------------------
+A browser/PWA cannot raise the iPhone's physical hardware screen brightness
+above the level selected in iOS. ReadPlanner's 100%–250% range is therefore a
+visual/content brightness boost. The iPhone Control Center brightness remains
+the hardware ceiling.
+
+Validation
+----------
+- JavaScript syntax: passed (Node --check on inline application script).
+- Manifest JSON: valid.
+- Brightness state test: passed at 50%, 100%, 150% and 250%.
+- 50% retains the existing dim-overlay behaviour.
+- 100% produces no dimming or boost.
+- 150% and 250% produce compositor brightness(1.50) and brightness(2.50).
+- Service-worker cache version advanced to Build 98 so GitHub/PWA clients can
+  receive the updated index without reusing the Build 97 shell.
+- No other Build 97 feature code was intentionally changed.

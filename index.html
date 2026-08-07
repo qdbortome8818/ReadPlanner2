@@ -167,7 +167,7 @@
   .theme-green{ --r-bg:#E3EDDF; --r-text:#2A362B; --r-muted:#6F7F6F; --r-surface:#D8E4D3; --r-line:rgba(42,54,43,0.14); --bg:#E3EDDF; --text:#2A362B; --muted:#6F7F6F; --surface:#D8E4D3; --surface2:#CCDBC6; --line:rgba(42,54,43,0.14); }
   .theme-sky{ --r-bg:#DDEBF3; --r-text:#26363E; --r-muted:#6E7E86; --r-surface:#D2E2EB; --r-line:rgba(38,54,62,0.14); --bg:#DDEBF3; --text:#26363E; --muted:#6E7E86; --surface:#D2E2EB; --surface2:#C7D8E2; --line:rgba(38,54,62,0.14); }
   .theme-pink{ --r-bg:#F2E0E4; --r-text:#422F34; --r-muted:#8C7379; --r-surface:#E9D4D9; --r-line:rgba(66,47,52,0.14); --bg:#F2E0E4; --text:#422F34; --muted:#8C7379; --surface:#E9D4D9; --surface2:#DFC7CE; --line:rgba(66,47,52,0.14); }
-  #dim-overlay{ position:fixed; inset:0; background:#000; pointer-events:none; z-index:9999; opacity:0; }
+  #dim-overlay{ position:fixed; inset:0; background:#000; pointer-events:none; z-index:9999; opacity:0; -webkit-backdrop-filter:none; backdrop-filter:none; will-change:opacity,-webkit-backdrop-filter,backdrop-filter; }
   .word{ cursor:pointer; border-radius:3px; }
   .hl-yellow{ background:rgba(255,214,64,0.4); border-radius:2px; }
   .hl-green{ background:rgba(107,201,120,0.35); border-radius:2px; }
@@ -4968,7 +4968,31 @@ document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState=
 // ================= dim overlay =================
 function applyBrightness(){
   const overlay=document.getElementById('dim-overlay');
-  if(overlay) overlay.style.opacity = String(Math.min(0.85, 1 - settings.brightness));
+  // 100% is the neutral/native rendering point. Below it we retain the proven
+  // black dimmer; above it we brighten the already-rendered reading surface
+  // with a compositor-only backdrop filter, which changes no layout geometry.
+  // This keeps the AA control visually powerful without disturbing scrolling,
+  // TOC targets, pagination/progress measurements or touch hit-testing.
+  const level=Math.max(.10,Math.min(2.50,Number(settings.brightness)||1));
+  if(overlay){
+    if(level<1){
+      overlay.style.background='#000';
+      overlay.style.opacity=String(Math.min(.85,1-level));
+      overlay.style.webkitBackdropFilter='none';
+      overlay.style.backdropFilter='none';
+    }else if(level>1){
+      overlay.style.background='rgba(255,255,255,.001)';
+      overlay.style.opacity='1';
+      const boost=`brightness(${level.toFixed(2)})`;
+      overlay.style.webkitBackdropFilter=boost;
+      overlay.style.backdropFilter=boost;
+    }else{
+      overlay.style.background='#000';
+      overlay.style.opacity='0';
+      overlay.style.webkitBackdropFilter='none';
+      overlay.style.backdropFilter='none';
+    }
+  }
   if(state.view==='read' || document.documentElement.classList.contains('reading-mode')){
     syncReadingCanvasColor(settings.theme);
   }
@@ -6562,7 +6586,7 @@ let _readerSettingsAdjusting=false,_settingsApplyFrame=0,_settingsSaveTimer=0,_s
 // bounds mirror the reference reader values supplied during testing, so later
 // adjustments do not require hunting through the rendering/event code.
 const READER_SETTING_LIMITS=Object.freeze({
-  brightness:{min:.10,max:1,step:.05},
+  brightness:{min:.10,max:2.50,step:.05},
   fontSize:{min:13,max:60,step:1},
   letterSpacing:{min:-.4,max:4,step:.1},
   wordSpacing:{min:0,max:8,step:.2},
