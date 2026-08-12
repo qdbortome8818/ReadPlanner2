@@ -1,0 +1,30 @@
+ReadPlanner Build 102 — PDF Original Reading + Vocabulary Review Refinement
+
+Targeted changes only. EPUB reading, EPUB navigation, themes, plans, highlights, storage schema, and stable library behavior were not refactored.
+
+1. Vocabulary review
+- Review starts with the saved word/phrase alone.
+- Fuzzy or Forgot reveals only the single original sentence containing that item.
+- The target item uses a high-contrast yellow highlight with dark red text.
+- Open in Book appears after context is revealed and uses the same high-contrast temporary cue.
+
+2. PDF original reading
+- PDF collections now use the faithful original PDF pages as the primary user-facing reading mode.
+- The extracted text representation remains internal for metadata/indexing compatibility, rather than being presented as a second reading experience.
+- Original PDF pages support 100%–320% zoom with +/- controls and two-finger pinch.
+- Zoom level is remembered per PDF book/collection.
+
+3. PDF exit and resume
+- The top close button is forced to remain visible in PDF mode.
+- A second close button is available on the persistent bottom toolbar.
+- PDF resume data now records chapter ID, local page, page number, viewport offset, and zoom, making resume robust even as a collection grows.
+
+4. PDF collection contents/navigation
+- Original PDF view now has its own collection Contents button.
+- Contents lists upload date + detected article title.
+- Selecting a chapter jumps directly to that chapter's original PDF, not the first PDF in the collection.
+- Opening Original PDF from a text-derived location also resolves the matching collection chapter.
+- Chapter manager Open now opens the correct original PDF chapter directly.
+
+5. Preservation
+- Original PDF rendering continues to preserve pictures, charts, Chinese text, QR codes, fixed layout, and other visible page content.

@@ -1,0 +1,18 @@
+{
+  "build": 102,
+  "base": 101,
+  "scope": "targeted PDF original-reader and vocabulary-review fixes",
+  "checks": {
+    "javascript_syntax": "pass",
+    "service_worker_build": "102",
+    "pdf_import_schema_unchanged": true,
+    "epub_parser_touched": false,
+    "pdf_collection_source_store_touched": false,
+    "pdf_zoom_range": "100%-320%",
+    "pdf_collection_original_toc": true,
+    "pdf_resume_chapter_aware": true,
+    "vocabulary_initial_word_only": true,
+    "vocabulary_sentence_only_reveal": true,
+    "vocabulary_high_contrast_highlight": true
+  }
+}
