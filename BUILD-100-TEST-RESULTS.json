@@ -1,0 +1,27 @@
+{
+  "build": 100,
+  "name": "PDF Fidelity",
+  "date": "2026-08-12",
+  "checks": {
+    "inline_javascript_syntax": "PASS (node --check)",
+    "manifest_json": "PASS",
+    "service_worker_build": "PASS (100)",
+    "pdf_original_view_static_presence": "PASS",
+    "pdf_lazy_render_and_offscreen_canvas_release": "PASS (static/source check)",
+    "pdf_local_source_pending_bridge": "PASS (static/source check)",
+    "pdf_legacy_page_count_auto_upgrade": "PASS (static/source check)",
+    "pdf_legacy_title_auto_upgrade": "PASS (static/source check)",
+    "test_pdf_page_count": "PASS (11)",
+    "test_pdf_renderability": "PASS (11/11 pages rendered in independent PDF render smoke test)",
+    "test_pdf_image_inventory": "PASS (49 image/mask entries reported)",
+    "test_pdf_title_detection": "PASS (Kids lose more than just books when school is on a screen)",
+    "epub_parse_function_unchanged_from_build_99": "PASS",
+    "navigate_to_day_function_unchanged_from_build_99": "PASS",
+    "reader_progress_function_unchanged_from_build_99": "PASS",
+    "read_aloud_function_unchanged_from_build_99": "PASS",
+    "iphone_safari_visual_validation": "NOT RUN — user/device validation required",
+    "existing_application_files_changed": "PASS (index.html, sw.js only)",
+    "zip_integrity": "PASS"
+  },
+  "test_pdf": "【Week32-3】精读讲义 20260812 数字化学习 ★★★☆☆ 小编-胡筒筒.pdf"
+}

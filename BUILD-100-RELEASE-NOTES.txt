@@ -1,0 +1,46 @@
+ReadPlanner Stable Build 100 — PDF Fidelity
+Date: 2026-08-12
+
+SCOPE
+This release changes PDF handling only. Existing EPUB/TXT reading behavior and the established reader systems are intentionally left intact.
+
+WHAT CHANGED
+1. Faithful Original PDF view
+   - PDF books now have an "Original PDF" view rendered directly from the saved original PDF with PDF.js.
+   - Fixed-layout pages preserve the PDF's visible photos, diagrams, QR codes, typography, positioning, colours, and other page artwork.
+   - Pages render lazily near the viewport and far-away canvases are released to control memory use on iPhone/iPad.
+   - Original-PDF scroll position is saved separately from the normal Reading text position.
+
+2. Reading text remains available
+   - PDF books retain a separate "Reading text" mode using ReadPlanner's existing reader so selectable text, highlighting, vocabulary lookup, search, reading plans, and other text-reader tools remain available.
+   - PDF page boundaries are kept during reflow extraction to avoid accidental joins across pages.
+
+3. Better PDF title detection
+   - Uses a meaningful PDF metadata title when available.
+   - If metadata is missing/unusable, ReadPlanner analyses prominent first-page text to detect the visible document/article title.
+   - Falls back to the file name only when no reliable title is available.
+   - Existing older PDF imports can upgrade their title/page count when Original PDF is opened, provided ReadPlanner still has the locally saved original source PDF.
+
+4. Local source-file architecture
+   - The original PDF continues to be stored locally with the book in ReadPlanner's existing source-file storage; it is NOT bundled into the GitHub app deployment.
+   - A newly imported PDF can be opened in Original PDF view immediately even while the low-priority IndexedDB source-file save is still finishing.
+
+5. PDF-specific UI
+   - PDF overview pages expose "Open original PDF" and "Reading text" choices.
+   - The text reader has an "Original PDF" shortcut for PDF books only.
+   - Original PDF view includes page progress and a switch back to Reading text.
+   - Added Simplified/Traditional Chinese localization support for the new PDF interface strings.
+
+STABILITY BOUNDARY
+Among existing application files, only index.html and sw.js changed. sw.js changed only to advance the PWA shell cache from Build 99 to Build 100. No EPUB parser rewrite, TOC/navigation rewrite, reading-plan rewrite, highlight/vocabulary rewrite, reader-progress rewrite, speech rewrite, library-gesture rewrite, or theme/brightness rewrite was performed.
+
+TEST DOCUMENT
+【Week32-3】精读讲义 20260812 数字化学习 ★★★☆☆ 小编-胡筒筒.pdf
+- 11 pages, A4
+- PDF metadata has no usable Title field
+- 49 embedded image/mask entries reported by pdfimages
+- Includes the large page-1 article image and the coloured study diagram on page 4
+- Expected detected title: "Kids lose more than just books when school is on a screen"
+
+IMPORTANT
+The real iPhone Safari/Home-Screen visual pass remains the final device test. If an older PDF no longer has its original source Blob in ReadPlanner storage, re-import that PDF once; no EPUB needs to be re-imported.
