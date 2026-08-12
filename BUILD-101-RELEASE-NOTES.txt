@@ -1,0 +1,15 @@
+ReadPlanner Build 101 — PDF Collections & Context Review
+
+Targeted additions on top of stable Build 100:
+- Fixes the Build 100 PDF import ReferenceError (pdfPageSizes).
+- Adds virtual PDF Collections: each imported PDF becomes a dated chapter in one growing course book.
+- Adds create-new / add-to-existing / import-separately choices for PDFs.
+- Adds collection Contents generated from upload date + detected article title.
+- Adds chapter rename and delete management; deleting a chapter removes its local PDF Blob and remaps collection annotations.
+- Adds faithful Original PDF view across collection chapters, lazily rendered from each locally stored source PDF.
+- Keeps EPUB-style Reading Text features for PDF collections: continuous reading, reading position, progress, search, highlights, notes, vocabulary, read-aloud, and optional reading plans.
+- PDF collections intentionally do not use Reading Tree.
+- Adds Settings > Storage & data with browser-origin usage/quota and known per-book source-file sizes, plus delete actions.
+- Redesigns Vocabulary review to show the saved source context first with the target term highlighted. Open in Book returns to the exact review card and temporarily highlights the term in the book.
+
+Unchanged by design: EPUB parsing/rendering, existing EPUB TOC navigation, theme/brightness logic, library selection behavior, journey/tree behavior for non-PDF books, and all existing reading-position machinery.

@@ -57,3 +57,14 @@ Build 97 diff.
 
 For future maintenance, AA range limits now live in `READER_SETTING_LIMITS`, and
 whole-book physical progress remains isolated in `viewportMeasuredBookProgress`.
+
+
+## Build 101 targeted additions
+- PDF import regression fixed: `pdfPageSizes` now returns the collected `pageSizes` array.
+- IndexedDB schema upgraded from 3 to 4 only to add `pdfSources`, an isolated store for PDF-collection chapter source blobs. Existing stores are unchanged.
+- PDF Collections are additive virtual-book records. EPUB book records and EPUB parsing code are not migrated or rewritten.
+- Collection chapter deletion remaps only that collection's check-ins/highlights/bookmarks/vocabulary and clears its resume checkpoints to avoid stale coordinates.
+- Original PDF collection pages are lazy-rendered from locally stored source PDFs; PDF files are not bundled into the deployed app.
+- Reading Tree is suppressed only for `PDF Collection` books.
+- Vocabulary context review changes presentation/navigation only; saved vocabulary schema remains backward compatible.
+- Storage manager reports browser-origin estimate plus known source-file sizes and reuses the existing book deletion path.

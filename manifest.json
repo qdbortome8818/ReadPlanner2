@@ -2,7 +2,7 @@
   "id": "./",
   "name": "ReadPlanner",
   "short_name": "ReadPlanner",
-  "description": "A publisher-faithful EPUB reader with adjustable typography, continuous reading, plans, highlights, vocabulary and read-aloud.",
+  "description": "A publisher-faithful EPUB and PDF collection reader with continuous reading, plans, highlights, vocabulary, storage tools and read-aloud.",
   "lang": "en",
   "dir": "ltr",
   "start_url": "./",

@@ -1,0 +1,17 @@
+{
+  "build": 101,
+  "scope": [
+    "PDF import regression fix",
+    "PDF collections",
+    "collection chapter management",
+    "storage manager",
+    "context-first vocabulary review"
+  ],
+  "static_checks": {
+    "javascript_syntax": "pass",
+    "manifest_json": "pass",
+    "service_worker_build": "101"
+  },
+  "target_pdf": "【Week32-3】精读讲义 20260812 数字化学习 ★★★☆☆ 小编-胡筒筒.pdf",
+  "notes": "Final iPhone Safari interaction and visual validation remains device-dependent."
+}
