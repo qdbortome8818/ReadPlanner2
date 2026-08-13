@@ -1,0 +1,72 @@
+{
+  "build": 105,
+  "status": "pass_with_real_device_validation_pending",
+  "baseline": "ReadPlanner-Stable-Build-104-PDF-Reliability(1).zip",
+  "tests": {
+    "inline_javascript_syntax": "pass",
+    "service_worker_syntax": "pass",
+    "manifest_json": "pass",
+    "standalone_pdf_contents_button": "pass",
+    "standalone_pdf_thumbnail_grid_page_count": "pass",
+    "standalone_pdf_thumbnail_exact_page_navigation": "pass",
+    "collection_pdf_thumbnail_exact_chapter_and_page_navigation": "pass",
+    "pdf_search_exact_word_geometry_not_whole_sentence": "pass",
+    "pdf_read_aloud_sentence_highlight": "pass",
+    "pdf_read_aloud_current_word_highlight": "pass",
+    "pdf_read_aloud_stop_clears_highlight": "pass",
+    "pdf_eraser_icon_is_dedicated_eraser_svg": "pass",
+    "pdf_overview_continue_reading_label": "pass",
+    "pdf_resume_book_metadata_fallback": "pass",
+    "pdf_resume_exact_page_and_within_page_offset_simulation": "pass",
+    "explicit_page_destination_overrides_old_resume": "pass",
+    "global_duplicate_detection_standalone_pdf": "pass",
+    "global_duplicate_detection_collection_chapter": "pass",
+    "duplicate_collection_name_guard": "pass",
+    "thumbnail_pdf_destroy_deferred_until_render_chain_settles": "pass",
+    "critical_epub_function_freeze": "pass",
+    "supplied_course_pdf_page_and_text_smoke": "pass",
+    "zip_integrity": "pass"
+  },
+  "browser_dom_regression_suite": "19/19 pass",
+  "epub_functions_byte_for_byte_unchanged": [
+    "parseEpub",
+    "renderRead",
+    "saveReadingPosition",
+    "restoreReadingPosition",
+    "toggleReadAloud",
+    "startTTSQueue",
+    "navigateToDay",
+    "mapOriginalTocToChunks"
+  ],
+  "supplied_pdf": {
+    "pages": 11,
+    "text_smoke": {
+      "Chromebook": [
+        2,
+        5,
+        6
+      ],
+      "Kids lose more than just books": [
+        1,
+        5
+      ]
+    }
+  },
+  "not_run": [
+    "Final iPhone Safari/PWA visual validation",
+    "Real iPhone speech boundary timing",
+    "Real iPhone long-session PDF.js memory-pressure validation",
+    "Real iPhone pen/eraser ergonomics"
+  ],
+  "file_change_scope": {
+    "changed_existing_files": [
+      "index.html",
+      "sw.js"
+    ],
+    "added_files": [
+      "BUILD-105-RELEASE-NOTES.txt",
+      "BUILD-105-TEST-RESULTS.json"
+    ],
+    "removed_files": []
+  }
+}

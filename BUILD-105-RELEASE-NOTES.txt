@@ -1,0 +1,97 @@
+ReadPlanner Build 105 — PDF Reliability Polish
+
+Scope
+-----
+Built directly on the user's Build 104 baseline. This is a targeted PDF-only
+reliability pass. Stable EPUB parsing, reader rendering, EPUB navigation,
+reading-position restoration and EPUB speech functions were left unchanged.
+
+Fixes
+-----
+1. Standalone PDF Contents / exact page thumbnails
+   • The Contents button is now present for standalone PDFs as well as PDF
+     collections.
+   • A standalone PDF opens its own Apple-Books-style page thumbnail grid.
+   • Tapping Page N passes Page N as an authoritative explicit destination;
+     a stale resume checkpoint is not allowed to replace that choice.
+   • Collection article thumbnails retain the same exact chapter + page mapping.
+
+2. PDF Read Aloud highlighting
+   • The existing Stop behavior is retained.
+   • Spoken sentences now receive a visible transient reading cue.
+   • Word-boundary callbacks add a stronger cue to the word currently being
+     spoken, so the reader can follow the voice on the PDF page.
+   • Stop clears both sentence and word cues immediately.
+
+3. Eraser icon clarity
+   • Replaced the backspace/delete-looking glyph with a dedicated eraser SVG.
+   • The Build 104 true vector-stroke eraser behavior is retained.
+
+4. Durable PDF resume
+   • PDF checkpoints are now mirrored into the book record as well as local
+     browser storage.
+   • Exit persists the current PDF/chapter, page, within-page offset and zoom
+     before the PDF runtime is torn down.
+   • Reopening restores that exact checkpoint. Programmatic page navigation is
+     temporarily protected from scroll/position autosaves so Page 6 cannot be
+     overwritten by an older Page 1 checkpoint.
+   • pagehide, backgrounding and beforeunload take a final checkpoint.
+
+5. PDF overview action
+   • Once a PDF has a real reading checkpoint, the overview action changes from
+     “Open original PDF” to “Continue Reading”.
+
+6. PDF collection / Contents stability
+   • Thumbnail PDF documents are no longer destroyed while their queued render
+     promise is still settling.
+   • Original/collection PDF document teardown is deferred briefly after the
+     render generation is invalidated, reducing PDF.js teardown races when
+     rapidly opening/closing a collection, thumbnail sheet or overview on iOS.
+
+7. Global duplicate-PDF detection
+   • A PDF fingerprint is checked against standalone PDFs and every chapter of
+     every PDF collection before the destination dialog is shown.
+   • Single-file import warns before adding another copy.
+   • Batch PDF import consistently skips PDFs that already exist anywhere in
+     ReadPlanner unless the single-file user explicitly confirmed a duplicate.
+
+8. Duplicate PDF-collection name protection
+   • New collection names are checked case-insensitively with whitespace
+     normalization.
+   • An existing name is rejected in the creation dialog and again at creation
+     time to guard against races.
+   • Renaming an existing PDF collection to another collection's name is also
+     rejected.
+
+9. PDF search exact-word cue
+   • Search navigation still targets the exact PDF chapter and page.
+   • The visible result cue is now created from DOM Range geometry for the exact
+     matched word/phrase rather than coloring an entire PDF.js text span.
+   • The cue is retried after page/text-layer rendering so it is consistent when
+     the destination page was not previously mounted.
+
+Validation
+----------
+• Inline JavaScript syntax: passed.
+• Service worker syntax: passed; cache advanced to Build 105.
+• manifest.json: valid.
+• Browser DOM regression suite: 19/19 passed (standalone/collection thumbnail
+  mapping, exact search cue geometry, speech sentence + word cues and Stop,
+  eraser icon, Continue Reading label, resume fallback, global duplicate checks,
+  duplicate collection-name guard, and deferred thumbnail teardown).
+• Exact resume simulation: restored Page 2 and the same within-page scroll offset.
+• Explicit-destination simulation: a saved Page 2 checkpoint did not override an
+  explicit request for Page 6.
+• The supplied 11-page course PDF was independently inspected: 11 pages were
+  readable; searchable text such as “Chromebook” appeared on pages 2, 5 and 6.
+• Critical EPUB functions were compared against Build 104 and are byte-for-byte
+  unchanged: parseEpub, renderRead, saveReadingPosition,
+  restoreReadingPosition, toggleReadAloud, startTTSQueue, navigateToDay and
+  mapOriginalTocToChunks.
+
+Real-device note
+----------------
+Automated tests cannot reproduce iPhone Safari/PWA speech boundary timing,
+finger selection, long PDF.js sessions or iOS memory pressure perfectly. The
+owner's normal iPhone test remains authoritative for those device-specific
+behaviors.
