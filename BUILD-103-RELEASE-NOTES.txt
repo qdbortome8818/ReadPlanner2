@@ -1,0 +1,65 @@
+ReadPlanner Build 103 — Interactive PDF Collections
+
+Scope
+-----
+This build is intentionally confined to the PDF collection/original-PDF experience and the PDF-aware vocabulary-review path. Existing EPUB parsing, EPUB TOC/navigation, reading plans, typography/themes, Journey/Reading Tree, library gestures and the established EPUB reader are not refactored.
+
+What changed
+------------
+1. Exact PDF collection navigation
+   • Collection Contents keeps upload date + detected article title.
+   • Tapping an article opens an Apple-Books-style page-thumbnail grid for that article's own PDF only.
+   • Every thumbnail shows its page number and opens the exact collection chapter + PDF page.
+   • Original PDF rendering now mounts one active PDF chapter at a time, so chapter 2/3 cannot silently remain on chapter 1.
+   • Previous/Next article controls move between real PDF sources, not the extracted-text representation.
+
+2. Faithful original-PDF reader
+   • Original PDF remains the user-facing reading surface so pictures, charts, QR codes, Chinese text, colours and fixed layout are preserved.
+   • The extracted PDF text remains a secondary/internal layer for search, selection context and vocabulary support.
+   • Zoom supports +/- controls and custom two-finger pinch zoom (100%–320%).
+   • Exit controls remain persistent at both the top and bottom of the PDF reader.
+
+3. Exact resume
+   • Saves collection chapter ID, local PDF page, signed viewport offset, scroll position and zoom.
+   • Normal reopen restores the same PDF chapter/page and the same within-page reading offset.
+   • Explicit TOC/search/thumbnail jumps still open the selected page with top clearance.
+   • Position is checkpointed on exit, pagehide and visibility changes.
+
+4. Search
+   • Search the current PDF/article or the whole PDF collection.
+   • Results show article/date context, page number and a text snippet.
+   • Tapping a result opens the exact PDF/page and temporarily cues the matched text.
+
+5. Interactive PDF text
+   • Adds a transparent selectable text layer over the faithful PDF canvas.
+   • Uses PDF.js's text-layer renderer when available, with a compatibility fallback.
+   • Selection actions: Copy, Highlight, Vocabulary and Speak.
+   • Text highlights are saved per book + collection chapter + PDF page and survive reopening/zoom.
+
+6. PDF-aware vocabulary review
+   • Review starts with only the saved word/phrase.
+   • Fuzzy/Forgot reveals one complete source sentence only.
+   • The target word/phrase is strongly marked in yellow with dark-red text.
+   • PDF vocabulary stores chapter/page/context.
+   • Open in Book goes to the exact original PDF/page, temporarily cues the word/phrase, and Back to Word Review returns to the same review session/card.
+
+7. Pen / Markup
+   • ReadPlanner-native vector annotation layer over the original PDF (not Apple's private Markup UI).
+   • Pen, marker/highlighter, eraser, red/yellow/blue/black colours, stroke-width slider, Undo and Redo.
+   • Strokes use normalized page coordinates, so they remain aligned when the PDF is zoomed.
+   • Annotations are stored separately from the original PDF instead of duplicating the whole PDF.
+
+8. Storage / deletion integration
+   • IndexedDB schema moves from v4 to v5 only to add the isolated pdfAnnotations store.
+   • Existing PDF source Blobs remain in pdfSources.
+   • Deleting a chapter removes that chapter's PDF source, PDF annotations and PDF-linked vocabulary.
+   • Deleting a whole book/collection also removes its PDF annotation data.
+   • Storage & Data includes approximate annotation bytes alongside source-file bytes.
+
+Build/cache
+-----------
+Runtime build and service-worker cache version are both 103 so the Home Screen PWA can receive the new shell after deployment.
+
+Important validation boundary
+-----------------------------
+Static syntax, targeted browser-DOM logic, PDF structure/text/image checks and ZIP integrity were tested in the development environment. Final touch selection, pinch gestures and Apple-style feel on the user's actual iPhone/WebKit still require real-device validation after deployment.

@@ -1,0 +1,36 @@
+{
+  "build": 103,
+  "status": "pass_with_real_device_validation_pending",
+  "tests": {
+    "inline_javascript_node_check": "pass",
+    "service_worker_node_check": "pass",
+    "manifest_json": "pass",
+    "targeted_browser_dom_tests": "pass",
+    "pdf_collection_chapter_to_thumbnail_mapping": "pass",
+    "pdf_thumbnail_page_count_mapping": "pass",
+    "collection_wide_pdf_search_logic": "pass",
+    "pdf_markup_toolbar_tools": "pass",
+    "pdf_annotation_persistence_crud_fallback": "pass",
+    "pdf_resume_anchor_math": "pass",
+    "vocabulary_word_only_then_sentence_reveal": "pass",
+    "actual_course_pdf_page_count": 11,
+    "actual_course_pdf_selectable_text": "pass",
+    "actual_course_pdf_embedded_images": "pass",
+    "actual_course_pdf_search_term": "pass",
+    "zip_integrity": "pass"
+  },
+  "actual_course_pdf": {
+    "pages": 11,
+    "page_1_text_chars": 939,
+    "page_1_embedded_images": 4,
+    "page_4_text_chars": 283,
+    "page_4_embedded_images": 2,
+    "chromebook_found_on_pages": [2, 5, 6]
+  },
+  "not_run": [
+    "Final iPhone Safari/PWA visual validation",
+    "Real iPhone touch-selection ergonomics",
+    "Real iPhone pinch-zoom feel",
+    "Real iPhone long-session memory/performance validation"
+  ]
+}
