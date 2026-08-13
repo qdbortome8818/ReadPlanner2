@@ -1,0 +1,21 @@
+ReadPlanner Build 106 — PDF Continuity Restore
+
+Scope: only the four Build 105 regressions reported in iPhone testing. Stable EPUB behavior is intentionally untouched.
+
+1. PDF read-aloud highlighting
+- Restores Build 104's proven direct text-span highlighting path for spoken sentences/current words.
+- Keeps Build 105's working Stop control.
+
+2. Durable PDF resume
+- Removes the delayed forced save that could overwrite a just-restored checkpoint.
+- Keeps a last-stable PDF checkpoint and persists chapter, page, within-page anchor and zoom.
+- Reopening a PDF collection seeds the active chapter from the durable saved checkpoint.
+
+3. Contents / thumbnail exact-page navigation + stability
+- Root cause fixed: Build 105 clearPdfOriginalRuntime() incremented _pdfExplicitNavToken during render, cancelling the very navigation request that triggered the render.
+- Runtime teardown no longer cancels the current explicit destination.
+- Thumbnail/chapter clicks use guarded, propagation-safe async navigation and retain Build 105's safe PDF.js teardown.
+
+4. Search highlight after navigation
+- Uses precise DOM-range cue geometry for the searched word/phrase, with the proven Build 104 span-class path as a fallback.
+- Search navigation benefits from the explicit-navigation-token fix above.

@@ -1,0 +1,47 @@
+{
+  "build": 106,
+  "syntax": "passed (node --check)",
+  "manifest": "passed",
+  "targeted_assertions": [
+    "explicit PDF navigation token survives render/runtime teardown",
+    "thumbnail click forwards exact page to openPdfOriginalTarget",
+    "Build 104 span-based speech highlighting restored",
+    "search uses precise word/phrase cue with span fallback",
+    "search cue layer is above selectable text layer",
+    "resume restore no longer force-saves after delayed restore",
+    "overview re-entry seeds collection chapter from saved PDF position"
+  ],
+  "stable_epub_functions": [
+    {
+      "name": "parseEpub",
+      "unchanged": true,
+      "sha256": "240c4f40f86474d6127871bb802fd5d791d4f538b678957b1b7dd5c4cae536c2"
+    },
+    {
+      "name": "renderEpubMediaBlock",
+      "unchanged": true,
+      "sha256": "053b0845781eb225dab7697d512a8c3c465deea3c42a6fd44384e0b04d6626b4"
+    },
+    {
+      "name": "saveReadingPosition",
+      "unchanged": true,
+      "sha256": "c5604185b842d750d01918ce73380839352755b9adf9aa205f051aa3ea24ee78"
+    },
+    {
+      "name": "saveReadingPositionDurably",
+      "unchanged": true,
+      "sha256": "636c863f1dd5348bfee1c97e40cc117dd6cc54525c5d5a8b4c1b014a32db2b0c"
+    },
+    {
+      "name": "navigateToDay",
+      "unchanged": true,
+      "sha256": "818df4af08bcd99183c3a739274af1ac3d4e38e9987e60a06627ce56099a73fc"
+    },
+    {
+      "name": "openEpubExternalSafely",
+      "unchanged": true,
+      "sha256": "12124b342f487884896310a3a756a69de25e67d57114717ed1b5b669c42b074c"
+    }
+  ],
+  "iphone_touch_validation": "requires user device test"
+}
