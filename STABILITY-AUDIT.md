@@ -58,6 +58,25 @@ Build 97 diff.
 For future maintenance, AA range limits now live in `READER_SETTING_LIMITS`, and
 whole-book physical progress remains isolated in `viewportMeasuredBookProgress`.
 
+## Build 104 PDF reliability containment
+
+Build 104 changes only PDF import/collection routing and the original-PDF
+runtime. EPUB parsing, EPUB rendering, EPUB TOC mapping, reading-position
+storage/restoration, planned navigation and EPUB read-aloud controllers are
+byte-for-byte unchanged from Build 103.
+
+- PDF speech uses its own session token, visible Stop control and temporary
+  text-layer cues; leaving or backgrounding the PDF invalidates callbacks.
+- Initial PDF zoom setup cannot write a page-1 checkpoint before restoration.
+- PDF restore retries have a token, so a late retry or overview scroll cannot
+  override an explicit search/thumbnail destination.
+- Thumbnail canvases render lazily in one bounded queue and are destroyed when
+  the sheet closes, limiting iPhone memory pressure.
+- Ink erasing uses point-to-segment geometry and deletes the intersected vector
+  stroke instead of painting a translucent stroke over it.
+- Single and batch PDF imports both route into a new or existing PDF collection;
+  no new PDF exposes a separate Reading text entry.
+
 
 ## Build 101 targeted additions
 - PDF import regression fixed: `pdfPageSizes` now returns the collected `pageSizes` array.

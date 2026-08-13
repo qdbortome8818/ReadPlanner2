@@ -1,0 +1,52 @@
+ReadPlanner Build 104 — PDF Reader Reliability
+
+Scope
+-----
+This build fixes the seven reported PDF-reader problems. Stable EPUB parsing,
+rendering, navigation, position restoration and speech code are unchanged.
+
+Fixes
+-----
+1. PDF read-aloud
+   • The speaker button becomes a visible Stop button while speech is active.
+   • The current spoken sentence is highlighted on the selectable PDF text layer.
+   • Stop, exit, backgrounding and a new PDF destination invalidate old speech
+     callbacks through a PDF-only session token.
+
+2. Batch PDF import and collections
+   • Import several PDFs now asks once whether to add them to an existing PDF
+     collection or create a new collection.
+   • Each selected PDF becomes one article in the selected order.
+   • Single PDF import uses the same collection-only destination flow.
+   • PDF overviews no longer expose the separate “Reading text” entry.
+
+3. PDF search
+   • A result opens its exact article and page, waits for that page's text layer,
+     scrolls to the match and visibly highlights the searched word or phrase.
+
+4. True ink eraser
+   • Eraser hit-testing now covers the complete line segments between recorded
+     points, including fast strokes.
+   • Crossing a stroke removes that vector stroke; it does not draw a pale mark.
+
+5–6. Contents and page thumbnails
+   • Every page thumbnail opens the exact selected page.
+   • Explicit destinations cancel stale restore/scroll-to-top retries.
+   • Page previews are rendered lazily through one bounded queue and released on
+     close, reducing the memory spike that could crash the article or app.
+
+7. Exact PDF resume
+   • Initial zoom mounting no longer saves page 1 before the real checkpoint is
+     restored.
+   • Reopening restores the saved article, page and within-page offset.
+
+Validation
+----------
+Inline JavaScript and service-worker syntax passed. A DOM interaction suite
+passed batch collection import, no-PDF-Reading-text UI, exact thumbnail page,
+exact reopen position, exact search page with highlight, speech Stop/highlight,
+eraser geometry and lazy-thumbnail lifecycle tests. Critical EPUB functions
+were AST-compared with Build 103 and were byte-for-byte unchanged.
+
+Final iPhone PWA touch feel and long-session memory behaviour still require the
+owner's normal real-device check after deployment.

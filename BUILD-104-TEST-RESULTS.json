@@ -1,0 +1,37 @@
+{
+  "build": 104,
+  "status": "pass_with_real_device_validation_pending",
+  "tests": {
+    "inline_javascript_syntax": "pass",
+    "service_worker_syntax": "pass",
+    "manifest_json": "pass",
+    "single_pdf_collection_only_import": "pass",
+    "batch_pdf_collection_import": "pass",
+    "pdf_reading_text_entry_removed": "pass",
+    "pdf_thumbnail_exact_page_navigation": "pass",
+    "pdf_resume_exact_page_after_reopen": "pass",
+    "pdf_search_exact_page_and_in_page_highlight": "pass",
+    "pdf_speech_visible_stop_control": "pass",
+    "pdf_speech_current_text_highlight": "pass",
+    "pdf_eraser_full_segment_hit_testing": "pass",
+    "pdf_lazy_thumbnail_memory_lifecycle": "pass",
+    "stale_pdf_restore_retry_cancellation": "pass",
+    "epub_critical_function_ast_freeze": "pass",
+    "zip_integrity": "pass"
+  },
+  "epub_functions_byte_for_byte_unchanged": [
+    "parseEpub",
+    "renderRead",
+    "saveReadingPosition",
+    "restoreReadingPosition",
+    "toggleReadAloud",
+    "startTTSQueue",
+    "navigateToDay",
+    "mapOriginalTocToChunks"
+  ],
+  "not_run": [
+    "Final iPhone Safari/PWA visual validation",
+    "Real iPhone pen and eraser ergonomics",
+    "Real iPhone long-session thumbnail memory validation"
+  ]
+}
