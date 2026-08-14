@@ -1,0 +1,49 @@
+ReadPlanner Build 108 — PDF Navigation Transaction Repair
+
+Scope
+- Built directly from the supplied Build 107 ZIP.
+- Fixes PDF collection exact-page navigation, durable resume, and the title/thumbnail/exit crash path.
+- Stable EPUB parsing, rendering, navigation, position, and speech functions were not changed.
+
+Root causes fixed
+
+1. Exact Page 5 could be overwritten by Page 1
+Build 107 correctly passed the requested thumbnail page into openPdfOriginalTarget(), but the destination was only provisional. Roughly 1.5 seconds later a forced position save sampled whichever page happened to be considered current after layout/render settling. On a failed or delayed scroll this could be Page 1, overwriting the requested Page 5 checkpoint.
+
+Build 108 makes an explicit PDF destination an authoritative navigation transaction. The requested collection chapter + local page is committed before render and cannot be replaced by a transient page until the matching card is actually on screen.
+
+2. Resume could regress when iOS backgrounded/closed the PWA
+Build 107 had two independent sets of PDF visibility/pagehide/beforeunload handlers. The later set force-sampled the live DOM and could overwrite a good checkpoint while WebKit was already changing layout during backgrounding.
+
+Build 108 removes the duplicate forced handlers and uses one guarded lifecycle checkpoint. The same chapter/page is mirrored into the book record as a durable fallback.
+
+3. Chapter resume depended too heavily on one localStorage key
+Build 107 read per-chapter PDF resume only from localStorage. Build 108 also stores and reads a per-chapter position map on the book record, providing a second durable source without changing the IndexedDB schema.
+
+4. PDF scrolling used a narrower code path than the stable Reader
+Build 107 PDF navigation calculated from window.scrollY and called window.scrollTo directly. Build 108 uses the same robust document scroll metrics/application path already used by the stable Reader, covering the actual scrolling element as well as window scroll.
+
+5. PDF.js document teardown could race an in-flight page render
+Build 107 destroyed old full-PDF documents after a fixed 180 ms delay. A slow iPhone render could still be active, creating a teardown race during rapid collection/title/page transitions.
+
+Build 108 tracks full-page render settlements and destroys the old PDF.js document only after active renders have settled.
+
+6. Redundant thumbnail teardown
+The Page button path explicitly cleared thumbnail runtime and then called closeSheets(), which cleared it again. Build 108 reduces this to one teardown path and applies the same cleanup to Back/Close handling.
+
+7. Stale build identity / dead PDF helper
+The ZIP was externally Build 107 but index.html still reported READPLANNER_BUILD='106'. Build 108 synchronizes the index, service worker cache version, and manifest cache-buster at 108. The unused PDF-only helper currentPdfOriginalPage() was removed after reference scanning.
+
+Validation
+- JavaScript syntax: passed.
+- Manifest parse: passed.
+- Supplied PDFs: 14, 13, and 17 pages; Page 5 of each parsed and rendered in the test environment.
+- Browser navigation suite: 26/26 assertions passed, zero uncaught page/console errors.
+- Contents -> each article title -> Page 5: exact article and exact Page 5 for all three supplied PDFs.
+- Save -> exit -> reopen: restored article 3 Page 7 rather than collection article 1 Page 1.
+- Article-title -> thumbnail grid -> close -> exit reader: no crash in the browser suite; prior resume remained unchanged.
+- Lifecycle regression test: an unsettled article 2 Page 8 destination remained article 2 Page 8 instead of being overwritten by the currently mounted page.
+- Teardown test: old PDF document was not destroyed during an active render and was destroyed after render settlement.
+
+Device note
+The automated suite exercises the browser/PWA logic and supplied-PDF geometry, but an actual iPhone/iPad WebKit process lifecycle cannot be perfectly reproduced in this container. The build is therefore ready for the same real-device sequence that exposed the bug.

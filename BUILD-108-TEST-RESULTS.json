@@ -1,0 +1,812 @@
+{
+  "build": 108,
+  "actual_pdf_validation": [
+    {
+      "id": "ch1",
+      "title": "【Week27-4】精读讲义 20260709 共迎250周年 ★★★★★ 小编西西(1)",
+      "file": "【Week27-4】精读讲义 20260709 共迎250周年 ★★★★★ 小编西西(1).pdf",
+      "pages": 14,
+      "pageSizes": [
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        }
+      ],
+      "page5_pixels": [
+        298,
+        421
+      ],
+      "page5_text_len": 1459,
+      "sha256": "fc0dde91d430e43004d06bdbeb1ead6c5b3969f2e596d59bea5e354f662bcd14"
+    },
+    {
+      "id": "ch2",
+      "title": "【Week32-4】精读讲义 20260813 动物实验 ★★★☆☆ 小编Keira(1)",
+      "file": "【Week32-4】精读讲义 20260813 动物实验 ★★★☆☆ 小编Keira(1).pdf",
+      "pages": 13,
+      "pageSizes": [
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        }
+      ],
+      "page5_pixels": [
+        298,
+        421
+      ],
+      "page5_text_len": 1526,
+      "sha256": "76f3cbd7c475d58066be7cffc8c244f9ecc707f057c5341942d78aae95869434"
+    },
+    {
+      "id": "ch3",
+      "title": "【Week32-2】精读讲义 20260811 史密森尼学会对美国的蔑视 ★★★★★ 小编-路西(1)",
+      "file": "【Week32-2】精读讲义 20260811 史密森尼学会对美国的蔑视 ★★★★★ 小编-路西(1).pdf",
+      "pages": 17,
+      "pageSizes": [
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        },
+        {
+          "width": 595.32,
+          "height": 841.92
+        }
+      ],
+      "page5_pixels": [
+        298,
+        421
+      ],
+      "page5_text_len": 1591,
+      "sha256": "08fe98dbb5a48ded243d1542937f1b367021e4f7048b79ae83dfeb17ccc66b4c"
+    }
+  ],
+  "assertions": [
+    {
+      "name": "explicit collection target lands on article 2 page 5",
+      "passed": true,
+      "detail": {
+        "view": "pdf",
+        "card": {
+          "chapter": "ch2",
+          "page": 5,
+          "top": 76.484375
+        },
+        "saved": {
+          "bookId": "book1",
+          "scrollY": 0,
+          "pct": 0,
+          "page": 5,
+          "chapterId": "ch2",
+          "localPage": 5,
+          "anchorOffset": 76,
+          "zoom": 1,
+          "updatedAt": 1786698516829,
+          "kind": "explicit",
+          "startedAt": 1786698515126
+        },
+        "internals": {
+          "active": "ch2",
+          "last": {
+            "bookId": "book1",
+            "scrollY": 0,
+            "pct": 0,
+            "page": 5,
+            "chapterId": "ch2",
+            "localPage": 5,
+            "anchorOffset": 76,
+            "zoom": 1,
+            "updatedAt": 1786698516829,
+            "kind": "explicit",
+            "startedAt": 1786698515126
+          },
+          "target": null,
+          "pendingChapter": null,
+          "pendingPage": null,
+          "saveSuppressed": 0,
+          "nav": 1,
+          "restore": 5,
+          "generation": 3
+        }
+      }
+    },
+    {
+      "name": "explicit target persists as article 2 page 5",
+      "passed": true,
+      "detail": {
+        "bookId": "book1",
+        "scrollY": 0,
+        "pct": 0,
+        "page": 5,
+        "chapterId": "ch2",
+        "localPage": 5,
+        "anchorOffset": 76,
+        "zoom": 1,
+        "updatedAt": 1786698516829,
+        "kind": "explicit",
+        "startedAt": 1786698515126
+      }
+    },
+    {
+      "name": "ch1 title opens page thumbnail grid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ch1 Page 5 thumbnail lands on exact Page 5",
+      "passed": true,
+      "detail": {
+        "view": "pdf",
+        "card": {
+          "chapter": "ch1",
+          "page": 5,
+          "top": 76.484375
+        },
+        "saved": {
+          "bookId": "book1",
+          "scrollY": 0,
+          "pct": 0,
+          "page": 5,
+          "chapterId": "ch1",
+          "localPage": 5,
+          "anchorOffset": 76,
+          "zoom": 1,
+          "updatedAt": 1786698519708,
+          "kind": "explicit",
+          "startedAt": 1786698518006
+        },
+        "internals": {
+          "active": "ch1",
+          "last": {
+            "bookId": "book1",
+            "scrollY": 0,
+            "pct": 0,
+            "page": 5,
+            "chapterId": "ch1",
+            "localPage": 5,
+            "anchorOffset": 76,
+            "zoom": 1,
+            "updatedAt": 1786698519708,
+            "kind": "explicit",
+            "startedAt": 1786698518006
+          },
+          "target": null,
+          "pendingChapter": null,
+          "pendingPage": null,
+          "saveSuppressed": 0,
+          "nav": 2,
+          "restore": 8,
+          "generation": 4
+        }
+      }
+    },
+    {
+      "name": "ch1 Page 5 remains durable resume target",
+      "passed": true,
+      "detail": {
+        "bookId": "book1",
+        "scrollY": 0,
+        "pct": 0,
+        "page": 5,
+        "chapterId": "ch1",
+        "localPage": 5,
+        "anchorOffset": 76,
+        "zoom": 1,
+        "updatedAt": 1786698519708,
+        "kind": "explicit",
+        "startedAt": 1786698518006
+      }
+    },
+    {
+      "name": "ch2 title opens page thumbnail grid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ch2 Page 5 thumbnail lands on exact Page 5",
+      "passed": true,
+      "detail": {
+        "view": "pdf",
+        "card": {
+          "chapter": "ch2",
+          "page": 5,
+          "top": 76.484375
+        },
+        "saved": {
+          "bookId": "book1",
+          "scrollY": 0,
+          "pct": 0,
+          "page": 5,
+          "chapterId": "ch2",
+          "localPage": 5,
+          "anchorOffset": 76,
+          "zoom": 1,
+          "updatedAt": 1786698522544,
+          "kind": "explicit",
+          "startedAt": 1786698520841
+        },
+        "internals": {
+          "active": "ch2",
+          "last": {
+            "bookId": "book1",
+            "scrollY": 0,
+            "pct": 0,
+            "page": 5,
+            "chapterId": "ch2",
+            "localPage": 5,
+            "anchorOffset": 76,
+            "zoom": 1,
+            "updatedAt": 1786698522544,
+            "kind": "explicit",
+            "startedAt": 1786698520841
+          },
+          "target": null,
+          "pendingChapter": null,
+          "pendingPage": null,
+          "saveSuppressed": 0,
+          "nav": 3,
+          "restore": 11,
+          "generation": 5
+        }
+      }
+    },
+    {
+      "name": "ch2 Page 5 remains durable resume target",
+      "passed": true,
+      "detail": {
+        "bookId": "book1",
+        "scrollY": 0,
+        "pct": 0,
+        "page": 5,
+        "chapterId": "ch2",
+        "localPage": 5,
+        "anchorOffset": 76,
+        "zoom": 1,
+        "updatedAt": 1786698522544,
+        "kind": "explicit",
+        "startedAt": 1786698520841
+      }
+    },
+    {
+      "name": "ch3 title opens page thumbnail grid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ch3 Page 5 thumbnail lands on exact Page 5",
+      "passed": true,
+      "detail": {
+        "view": "pdf",
+        "card": {
+          "chapter": "ch3",
+          "page": 5,
+          "top": 76.484375
+        },
+        "saved": {
+          "bookId": "book1",
+          "scrollY": 0,
+          "pct": 0,
+          "page": 5,
+          "chapterId": "ch3",
+          "localPage": 5,
+          "anchorOffset": 76,
+          "zoom": 1,
+          "updatedAt": 1786698525378,
+          "kind": "explicit",
+          "startedAt": 1786698523676
+        },
+        "internals": {
+          "active": "ch3",
+          "last": {
+            "bookId": "book1",
+            "scrollY": 0,
+            "pct": 0,
+            "page": 5,
+            "chapterId": "ch3",
+            "localPage": 5,
+            "anchorOffset": 76,
+            "zoom": 1,
+            "updatedAt": 1786698525378,
+            "kind": "explicit",
+            "startedAt": 1786698523676
+          },
+          "target": null,
+          "pendingChapter": null,
+          "pendingPage": null,
+          "saveSuppressed": 0,
+          "nav": 4,
+          "restore": 14,
+          "generation": 6
+        }
+      }
+    },
+    {
+      "name": "ch3 Page 5 remains durable resume target",
+      "passed": true,
+      "detail": {
+        "bookId": "book1",
+        "scrollY": 0,
+        "pct": 0,
+        "page": 5,
+        "chapterId": "ch3",
+        "localPage": 5,
+        "anchorOffset": 76,
+        "zoom": 1,
+        "updatedAt": 1786698525378,
+        "kind": "explicit",
+        "startedAt": 1786698523676
+      }
+    },
+    {
+      "name": "manual position saves article 3 page 7 before exit",
+      "passed": true,
+      "detail": {
+        "view": "pdf",
+        "card": {
+          "chapter": "ch3",
+          "page": 7,
+          "top": -120.015625
+        },
+        "saved": {
+          "bookId": "book1",
+          "scrollY": 3654,
+          "pct": 0.41603096891722646,
+          "page": 7,
+          "chapterId": "ch3",
+          "localPage": 7,
+          "anchorOffset": -120.015625,
+          "zoom": 1,
+          "updatedAt": 1786698525501
+        },
+        "internals": {
+          "active": "ch3",
+          "last": {
+            "bookId": "book1",
+            "scrollY": 3654,
+            "pct": 0.41603096891722646,
+            "page": 7,
+            "chapterId": "ch3",
+            "localPage": 7,
+            "anchorOffset": -120.015625,
+            "zoom": 1,
+            "updatedAt": 1786698525501
+          },
+          "target": null,
+          "pendingChapter": null,
+          "pendingPage": null,
+          "saveSuppressed": 0,
+          "nav": 4,
+          "restore": 14,
+          "generation": 6
+        }
+      }
+    },
+    {
+      "name": "reopen restores article 3 page 7",
+      "passed": true,
+      "detail": {
+        "view": "pdf",
+        "card": {
+          "chapter": "ch3",
+          "page": 7,
+          "top": 75.984375
+        },
+        "saved": {
+          "bookId": "book1",
+          "scrollY": 0,
+          "pct": 0,
+          "page": 7,
+          "chapterId": "ch3",
+          "localPage": 7,
+          "anchorOffset": 76,
+          "zoom": 1,
+          "updatedAt": 1786698527443,
+          "kind": "explicit",
+          "startedAt": 1786698525740
+        },
+        "internals": {
+          "active": "ch3",
+          "last": {
+            "bookId": "book1",
+            "scrollY": 0,
+            "pct": 0,
+            "page": 7,
+            "chapterId": "ch3",
+            "localPage": 7,
+            "anchorOffset": 76,
+            "zoom": 1,
+            "updatedAt": 1786698527443,
+            "kind": "explicit",
+            "startedAt": 1786698525740
+          },
+          "target": null,
+          "pendingChapter": "ch3",
+          "pendingPage": 7,
+          "saveSuppressed": 0,
+          "nav": 4,
+          "restore": 18,
+          "generation": 9
+        }
+      }
+    },
+    {
+      "name": "reopen does not regress to first PDF/page 1",
+      "passed": true,
+      "detail": {
+        "view": "pdf",
+        "card": {
+          "chapter": "ch3",
+          "page": 7,
+          "top": 75.984375
+        },
+        "saved": {
+          "bookId": "book1",
+          "scrollY": 0,
+          "pct": 0,
+          "page": 7,
+          "chapterId": "ch3",
+          "localPage": 7,
+          "anchorOffset": 76,
+          "zoom": 1,
+          "updatedAt": 1786698527443,
+          "kind": "explicit",
+          "startedAt": 1786698525740
+        },
+        "internals": {
+          "active": "ch3",
+          "last": {
+            "bookId": "book1",
+            "scrollY": 0,
+            "pct": 0,
+            "page": 7,
+            "chapterId": "ch3",
+            "localPage": 7,
+            "anchorOffset": 76,
+            "zoom": 1,
+            "updatedAt": 1786698527443,
+            "kind": "explicit",
+            "startedAt": 1786698525740
+          },
+          "target": null,
+          "pendingChapter": "ch3",
+          "pendingPage": 7,
+          "saveSuppressed": 0,
+          "nav": 4,
+          "restore": 18,
+          "generation": 9
+        }
+      }
+    },
+    {
+      "name": "title -> thumbnail grid -> exit reader reaches overview without crash",
+      "passed": true,
+      "detail": "overview"
+    },
+    {
+      "name": "opening a title alone does not replace the reading resume",
+      "passed": true,
+      "detail": {
+        "bookId": "book1",
+        "scrollY": 3458,
+        "pct": 0.3937151315040419,
+        "page": 7,
+        "chapterId": "ch3",
+        "localPage": 7,
+        "anchorOffset": 75.984375,
+        "zoom": 1,
+        "updatedAt": 1786698528687
+      }
+    },
+    {
+      "name": "lifecycle checkpoint preserves authoritative article 2 page 8",
+      "passed": true,
+      "detail": {
+        "target": {
+          "bookId": "book1",
+          "scrollY": 0,
+          "pct": 0,
+          "page": 8,
+          "chapterId": "ch2",
+          "localPage": 8,
+          "anchorOffset": 76,
+          "zoom": 1,
+          "updatedAt": 1786698529872,
+          "kind": "test-lifecycle",
+          "startedAt": 1786698529872
+        },
+        "checkpoint": {
+          "bookId": "book1",
+          "scrollY": 0,
+          "pct": 0,
+          "page": 8,
+          "chapterId": "ch2",
+          "localPage": 8,
+          "anchorOffset": 76,
+          "zoom": 1,
+          "updatedAt": 1786698529872,
+          "kind": "test-lifecycle",
+          "startedAt": 1786698529872
+        },
+        "saved": {
+          "bookId": "book1",
+          "scrollY": 0,
+          "pct": 0,
+          "page": 8,
+          "chapterId": "ch2",
+          "localPage": 8,
+          "anchorOffset": 76,
+          "zoom": 1,
+          "updatedAt": 1786698529872,
+          "kind": "test-lifecycle",
+          "startedAt": 1786698529872
+        }
+      }
+    },
+    {
+      "name": "per-chapter position falls back to book record",
+      "passed": true,
+      "detail": {
+        "bookId": "book1",
+        "scrollY": 0,
+        "pct": 0,
+        "page": 8,
+        "chapterId": "ch2",
+        "localPage": 8,
+        "anchorOffset": 76,
+        "zoom": 1,
+        "updatedAt": 1786698529872,
+        "kind": "test-lifecycle",
+        "startedAt": 1786698529872
+      }
+    },
+    {
+      "name": "PDF document is not destroyed while render is active",
+      "passed": true,
+      "detail": {
+        "before": false,
+        "after": true
+      }
+    },
+    {
+      "name": "PDF document is destroyed after render settles",
+      "passed": true,
+      "detail": {
+        "before": false,
+        "after": true
+      }
+    },
+    {
+      "name": "no uncaught browser/page errors in navigation suite",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "Build marker is 108",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "service worker cache version is 108",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest cache-buster is 108",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "duplicate forced PDF lifecycle handlers removed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unused currentPdfOriginalPage helper removed",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "browser_errors": [],
+  "test_scope": {
+    "supplied_pdf_bytes": "Opened with PyMuPDF; page counts/sizes/text extracted; Page 5 of each rendered successfully.",
+    "browser_navigation": "Chromium DOM/PWA logic harness using the exact page counts and page dimensions extracted from the three supplied PDFs. PDF.js canvas rendering was stubbed in the browser harness so navigation/persistence could be stress-tested deterministically.",
+    "real_ios_webkit": "Not available in this container; final on-device confirmation remains necessary."
+  },
+  "stable_epub_functions": [
+    {
+      "name": "parseEpub",
+      "unchanged": true,
+      "sha256": "89e2674482a5066062befa32606d4462bf4467044d85376dadb56a642162c2bd",
+      "bytes": 54789
+    },
+    {
+      "name": "renderEpubMediaBlock",
+      "unchanged": true,
+      "sha256": "07dcbb74389b56c52b7da41cdf2b36cde2f537ac3e399bdfad1bbe922effeca8",
+      "bytes": 1239
+    },
+    {
+      "name": "saveReadingPosition",
+      "unchanged": true,
+      "sha256": "f6d7ebbfa10f7155d57dac98c4f4ea3d90cfc8285a0bf79af6ea2ad678a15024",
+      "bytes": 3673
+    },
+    {
+      "name": "saveReadingPositionDurably",
+      "unchanged": true,
+      "sha256": "77776f745b3b87549ec6f881db7e0ffdc43aa0e75f409046ef05cdf77f6e7ba8",
+      "bytes": 279
+    },
+    {
+      "name": "navigateToDay",
+      "unchanged": true,
+      "sha256": "b00f8fc008e8c3bd838d820e70e5b2b367c3a3beef61970ef000e83401033282",
+      "bytes": 3557
+    },
+    {
+      "name": "openEpubExternalSafely",
+      "unchanged": true,
+      "sha256": "a95b38cb69e018caf196a2d554be8a45cca6ea3c28f50bdf74910afbef1005fc",
+      "bytes": 1071
+    }
+  ]
+}

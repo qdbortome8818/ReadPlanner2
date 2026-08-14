@@ -1,0 +1,38 @@
+[
+  {
+    "name": "parseEpub",
+    "unchanged": true,
+    "sha256": "89e2674482a5066062befa32606d4462bf4467044d85376dadb56a642162c2bd",
+    "bytes": 54789
+  },
+  {
+    "name": "renderEpubMediaBlock",
+    "unchanged": true,
+    "sha256": "07dcbb74389b56c52b7da41cdf2b36cde2f537ac3e399bdfad1bbe922effeca8",
+    "bytes": 1239
+  },
+  {
+    "name": "saveReadingPosition",
+    "unchanged": true,
+    "sha256": "f6d7ebbfa10f7155d57dac98c4f4ea3d90cfc8285a0bf79af6ea2ad678a15024",
+    "bytes": 3673
+  },
+  {
+    "name": "saveReadingPositionDurably",
+    "unchanged": true,
+    "sha256": "77776f745b3b87549ec6f881db7e0ffdc43aa0e75f409046ef05cdf77f6e7ba8",
+    "bytes": 279
+  },
+  {
+    "name": "navigateToDay",
+    "unchanged": true,
+    "sha256": "b00f8fc008e8c3bd838d820e70e5b2b367c3a3beef61970ef000e83401033282",
+    "bytes": 3557
+  },
+  {
+    "name": "openEpubExternalSafely",
+    "unchanged": true,
+    "sha256": "a95b38cb69e018caf196a2d554be8a45cca6ea3c28f50bdf74910afbef1005fc",
+    "bytes": 1071
+  }
+]
