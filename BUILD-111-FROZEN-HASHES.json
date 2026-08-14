@@ -1,0 +1,87 @@
+{
+  "openPdfOriginalTarget": {
+    "build110": "38da8ffb5d2c47a34ecd4fb450b6dfa637a89dd5fbb38cfd22fe5e73300fd874",
+    "build111": "38da8ffb5d2c47a34ecd4fb450b6dfa637a89dd5fbb38cfd22fe5e73300fd874",
+    "unchanged": true
+  },
+  "restorePdfOriginalPosition": {
+    "build110": "aaf17ef07d34b69b12c507bdc675119fa29b0ec71e44b3b618b6a09c8845733c",
+    "build111": "aaf17ef07d34b69b12c507bdc675119fa29b0ec71e44b3b618b6a09c8845733c",
+    "unchanged": true
+  },
+  "scrollToPdfOriginalTarget": {
+    "build110": "ab1700b6a0021e8d676ac361216541ada26b8ae4216cf1ed4530008926c7815a",
+    "build111": "ab1700b6a0021e8d676ac361216541ada26b8ae4216cf1ed4530008926c7815a",
+    "unchanged": true
+  },
+  "openPdfSearch": {
+    "build110": "e43ac64760137d6717c780e1d0ed3852b526a6f845d97272a9cf5842e7e9c1fd",
+    "build111": "e43ac64760137d6717c780e1d0ed3852b526a6f845d97272a9cf5842e7e9c1fd",
+    "unchanged": true
+  },
+  "openPdfCollectionOriginalContents": {
+    "build110": "46f1c8cd416b18934f5b6130bbcd6fb8bafd4b042ab15f8d76fa624e015b19be",
+    "build111": "46f1c8cd416b18934f5b6130bbcd6fb8bafd4b042ab15f8d76fa624e015b19be",
+    "unchanged": true
+  },
+  "pdfOriginalPositionKey": {
+    "build110": "578b85282fb1163d7e6b2d68e9b707e883bc11c4e25a588df43595c5d557a24e",
+    "build111": "578b85282fb1163d7e6b2d68e9b707e883bc11c4e25a588df43595c5d557a24e",
+    "unchanged": true
+  },
+  "savePdfOriginalPosition": {
+    "build110": "acc01a08176a23cb29bff6cd7f27e71d51be9b917ba3d1a49b5f29893b8d1a33",
+    "build111": "acc01a08176a23cb29bff6cd7f27e71d51be9b917ba3d1a49b5f29893b8d1a33",
+    "unchanged": true
+  },
+  "markPdfTextPrecise": {
+    "build110": "9941e941601e29041aa8da2e6b805d31cde8d5433281a87eca45bde9360114d1",
+    "build111": "9941e941601e29041aa8da2e6b805d31cde8d5433281a87eca45bde9360114d1",
+    "unchanged": true
+  },
+  "renderPdfTextLayer": {
+    "build110": "f7c592caef466eedaf83000f78810ff9f1f99ace240c0062471225c8705ce85b",
+    "build111": "f7c592caef466eedaf83000f78810ff9f1f99ace240c0062471225c8705ce85b",
+    "unchanged": true
+  },
+  "readingProgressInfo": {
+    "build110": "feaa5844764c6c999543cdccfd015d5ded4a20e5a60835428262248dfda8283e",
+    "build111": "feaa5844764c6c999543cdccfd015d5ded4a20e5a60835428262248dfda8283e",
+    "unchanged": true
+  },
+  "renderPdfOriginal": {
+    "build110": "29c7e5b2b653efa2a2848d0a266640da16bde4196ecdd25d9c4e999afed8b7cf",
+    "build111": "29c7e5b2b653efa2a2848d0a266640da16bde4196ecdd25d9c4e999afed8b7cf",
+    "unchanged": true
+  },
+  "parseEpub": {
+    "build110": "89e2674482a5066062befa32606d4462bf4467044d85376dadb56a642162c2bd",
+    "build111": "89e2674482a5066062befa32606d4462bf4467044d85376dadb56a642162c2bd",
+    "unchanged": true
+  },
+  "renderEpubMediaBlock": {
+    "build110": "07dcbb74389b56c52b7da41cdf2b36cde2f537ac3e399bdfad1bbe922effeca8",
+    "build111": "07dcbb74389b56c52b7da41cdf2b36cde2f537ac3e399bdfad1bbe922effeca8",
+    "unchanged": true
+  },
+  "saveReadingPosition": {
+    "build110": "f6d7ebbfa10f7155d57dac98c4f4ea3d90cfc8285a0bf79af6ea2ad678a15024",
+    "build111": "f6d7ebbfa10f7155d57dac98c4f4ea3d90cfc8285a0bf79af6ea2ad678a15024",
+    "unchanged": true
+  },
+  "saveReadingPositionDurably": {
+    "build110": "77776f745b3b87549ec6f881db7e0ffdc43aa0e75f409046ef05cdf77f6e7ba8",
+    "build111": "77776f745b3b87549ec6f881db7e0ffdc43aa0e75f409046ef05cdf77f6e7ba8",
+    "unchanged": true
+  },
+  "navigateToDay": {
+    "build110": "12fbc5dd77573528d79b65487e41e608691d4009cae4c9bf6b01a692f62edf1e",
+    "build111": "12fbc5dd77573528d79b65487e41e608691d4009cae4c9bf6b01a692f62edf1e",
+    "unchanged": true
+  },
+  "openEpubExternalSafely": {
+    "build110": "100b7c10147d7ab70159966b501e963b11b01c4c602825f4ba43b71d043c4025",
+    "build111": "100b7c10147d7ab70159966b501e963b11b01c4c602825f4ba43b71d043c4025",
+    "unchanged": true
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "passed": 10,
+  "total": 10,
+  "checks": [
+    [
+      "saved 3.2x zoom reopens at safe 2.4x",
+      true,
+      "2.4"
+    ],
+    [
+      "iOS DPR cap executes at 1.1",
+      true,
+      "{\"dpr\":1.1,\"scale\":0.720620842572062}"
+    ],
+    [
+      "visual zoom clamps to 2.4x",
+      true,
+      "2.4"
+    ],
+    [
+      "zoom scales both mounted page cards without PDF rerender",
+      true,
+      "{\"visual\":2,\"releases\":0,\"renderSingle\":0,\"renderCollection\":0}"
+    ],
+    [
+      "zoom schedules bounded current-page verification",
+      true,
+      "1"
+    ],
+    [
+      "zoom geometry becomes 240 percent",
+      true,
+      "[\"240%\",\"240%\"]"
+    ],
+    [
+      "exact Contents/search target renders once",
+      true,
+      "1"
+    ],
+    [
+      "exact target releases only the non-target surface",
+      true,
+      "{\"releases\":2,\"releaseIds\":[\"other\",\"other\"]}"
+    ],
+    [
+      "exact target cleans document cache before new page render",
+      true,
+      "1"
+    ],
+    [
+      "exact target returns connected target",
+      true,
+      "target"
+    ]
+  ]
+}

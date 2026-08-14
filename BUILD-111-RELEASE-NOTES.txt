@@ -1,0 +1,45 @@
+ReadPlanner Build 111 - iOS Bounded PDF Renderer
+=================================================
+
+Purpose
+-------
+Build 111 changes only the PDF rendering/resource strategy needed to address the remaining iPhone/WebKit stability failure. Existing PDF navigation, resume, search/highlighting, Today/Current Reading behavior, and the established EPUB reader are not redesigned.
+
+What changed
+------------
+1. iOS keeps only one live heavy PDF page surface at a time.
+2. PDF.js raster width on iOS is based on the unzoomed reader viewport, not the zoomed page card.
+3. Pinch zoom on iOS is visual/CSS scaling; it does not rerender the PDF at 2x/3x raster width.
+4. iOS restored zoom is capped at 2.4x, preventing an old stored 3.2x state from recreating the former crash-loop path.
+5. iOS PDF raster DPR is capped at 1.1 with a 1.4M-pixel page ceiling.
+6. Non-current page canvases/text/ink surfaces are reclaimed before another page is rendered.
+7. After render settlements complete, PDF.js document caches are cleaned before materializing the next bounded page.
+8. Contents/search exact targets use the same one-page budget without changing their existing navigation logic.
+9. iOS preload rendering is disabled; scroll synchronization selects one current/anchor page.
+10. Desktop PDF rendering behavior is retained.
+
+Why this is different from Builds 109/110
+------------------------------------------
+Build 110 fixed real cleanup leaks, but it could still turn visual zoom into a much larger PDF.js raster request because rendering used the zoomed card.clientWidth. It also restored the saved zoom before the first render. That made the reported sequence plausible: zoom -> blank/slow render -> WebKit termination -> reopen at the same expensive state -> termination again.
+
+Build 111 breaks that feedback loop. Zoom can enlarge what the user sees without enlarging the underlying iOS PDF.js backing raster.
+
+Regression protection
+---------------------
+Named-function SHA-256 checks confirm that the working PDF exact navigation/resume/search functions and selected EPUB core functions are byte-for-byte unchanged from Build 110.
+
+Test summary
+------------
+- JavaScript syntax: PASS
+- Static/regression checks: 55/55 PASS
+- Bounded-renderer unit checks: 10/10 PASS
+- PDF lifecycle regression: 5/5 PASS
+- Runtime teardown regression: 6/6 PASS
+- Three supplied PDFs: PASS under bounded stress, 108 transitions total
+- Real iPhone WebKit process-termination test: requires device acceptance; cannot be emulated in this environment
+
+Deployment
+----------
+Upload the complete Build 111 package over the existing repository-root files, preserving the icons/ and vendor/ folders. Wait for GitHub Pages deployment to complete. Fully close the installed ReadPlanner/Safari instance once, then reopen it so the Build 111 service-worker/cache identity is active.
+
+If Build 111 still produces the same WebKit process termination during normal PDF use, preserve this build as the last PDF experiment and consider disabling/removing PDF reading rather than touching the stable EPUB functionality.

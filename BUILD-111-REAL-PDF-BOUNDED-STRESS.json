@@ -1,0 +1,46 @@
+{
+  "summary": {
+    "files": 3,
+    "passed": 3,
+    "transitions": 108
+  },
+  "results": [
+    {
+      "file": "【Week27-4】精读讲义 20260709 共迎250周年 ★★★★★ 小编西西(1).pdf",
+      "size_mb": 2.18,
+      "page_count": 14,
+      "page5_text_chars": 1458,
+      "transitions": 36,
+      "live_render_surfaces": 1,
+      "target_backing_width_px": 429,
+      "max_single_surface_mb": 0.75,
+      "rss_sample_max_mb": 157.5,
+      "pass": true
+    },
+    {
+      "file": "【Week32-4】精读讲义 20260813 动物实验 ★★★☆☆ 小编Keira(1).pdf",
+      "size_mb": 2.22,
+      "page_count": 13,
+      "page5_text_chars": 1525,
+      "transitions": 36,
+      "live_render_surfaces": 1,
+      "target_backing_width_px": 429,
+      "max_single_surface_mb": 0.75,
+      "rss_sample_max_mb": 162.2,
+      "pass": true
+    },
+    {
+      "file": "【Week32-2】精读讲义 20260811 史密森尼学会对美国的蔑视 ★★★★★ 小编-路西(1).pdf",
+      "size_mb": 2.82,
+      "page_count": 17,
+      "page5_text_chars": 1590,
+      "transitions": 36,
+      "live_render_surfaces": 1,
+      "target_backing_width_px": 429,
+      "max_single_surface_mb": 0.75,
+      "rss_sample_max_mb": 171.8,
+      "pass": true
+    }
+  ],
+  "note": "This Linux/PyMuPDF stress test mirrors Build 111’s one-live-surface/base-width policy. It does not emulate Apple WebKit or prove iOS heap behavior; it validates the three real PDFs and the bounded raster target."
+}

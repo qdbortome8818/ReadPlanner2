@@ -1,0 +1,60 @@
+{
+  "build": 111,
+  "release": "iOS Bounded PDF Renderer",
+  "scope": "PDF rendering stability only; preserve working navigation/resume/search and EPUB behavior.",
+  "syntax": {
+    "inline_application_js": "PASS",
+    "service_worker_js": "PASS"
+  },
+  "static_regression": {
+    "passed": 55,
+    "total": 55,
+    "failed": []
+  },
+  "bounded_renderer_unit": {
+    "passed": 10,
+    "total": 10
+  },
+  "pdf_lifecycle_regression": {
+    "passed": 5,
+    "total": 5
+  },
+  "runtime_teardown_regression": {
+    "passed": 6,
+    "total": 6
+  },
+  "real_pdf_bounded_stress": {
+    "files": 3,
+    "passed": 3,
+    "transitions": 108
+  },
+  "browser_smoke": {
+    "status": "NOT RUN",
+    "reason": "Page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR at http://127.0.0.1:8765/index.html\nCall log:\n  - navigating to \"http://127.0.0.1:8765/index.html\", waiting until \"domcontentloaded\"\n"
+  },
+  "device_acceptance": {
+    "status": "REQUIRED",
+    "reason": "Apple iOS WebKit process termination cannot be reproduced in this execution environment.",
+    "priority_sequence": [
+      "open PDF",
+      "pinch zoom",
+      "scroll across pages",
+      "Contents arbitrary-page jump",
+      "Search/highlight jump",
+      "leave reader",
+      "reopen same PDF",
+      "repeat across PDFs"
+    ]
+  },
+  "root_cause_addressed": [
+    "Build 110 persisted zoom up to 3.2x.",
+    "Build 110 PDF.js rendering derived cssWidth from the zoomed card.clientWidth.",
+    "Build 110 rerendered at pinch end and restored the saved zoom before the next first render, allowing a high-zoom render state to reproduce on reopen.",
+    "Build 111 decouples iOS visual zoom from PDF.js raster dimensions and allows only one live heavy page surface."
+  ],
+  "frozen_function_hashes_file": "BUILD-111-FROZEN-HASHES.json",
+  "notes": [
+    "Linux/PyMuPDF real-file stress validates the supplied PDFs and bounded target but is not an Apple WebKit emulator.",
+    "If the same device-level crash remains, disabling/removing PDF reading is preferable to modifying stable EPUB behavior."
+  ]
+}
