@@ -1,0 +1,33 @@
+{
+  "stats": {
+    "getPage": 4,
+    "pageCleanup": 4,
+    "docCleanup": 1,
+    "docDestroy": 1,
+    "render": 1
+  },
+  "checks": [
+    [
+      "parsed all 3 pages",
+      true
+    ],
+    [
+      "every page proxy including cover cleaned",
+      true
+    ],
+    [
+      "document cleanup called before destroy",
+      true
+    ],
+    [
+      "document destroyed exactly once",
+      true
+    ],
+    [
+      "cover rendered once",
+      true
+    ]
+  ],
+  "passed": 5,
+  "total": 5
+}

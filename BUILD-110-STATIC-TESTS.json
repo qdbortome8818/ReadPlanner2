@@ -1,0 +1,326 @@
+{
+  "summary": {
+    "passed": 45,
+    "total": 45,
+    "failed": []
+  },
+  "checks": [
+    {
+      "name": "index JS syntax checked externally",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "service worker syntax checked externally",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "runtime build identity 110",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "manifest cache buster 110",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "service worker cache identity 110",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "PDF import document always destroyed",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "PDF import pages cleaned",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "cover canvas backing store released",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "document destroy waits active full-page renders",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "document destroy waits thumbnail cleanup",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no artificial 120ms document overlap delay",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "document destruction serialized",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "offscreen surface cleans PDF page proxy",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "renderOnePdfOriginalPage retains cleanup handle during render",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "renderOnePdfOriginalPage cleans page after materialization",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "renderOnePdfCollectionPage retains cleanup handle during render",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "renderOnePdfCollectionPage cleans page after materialization",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "thumbnail canvas backing stores released",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "borrowed thumbnail document cleaned",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "aborted collection document destruction awaited",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "thumbnail page proxy cleanup covers pre-render cancellation",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "new reader waits old PDF runtime destruction",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "background suspension releases visible PDF surfaces",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "foreground resumes existing renderer",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "visibility hidden invokes suspension",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "visibility visible invokes resume",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "temporary search pages cleaned",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "temporary search PDF destruction awaited",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "stable function unchanged: openPdfOriginalTarget",
+      "pass": true,
+      "detail": "38da8ffb5d2c47a34ecd4fb450b6dfa637a89dd5fbb38cfd22fe5e73300fd874 -> 38da8ffb5d2c47a34ecd4fb450b6dfa637a89dd5fbb38cfd22fe5e73300fd874"
+    },
+    {
+      "name": "stable function unchanged: restorePdfOriginalPosition",
+      "pass": true,
+      "detail": "aaf17ef07d34b69b12c507bdc675119fa29b0ec71e44b3b618b6a09c8845733c -> aaf17ef07d34b69b12c507bdc675119fa29b0ec71e44b3b618b6a09c8845733c"
+    },
+    {
+      "name": "stable function unchanged: scrollToPdfOriginalTarget",
+      "pass": true,
+      "detail": "bb18355af252899382998bf940de82e99360f45c85564e23f72fee88a47f80f0 -> bb18355af252899382998bf940de82e99360f45c85564e23f72fee88a47f80f0"
+    },
+    {
+      "name": "stable function unchanged: openPdfSearch",
+      "pass": true,
+      "detail": "e43ac64760137d6717c780e1d0ed3852b526a6f845d97272a9cf5842e7e9c1fd -> e43ac64760137d6717c780e1d0ed3852b526a6f845d97272a9cf5842e7e9c1fd"
+    },
+    {
+      "name": "stable function unchanged: openPdfCollectionOriginalContents",
+      "pass": true,
+      "detail": "46f1c8cd416b18934f5b6130bbcd6fb8bafd4b042ab15f8d76fa624e015b19be -> 46f1c8cd416b18934f5b6130bbcd6fb8bafd4b042ab15f8d76fa624e015b19be"
+    },
+    {
+      "name": "stable function unchanged: pdfOriginalPositionKey",
+      "pass": true,
+      "detail": "578b85282fb1163d7e6b2d68e9b707e883bc11c4e25a588df43595c5d557a24e -> 578b85282fb1163d7e6b2d68e9b707e883bc11c4e25a588df43595c5d557a24e"
+    },
+    {
+      "name": "stable function unchanged: savePdfOriginalPosition",
+      "pass": true,
+      "detail": "2d554fd8cc71f2b0a509d974173c11cc4724cf8301f330dffb23464eb7ad4c6f -> 2d554fd8cc71f2b0a509d974173c11cc4724cf8301f330dffb23464eb7ad4c6f"
+    },
+    {
+      "name": "stable function unchanged: markPdfTextPrecise",
+      "pass": true,
+      "detail": "959bcba264d0d9a4adb31e7636134d819dde5f6600898e391b9ba86998f5f8ac -> 959bcba264d0d9a4adb31e7636134d819dde5f6600898e391b9ba86998f5f8ac"
+    },
+    {
+      "name": "stable function unchanged: renderPdfTextLayer",
+      "pass": true,
+      "detail": "f7c592caef466eedaf83000f78810ff9f1f99ace240c0062471225c8705ce85b -> f7c592caef466eedaf83000f78810ff9f1f99ace240c0062471225c8705ce85b"
+    },
+    {
+      "name": "stable function unchanged: readingProgressInfo",
+      "pass": true,
+      "detail": "feaa5844764c6c999543cdccfd015d5ded4a20e5a60835428262248dfda8283e -> feaa5844764c6c999543cdccfd015d5ded4a20e5a60835428262248dfda8283e"
+    },
+    {
+      "name": "stable function unchanged: parseEpub",
+      "pass": true,
+      "detail": "89e2674482a5066062befa32606d4462bf4467044d85376dadb56a642162c2bd -> 89e2674482a5066062befa32606d4462bf4467044d85376dadb56a642162c2bd"
+    },
+    {
+      "name": "stable function unchanged: renderEpubMediaBlock",
+      "pass": true,
+      "detail": "07dcbb74389b56c52b7da41cdf2b36cde2f537ac3e399bdfad1bbe922effeca8 -> 07dcbb74389b56c52b7da41cdf2b36cde2f537ac3e399bdfad1bbe922effeca8"
+    },
+    {
+      "name": "stable function unchanged: saveReadingPosition",
+      "pass": true,
+      "detail": "0d8a723d02196b6dd88b914518deac755409beaf02fba044dfe425063bbdbfd3 -> 0d8a723d02196b6dd88b914518deac755409beaf02fba044dfe425063bbdbfd3"
+    },
+    {
+      "name": "stable function unchanged: saveReadingPositionDurably",
+      "pass": true,
+      "detail": "13d4737a455839213702f8cf468b6f9355721d208f8209ac64da4ca5ffd4802c -> 13d4737a455839213702f8cf468b6f9355721d208f8209ac64da4ca5ffd4802c"
+    },
+    {
+      "name": "stable function unchanged: navigateToDay",
+      "pass": true,
+      "detail": "bf8e4549f5eb79212da5a29a6b9febfa8e2232678de613d28f30b657cb74f617 -> bf8e4549f5eb79212da5a29a6b9febfa8e2232678de613d28f30b657cb74f617"
+    },
+    {
+      "name": "stable function unchanged: openEpubExternalSafely",
+      "pass": true,
+      "detail": "100b7c10147d7ab70159966b501e963b11b01c4c602825f4ba43b71d043c4025 -> 100b7c10147d7ab70159966b501e963b11b01c4c602825f4ba43b71d043c4025"
+    },
+    {
+      "name": "no new duplicate named functions",
+      "pass": true,
+      "detail": "baseline={'setMode': 2}; build110={'setMode': 2}"
+    }
+  ],
+  "stable_hashes": {
+    "openPdfOriginalTarget": {
+      "build109": "38da8ffb5d2c47a34ecd4fb450b6dfa637a89dd5fbb38cfd22fe5e73300fd874",
+      "build110": "38da8ffb5d2c47a34ecd4fb450b6dfa637a89dd5fbb38cfd22fe5e73300fd874",
+      "unchanged": true
+    },
+    "restorePdfOriginalPosition": {
+      "build109": "aaf17ef07d34b69b12c507bdc675119fa29b0ec71e44b3b618b6a09c8845733c",
+      "build110": "aaf17ef07d34b69b12c507bdc675119fa29b0ec71e44b3b618b6a09c8845733c",
+      "unchanged": true
+    },
+    "scrollToPdfOriginalTarget": {
+      "build109": "bb18355af252899382998bf940de82e99360f45c85564e23f72fee88a47f80f0",
+      "build110": "bb18355af252899382998bf940de82e99360f45c85564e23f72fee88a47f80f0",
+      "unchanged": true
+    },
+    "openPdfSearch": {
+      "build109": "e43ac64760137d6717c780e1d0ed3852b526a6f845d97272a9cf5842e7e9c1fd",
+      "build110": "e43ac64760137d6717c780e1d0ed3852b526a6f845d97272a9cf5842e7e9c1fd",
+      "unchanged": true
+    },
+    "openPdfCollectionOriginalContents": {
+      "build109": "46f1c8cd416b18934f5b6130bbcd6fb8bafd4b042ab15f8d76fa624e015b19be",
+      "build110": "46f1c8cd416b18934f5b6130bbcd6fb8bafd4b042ab15f8d76fa624e015b19be",
+      "unchanged": true
+    },
+    "pdfOriginalPositionKey": {
+      "build109": "578b85282fb1163d7e6b2d68e9b707e883bc11c4e25a588df43595c5d557a24e",
+      "build110": "578b85282fb1163d7e6b2d68e9b707e883bc11c4e25a588df43595c5d557a24e",
+      "unchanged": true
+    },
+    "savePdfOriginalPosition": {
+      "build109": "2d554fd8cc71f2b0a509d974173c11cc4724cf8301f330dffb23464eb7ad4c6f",
+      "build110": "2d554fd8cc71f2b0a509d974173c11cc4724cf8301f330dffb23464eb7ad4c6f",
+      "unchanged": true
+    },
+    "markPdfTextPrecise": {
+      "build109": "959bcba264d0d9a4adb31e7636134d819dde5f6600898e391b9ba86998f5f8ac",
+      "build110": "959bcba264d0d9a4adb31e7636134d819dde5f6600898e391b9ba86998f5f8ac",
+      "unchanged": true
+    },
+    "renderPdfTextLayer": {
+      "build109": "f7c592caef466eedaf83000f78810ff9f1f99ace240c0062471225c8705ce85b",
+      "build110": "f7c592caef466eedaf83000f78810ff9f1f99ace240c0062471225c8705ce85b",
+      "unchanged": true
+    },
+    "readingProgressInfo": {
+      "build109": "feaa5844764c6c999543cdccfd015d5ded4a20e5a60835428262248dfda8283e",
+      "build110": "feaa5844764c6c999543cdccfd015d5ded4a20e5a60835428262248dfda8283e",
+      "unchanged": true
+    },
+    "parseEpub": {
+      "build109": "89e2674482a5066062befa32606d4462bf4467044d85376dadb56a642162c2bd",
+      "build110": "89e2674482a5066062befa32606d4462bf4467044d85376dadb56a642162c2bd",
+      "unchanged": true
+    },
+    "renderEpubMediaBlock": {
+      "build109": "07dcbb74389b56c52b7da41cdf2b36cde2f537ac3e399bdfad1bbe922effeca8",
+      "build110": "07dcbb74389b56c52b7da41cdf2b36cde2f537ac3e399bdfad1bbe922effeca8",
+      "unchanged": true
+    },
+    "saveReadingPosition": {
+      "build109": "0d8a723d02196b6dd88b914518deac755409beaf02fba044dfe425063bbdbfd3",
+      "build110": "0d8a723d02196b6dd88b914518deac755409beaf02fba044dfe425063bbdbfd3",
+      "unchanged": true
+    },
+    "saveReadingPositionDurably": {
+      "build109": "13d4737a455839213702f8cf468b6f9355721d208f8209ac64da4ca5ffd4802c",
+      "build110": "13d4737a455839213702f8cf468b6f9355721d208f8209ac64da4ca5ffd4802c",
+      "unchanged": true
+    },
+    "navigateToDay": {
+      "build109": "bf8e4549f5eb79212da5a29a6b9febfa8e2232678de613d28f30b657cb74f617",
+      "build110": "bf8e4549f5eb79212da5a29a6b9febfa8e2232678de613d28f30b657cb74f617",
+      "unchanged": true
+    },
+    "openEpubExternalSafely": {
+      "build109": "100b7c10147d7ab70159966b501e963b11b01c4c602825f4ba43b71d043c4025",
+      "build110": "100b7c10147d7ab70159966b501e963b11b01c4c602825f4ba43b71d043c4025",
+      "unchanged": true
+    }
+  },
+  "named_functions": {
+    "build109_declarations": 591,
+    "build110_declarations": 594,
+    "build109_duplicates": {
+      "setMode": 2
+    },
+    "build110_duplicates": {
+      "setMode": 2
+    }
+  }
+}

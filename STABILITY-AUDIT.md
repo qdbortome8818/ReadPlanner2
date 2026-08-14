@@ -97,3 +97,7 @@ The important architectural change is that a PDF destination is now a transactio
 ## Build 109 iOS PDF stability repair
 
 The device-reported Safari/WebKit “A problem repeatedly occurred” failure exposed a PDF process-stability class that the Build 108 stubbed-canvas browser harness could not exercise. Build 109 moves PDF teardown before DOM replacement, adds render-task cancellation and offscreen reclamation, applies a conservative iOS canvas profile, suspends full-page rendering behind thumbnail sheets, removes thumbnail-document overlap, uses same-DOM navigation when possible, and includes Original-PDF positions in current-reading classification. See `BUILD-109-CODE-AUDIT.md` and `BUILD-109-TEST-RESULTS.json`.
+
+## Build 110 PDF.js resource-lifecycle stability repair
+
+After the real iPhone still terminated Build 109 despite its lower canvas profile, the next audit found retained PDF.js object lifetimes rather than another page-targeting defect: import-time `PDFDocumentProxy` instances were not destroyed; `PDFPageProxy.cleanup()` was not systematic; old document destruction was deliberately delayed; thumbnail canvases/page proxies had teardown gaps; and backgrounding retained live page surfaces. Build 110 fixes those resource lifetimes and serializes disposal before replacement PDF work. Build 109 exact resume, Contents-page navigation, search highlighting, Today’s Reading behavior and the stable EPUB reader are frozen and regression-hash checked. See `BUILD-110-CODE-AUDIT.md` and `BUILD-110-TEST-RESULTS.json`.

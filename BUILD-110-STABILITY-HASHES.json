@@ -1,0 +1,82 @@
+{
+  "openPdfOriginalTarget": {
+    "build109": "38da8ffb5d2c47a34ecd4fb450b6dfa637a89dd5fbb38cfd22fe5e73300fd874",
+    "build110": "38da8ffb5d2c47a34ecd4fb450b6dfa637a89dd5fbb38cfd22fe5e73300fd874",
+    "unchanged": true
+  },
+  "restorePdfOriginalPosition": {
+    "build109": "aaf17ef07d34b69b12c507bdc675119fa29b0ec71e44b3b618b6a09c8845733c",
+    "build110": "aaf17ef07d34b69b12c507bdc675119fa29b0ec71e44b3b618b6a09c8845733c",
+    "unchanged": true
+  },
+  "scrollToPdfOriginalTarget": {
+    "build109": "bb18355af252899382998bf940de82e99360f45c85564e23f72fee88a47f80f0",
+    "build110": "bb18355af252899382998bf940de82e99360f45c85564e23f72fee88a47f80f0",
+    "unchanged": true
+  },
+  "openPdfSearch": {
+    "build109": "e43ac64760137d6717c780e1d0ed3852b526a6f845d97272a9cf5842e7e9c1fd",
+    "build110": "e43ac64760137d6717c780e1d0ed3852b526a6f845d97272a9cf5842e7e9c1fd",
+    "unchanged": true
+  },
+  "openPdfCollectionOriginalContents": {
+    "build109": "46f1c8cd416b18934f5b6130bbcd6fb8bafd4b042ab15f8d76fa624e015b19be",
+    "build110": "46f1c8cd416b18934f5b6130bbcd6fb8bafd4b042ab15f8d76fa624e015b19be",
+    "unchanged": true
+  },
+  "pdfOriginalPositionKey": {
+    "build109": "578b85282fb1163d7e6b2d68e9b707e883bc11c4e25a588df43595c5d557a24e",
+    "build110": "578b85282fb1163d7e6b2d68e9b707e883bc11c4e25a588df43595c5d557a24e",
+    "unchanged": true
+  },
+  "savePdfOriginalPosition": {
+    "build109": "2d554fd8cc71f2b0a509d974173c11cc4724cf8301f330dffb23464eb7ad4c6f",
+    "build110": "2d554fd8cc71f2b0a509d974173c11cc4724cf8301f330dffb23464eb7ad4c6f",
+    "unchanged": true
+  },
+  "markPdfTextPrecise": {
+    "build109": "959bcba264d0d9a4adb31e7636134d819dde5f6600898e391b9ba86998f5f8ac",
+    "build110": "959bcba264d0d9a4adb31e7636134d819dde5f6600898e391b9ba86998f5f8ac",
+    "unchanged": true
+  },
+  "renderPdfTextLayer": {
+    "build109": "f7c592caef466eedaf83000f78810ff9f1f99ace240c0062471225c8705ce85b",
+    "build110": "f7c592caef466eedaf83000f78810ff9f1f99ace240c0062471225c8705ce85b",
+    "unchanged": true
+  },
+  "readingProgressInfo": {
+    "build109": "feaa5844764c6c999543cdccfd015d5ded4a20e5a60835428262248dfda8283e",
+    "build110": "feaa5844764c6c999543cdccfd015d5ded4a20e5a60835428262248dfda8283e",
+    "unchanged": true
+  },
+  "parseEpub": {
+    "build109": "89e2674482a5066062befa32606d4462bf4467044d85376dadb56a642162c2bd",
+    "build110": "89e2674482a5066062befa32606d4462bf4467044d85376dadb56a642162c2bd",
+    "unchanged": true
+  },
+  "renderEpubMediaBlock": {
+    "build109": "07dcbb74389b56c52b7da41cdf2b36cde2f537ac3e399bdfad1bbe922effeca8",
+    "build110": "07dcbb74389b56c52b7da41cdf2b36cde2f537ac3e399bdfad1bbe922effeca8",
+    "unchanged": true
+  },
+  "saveReadingPosition": {
+    "build109": "0d8a723d02196b6dd88b914518deac755409beaf02fba044dfe425063bbdbfd3",
+    "build110": "0d8a723d02196b6dd88b914518deac755409beaf02fba044dfe425063bbdbfd3",
+    "unchanged": true
+  },
+  "saveReadingPositionDurably": {
+    "build109": "13d4737a455839213702f8cf468b6f9355721d208f8209ac64da4ca5ffd4802c",
+    "build110": "13d4737a455839213702f8cf468b6f9355721d208f8209ac64da4ca5ffd4802c",
+    "unchanged": true
+  },
+  "navigateToDay": {
+    "build109": "bf8e4549f5eb79212da5a29a6b9febfa8e2232678de613d28f30b657cb74f617",
+    "build110": "bf8e4549f5eb79212da5a29a6b9febfa8e2232678de613d28f30b657cb74f617",
+    "unchanged": true
+  },
+  "openEpubExternalSafely": {
+    "build109": "100b7c10147d7ab70159966b501e963b11b01c4c602825f4ba43b71d043c4025",
+    "build110": "100b7c10147d7ab70159966b501e963b11b01c4c602825f4ba43b71d043c4025",
+    "unchanged": true
+  }
+}

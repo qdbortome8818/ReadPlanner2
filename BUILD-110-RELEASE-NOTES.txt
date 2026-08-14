@@ -1,0 +1,47 @@
+ReadPlanner Build 110 — PDF Runtime Stability Repair
+
+Scope
+-----
+Build 110 is deliberately stability-only. It keeps the Build 109 behaviors that are now working: exact PDF resume, Contents → exact page navigation, PDF search → exact page + highlight, Today’s Reading classification, and the established EPUB reader. It does not redesign those features.
+
+Root-level findings in Build 109
+--------------------------------
+1. parsePdf() created a PDF.js document/worker during import, traversed every page and rendered a cover, but never destroyed that PDF document. In a long-running iOS PWA this could leave one import-time document/worker/cache behind per imported PDF.
+2. Full-page PDF rendering released canvas backing stores when pages went off-screen, but did not consistently call PDFPageProxy.cleanup(), allowing PDF.js page-level operator/image/font caches to survive longer than necessary.
+3. Build 109 delayed document destroy() by 120 ms after render settlement. New PDF work could begin while the old worker/document still existed.
+4. Thumbnail canvases were hidden on close but their backing stores were not immediately reset. A thumbnail page proxy could also escape cleanup if the thumbnail token changed just after getPage() resolved.
+5. Temporary PDF documents used for search-time text extraction destroyed eventually but page cleanup and destruction were not consistently awaited.
+6. Backgrounding the installed PWA saved the position but retained rendered PDF surfaces and page caches until another navigation happened.
+
+Build 110 changes
+-----------------
+- parsePdf() now uses try/finally: each import page is cleanup()'d, the cover page is cleanup()'d, its temporary canvas is reduced to 1×1, and the import-time PDF document is always awaited through destroyPdfDocumentSafely().
+- Rendered Original-PDF pages retain their page proxy only while rendering/materializing text/annotation layers; cleanup() is called on completion, cancellation, error, off-screen release, or teardown.
+- PDF document destruction is serialized. It waits for outstanding full-page render settlements and thumbnail cleanup, then destroys the old documents before wirePdfOriginalView() is allowed to create a replacement runtime. The old 120 ms overlap delay is gone.
+- Thumbnail teardown immediately reduces every thumbnail canvas to 1×1, cancels the active render task, waits its render chain, cleanup()'s the borrowed/owned PDF document, and destroys only owned thumbnail documents.
+- Thumbnail page proxies are protected by an outer finally block, including the race where the sheet closes after getPage() but before render starts.
+- A collection document abandoned by a generation change is now cleanup/destroy awaited before the navigation continues.
+- Temporary search text extraction cleanup()'s every page and awaits document destruction.
+- When iOS/WebKit backgrounds the reader, visible PDF surfaces are reclaimed and document caches are asked to cleanup(); the existing observer is reattached on foreground without rebuilding navigation state.
+
+Why this is materially different from Build 109
+------------------------------------------------
+Build 109 reduced canvas resolution and improved cancellation, but it did not close several PDF.js object lifetimes. Build 110 addresses those lifetimes directly. The three supplied course PDFs are compressed to only a few MB on disk, but inspection shows pages can reference roughly 72 MB of raw raster data by image dimensions/components before renderer/browser overhead. This is an estimate of decoded image data, not measured iOS/WebKit heap; it explains why retaining page/document caches is unusually costly for these particular PDFs.
+
+Regression protection
+---------------------
+The working PDF functions for exact navigation/resume/search/highlighting and Today’s Reading were hash-compared with Build 109 and are unchanged. The established EPUB functions parseEpub, renderEpubMediaBlock, saveReadingPosition, saveReadingPositionDurably, navigateToDay, and openEpubExternalSafely are also byte-for-byte unchanged.
+
+Testing
+-------
+- index application JavaScript: syntax PASS
+- service worker JavaScript: syntax PASS
+- static/regression audit: 45/45 PASS
+- import lifecycle mock using the exact Build 110 parsePdf()/destroy function bodies: 5/5 PASS
+- runtime destruction/thumbnail cleanup mock using the exact Build 110 function bodies: 6/6 PASS
+- all three supplied PDFs: opened and stress-rendered Page 5 plus adjacent pages for 20 cycles each (60 cycles total), PASS
+- actual iOS WebKit process termination cannot be reproduced in this Linux container. The real iPhone remains the final acceptance environment.
+
+Deployment note
+---------------
+Build/cache identity is 110. After deployment, fully close the old Home Screen/Safari instance once before testing so Build 109’s live WebKit process and caches cannot survive into the acceptance test.

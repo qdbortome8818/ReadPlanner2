@@ -1,0 +1,119 @@
+{
+  "build": 110,
+  "scope": "PDF runtime stability only; Build 109 working navigation/resume/search and EPUB behavior frozen",
+  "syntax": {
+    "index_inline_javascript": "PASS",
+    "service_worker_javascript": "PASS"
+  },
+  "static_regression": {
+    "passed": 45,
+    "total": 45,
+    "failed": []
+  },
+  "parse_pdf_lifecycle_unit": {
+    "passed": 5,
+    "total": 5,
+    "stats": {
+      "getPage": 4,
+      "pageCleanup": 4,
+      "docCleanup": 1,
+      "docDestroy": 1,
+      "render": 1
+    }
+  },
+  "runtime_cleanup_unit": {
+    "passed": 6,
+    "total": 6,
+    "checks": [
+      [
+        "doc not destroyed before active render settles",
+        true
+      ],
+      [
+        "doc still not destroyed before thumbnail cleanup settles",
+        true
+      ],
+      [
+        "doc destroyed after both barriers",
+        true
+      ],
+      [
+        "thumbnail canvases reclaimed to 1x1",
+        true
+      ],
+      [
+        "borrowed thumbnail doc cleaned",
+        true
+      ],
+      [
+        "borrowed thumbnail doc not destroyed",
+        true
+      ]
+    ]
+  },
+  "real_pdf_stress": {
+    "summary": {
+      "files": 3,
+      "passed": 3,
+      "total_stress_cycles": 60
+    },
+    "results": [
+      {
+        "file": "【Week27-4】精读讲义 20260709 共迎250周年 ★★★★★ 小编西西(1).pdf",
+        "size_mb": 2.18,
+        "page_count": 14,
+        "text_chars": 23053,
+        "max_single_embedded_raster_estimate_mb": 34.33,
+        "max_page_embedded_raster_estimate_mb": 72.19,
+        "stress_cycles": 20,
+        "rendered_pages_per_cycle": "Page 5 and adjacent pages when present",
+        "rss_before_mb": 135.5,
+        "rss_after_mb": 321.4,
+        "rss_sample_max_mb": 321.4,
+        "pass": true
+      },
+      {
+        "file": "【Week32-4】精读讲义 20260813 动物实验 ★★★☆☆ 小编Keira(1).pdf",
+        "size_mb": 2.22,
+        "page_count": 13,
+        "text_chars": 18804,
+        "max_single_embedded_raster_estimate_mb": 34.33,
+        "max_page_embedded_raster_estimate_mb": 71.65,
+        "stress_cycles": 20,
+        "rendered_pages_per_cycle": "Page 5 and adjacent pages when present",
+        "rss_before_mb": 321.4,
+        "rss_after_mb": 305.3,
+        "rss_sample_max_mb": 449.9,
+        "pass": true
+      },
+      {
+        "file": "【Week32-2】精读讲义 20260811 史密森尼学会对美国的蔑视 ★★★★★ 小编-路西(1).pdf",
+        "size_mb": 2.82,
+        "page_count": 17,
+        "text_chars": 25502,
+        "max_single_embedded_raster_estimate_mb": 34.33,
+        "max_page_embedded_raster_estimate_mb": 71.96,
+        "stress_cycles": 20,
+        "rendered_pages_per_cycle": "Page 5 and adjacent pages when present",
+        "rss_before_mb": 305.3,
+        "rss_after_mb": 365.6,
+        "rss_sample_max_mb": 365.6,
+        "pass": true
+      }
+    ],
+    "note": "Embedded-raster figures are dimension/component estimates, not measured iOS/WebKit heap. The stress renderer is PyMuPDF in Linux and is used only to validate the real test files and repeated surface release."
+  },
+  "browser_smoke": {
+    "status": "NOT RUN",
+    "reason": "container Chromium navigation is blocked by administrator policy; not counted as a failure"
+  },
+  "ios_webkit_acceptance": {
+    "status": "REQUIRES DEVICE",
+    "reason": "Apple iOS WebKit process termination is unavailable in this Linux environment"
+  },
+  "overall_local_checks": {
+    "passed": 59,
+    "total": 59,
+    "failed": 0
+  }
+}

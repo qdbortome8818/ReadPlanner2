@@ -1,0 +1,55 @@
+{
+  "before": [
+    "cleanup"
+  ],
+  "afterRender": [
+    "cleanup"
+  ],
+  "afterAll": [
+    "cleanup",
+    "cleanup",
+    "destroy"
+  ],
+  "canvases": [
+    {
+      "width": 1,
+      "height": 1
+    },
+    {
+      "width": 1,
+      "height": 1
+    }
+  ],
+  "borrowed": {
+    "cleanupCount": 1,
+    "destroyCount": 0
+  },
+  "checks": [
+    [
+      "doc not destroyed before active render settles",
+      true
+    ],
+    [
+      "doc still not destroyed before thumbnail cleanup settles",
+      true
+    ],
+    [
+      "doc destroyed after both barriers",
+      true
+    ],
+    [
+      "thumbnail canvases reclaimed to 1x1",
+      true
+    ],
+    [
+      "borrowed thumbnail doc cleaned",
+      true
+    ],
+    [
+      "borrowed thumbnail doc not destroyed",
+      true
+    ]
+  ],
+  "passed": 6,
+  "total": 6
+}
