@@ -1,0 +1,259 @@
+{
+  "build": 109,
+  "source_build": 108,
+  "reported_failure": "iOS/Safari WebContent process crash when selecting an expanded PDF page thumbnail; subsequent PDF entry can repeatedly crash; PDF collection may disappear from Today’s Reading.",
+  "diagnosis": {
+    "screenshot_classification": "Safari/WebKit process-level page failure (the browser reports that a problem repeatedly occurred), not an ordinary caught in-app error.",
+    "code_root_causes": [
+      "Build 108 replaced the PDF DOM before clearing the previous PDF runtime on PDF-to-PDF navigation, allowing detached canvases/render work and the new PDF view to overlap.",
+      "The full-page IntersectionObserver was attached before resume navigation and used a 1200px root margin; a later fallback also forced pages 1 and 2 to render, increasing transient canvas pressure.",
+      "Offscreen pages that became non-visible while still loading could finish with a full canvas and remain allocated.",
+      "The ink overlay allocated a second full-resolution canvas even when no ink existed.",
+      "The thumbnail sheet opened another PDF.js document while the main PDF renderer remained active, and thumbnail document destruction was deliberately delayed, increasing transition overlap.",
+      "Build 108 browser navigation tests stubbed PDF.js canvas rendering and therefore could not exercise iOS WebKit process-memory behavior.",
+      "PDF-only original-view activity was not incorporated into readingProgressInfo/last-opened state, so a no-plan PDF collection could disappear from Today’s Reading after process restart."
+    ]
+  },
+  "static_and_regression_checks": [
+    {
+      "name": "inline JavaScript parses",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "service worker parses",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "index runtime build is 109",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "manifest cache buster is 109",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "service worker cache build is 109",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "PDF runtime is torn down before every PDF DOM replacement",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "wirePdfOriginalView no longer performs late runtime teardown",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "restore occurs before observer attachment in collection PDF",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "forced first-two-page render removed",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "offscreen/loading full-page render tasks are cancellable",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "full page surface releases canvas backing stores",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "iOS full-page DPR is capped",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "empty ink layers do not allocate full-resolution canvases",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "main PDF rendering is suspended while thumbnail sheet is open",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "thumbnail viewer can borrow already-loaded PDF document",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "thumbnail render task is cancellable",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "old 900ms thumbnail destruction overlap removed",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "thumbnail click waits for cleanup before navigation",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "same mounted PDF page can navigate without full app rerender",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "PDF open marks book as last opened",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "PDF resume position counts as started for Today’s Reading",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "no new duplicate named functions",
+      "passed": true,
+      "evidence": "{\"setMode\": 2}"
+    },
+    {
+      "name": "stable EPUB core functions are byte-for-byte unchanged",
+      "passed": true,
+      "evidence": ""
+    },
+    {
+      "name": "all three supplied PDFs open and Page 5 renders",
+      "passed": true,
+      "evidence": "[(14, [298, 421]), (13, [298, 421]), (17, [298, 421])]"
+    }
+  ],
+  "summary": {
+    "passed": 24,
+    "total": 24,
+    "failed": 0
+  },
+  "actual_pdf_validation": [
+    {
+      "file": "【Week27-4】精读讲义 20260709 共迎250周年 ★★★★★ 小编西西(1).pdf",
+      "pages": 14,
+      "page5_points": [
+        595.32,
+        841.92
+      ],
+      "page5_pixels": [
+        298,
+        421
+      ],
+      "page5_text_len": 1459,
+      "sha256": "fc0dde91d430e43004d06bdbeb1ead6c5b3969f2e596d59bea5e354f662bcd14"
+    },
+    {
+      "file": "【Week32-4】精读讲义 20260813 动物实验 ★★★☆☆ 小编Keira(1).pdf",
+      "pages": 13,
+      "page5_points": [
+        595.32,
+        841.92
+      ],
+      "page5_pixels": [
+        298,
+        421
+      ],
+      "page5_text_len": 1526,
+      "sha256": "76f3cbd7c475d58066be7cffc8c244f9ecc707f057c5341942d78aae95869434"
+    },
+    {
+      "file": "【Week32-2】精读讲义 20260811 史密森尼学会对美国的蔑视 ★★★★★ 小编-路西(1).pdf",
+      "pages": 17,
+      "page5_points": [
+        595.32,
+        841.92
+      ],
+      "page5_pixels": [
+        298,
+        421
+      ],
+      "page5_text_len": 1591,
+      "sha256": "08fe98dbb5a48ded243d1542937f1b367021e4f7048b79ae83dfeb17ccc66b4c"
+    }
+  ],
+  "ios_canvas_memory_profile": {
+    "basis": "Approximate RGBA canvas backing stores for an A4 page at 390 CSS px; excludes PDF.js/image/text caches.",
+    "build108_full_page_canvas": {
+      "dpr": 2.0,
+      "pixels": [
+        780,
+        1104
+      ],
+      "bytes": 3444480
+    },
+    "build108_render_plus_always_full_ink": {
+      "bytes": 6888960
+    },
+    "build109_full_page_canvas": {
+      "dpr_cap": 1.35,
+      "pixels": [
+        527,
+        745
+      ],
+      "bytes": 1570460
+    },
+    "build109_empty_ink_canvas": "1x1 backing store until ink exists",
+    "approx_backing_store_reduction_vs_build108_render_plus_empty_ink_pct": 77.2,
+    "observer_root_margin": {
+      "build108": "1200px 0px",
+      "build109_iOS": "360px 0px"
+    },
+    "thumbnail_root_margin": {
+      "build108": "320px 0px",
+      "build109_iOS": "100px 0px"
+    }
+  },
+  "epub_stability": [
+    {
+      "name": "parseEpub",
+      "unchanged": true,
+      "sha256": "89e2674482a5066062befa32606d4462bf4467044d85376dadb56a642162c2bd",
+      "bytes": 54789
+    },
+    {
+      "name": "renderEpubMediaBlock",
+      "unchanged": true,
+      "sha256": "07dcbb74389b56c52b7da41cdf2b36cde2f537ac3e399bdfad1bbe922effeca8",
+      "bytes": 1239
+    },
+    {
+      "name": "saveReadingPosition",
+      "unchanged": true,
+      "sha256": "f6d7ebbfa10f7155d57dac98c4f4ea3d90cfc8285a0bf79af6ea2ad678a15024",
+      "bytes": 3673
+    },
+    {
+      "name": "saveReadingPositionDurably",
+      "unchanged": true,
+      "sha256": "77776f745b3b87549ec6f881db7e0ffdc43aa0e75f409046ef05cdf77f6e7ba8",
+      "bytes": 279
+    },
+    {
+      "name": "navigateToDay",
+      "unchanged": true,
+      "sha256": "b00f8fc008e8c3bd838d820e70e5b2b367c3a3beef61970ef000e83401033282",
+      "bytes": 3557
+    },
+    {
+      "name": "openEpubExternalSafely",
+      "unchanged": true,
+      "sha256": "a95b38cb69e018caf196a2d554be8a45cca6ea3c28f50bdf74910afbef1005fc",
+      "bytes": 1071
+    }
+  ],
+  "environment_limit": "Real iOS WebKit process termination cannot be reproduced in this Linux container. Build 109 therefore still requires the exact on-device thumbnail → page → exit → reopen sequence as final confirmation."
+}

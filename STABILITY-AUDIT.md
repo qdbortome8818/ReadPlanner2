@@ -93,3 +93,7 @@ byte-for-byte unchanged from Build 103.
 Build 108 is constrained to PDF original-view navigation/persistence, PDF render teardown, thumbnail cleanup, and PWA build identity. The stable EPUB functions listed in `BUILD-108-EPUB-STABILITY.json` are unchanged from the supplied Build 107 source.
 
 The important architectural change is that a PDF destination is now a transaction rather than a best-effort scroll. A requested collection chapter/page is committed before render and remains authoritative until the matching page card is actually visible. Lifecycle checkpointing cannot force-sample a transient Page 1 over that transaction. Per-chapter positions are mirrored into the book record, and old PDF.js documents wait for active full-page renders to settle before destruction.
+
+## Build 109 iOS PDF stability repair
+
+The device-reported Safari/WebKit “A problem repeatedly occurred” failure exposed a PDF process-stability class that the Build 108 stubbed-canvas browser harness could not exercise. Build 109 moves PDF teardown before DOM replacement, adds render-task cancellation and offscreen reclamation, applies a conservative iOS canvas profile, suspends full-page rendering behind thumbnail sheets, removes thumbnail-document overlap, uses same-DOM navigation when possible, and includes Original-PDF positions in current-reading classification. See `BUILD-109-CODE-AUDIT.md` and `BUILD-109-TEST-RESULTS.json`.

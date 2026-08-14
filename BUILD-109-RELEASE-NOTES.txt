@@ -1,0 +1,33 @@
+ReadPlanner Build 109 — iOS PDF Stability Repair
+=================================================
+
+Why this build exists
+---------------------
+Build 108 corrected page-target and resume logic, but the real iPhone test exposed a more serious failure: selecting an expanded PDF page thumbnail could terminate Safari/WebKit's page process. After that termination, reopening the PDF could fail repeatedly, and a PDF collection read only in Original PDF mode could disappear from Today’s Reading.
+
+The screenshot supplied for this failure is a browser-level “A problem repeatedly occurred” page. That is not the normal result of a caught JavaScript exception. Without an iOS WebKit crash log the exact OS termination reason cannot be proven, but the Build 108 code contained several concrete PDF canvas/document overlap paths that can create a large transient memory spike and a render-teardown race on iOS. Build 109 removes those paths instead of adding another page-navigation workaround.
+
+Core stability changes
+----------------------
+1. PDF-to-PDF DOM replacement now tears down the old PDF runtime BEFORE replacing the DOM. Build 108 did this after the new PDF DOM had already been installed, leaving detached canvases/render tasks alive during the transition.
+2. Full-page PDF render tasks are now retained and cancellable. Pages leaving the render window while still loading are explicitly released when the task settles; completed offscreen canvases no longer remain allocated accidentally.
+3. Resume/explicit-page positioning is applied before the full-page IntersectionObserver starts. The Build 108 fallback that always rendered the first two pages after entry has been removed.
+4. iOS uses a lower full-page canvas DPR cap (1.35) plus a per-page pixel budget. The render window is also reduced from 1200px to 360px on iOS.
+5. Empty ink overlays no longer allocate a second full-resolution canvas. They stay at a 1×1 backing store until ink actually exists.
+6. Opening the expanded page-thumbnail sheet suspends the main PDF renderer and releases its page canvases first. When possible, thumbnails borrow the already-loaded PDF.js document rather than loading a second copy.
+7. Thumbnail render tasks can be cancelled. The extra delayed document-destruction window from Build 108 is removed, and page navigation waits for thumbnail cleanup to settle.
+8. Selecting a page in the same mounted chapter now navigates in place rather than rebuilding the whole PDF view. A full rebuild is used only when the requested chapter/page is not already represented by the mounted PDF DOM.
+9. Original-PDF activity now marks the book as last opened, and a saved PDF position counts as started reading. This restores no-plan PDF collections to Today’s Reading / Current Reading after a process restart.
+10. Runtime build, manifest cache-buster and service-worker cache identity are synchronized at Build 109.
+
+Regression containment
+----------------------
+The established EPUB core was not rewritten. parseEpub, renderEpubMediaBlock, saveReadingPosition, saveReadingPositionDurably, navigateToDay, and openEpubExternalSafely are byte-for-byte unchanged from Build 108; hashes are recorded in BUILD-109-EPUB-STABILITY.json.
+
+Validation
+----------
+BUILD-109-TEST-RESULTS.json records 24/24 passing static/regression checks. All three supplied PDFs were opened independently and Page 5 rendered successfully; page counts are 14, 13 and 17. The supplied A4 files were also used for the canvas-memory comparison.
+
+Important limitation
+--------------------
+This Linux build environment does not provide real iOS WebKit or its process-memory termination behavior. The code paths responsible for the Build 108 overlap have been removed and the PDF memory profile has been made substantially more conservative, but the final confirmation must be the exact iPhone sequence that failed: open collection → Contents → expand an article → select Page 5 → read/scroll → leave → reopen. Build 109 should be treated as the stability repair for that device test, not as a claim that an unavailable iOS runtime was simulated here.
