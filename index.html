@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <title>ReadPlanner</title>
+<!-- Build 120 PDF Scroll-Back Fix: after opening/resuming a PDF, the layout-settle watcher used to keep listening for up to 3.2 seconds no matter what, so if you scrolled away fast during that window, any unrelated page finishing its own render nearby could re-trigger a snap back to the original resume position. It now stops watching the moment the target position is confirmed on-screen (typically near-instant), instead of always waiting out the full window — closing the gap that let ordinary reading scroll get treated as if it were re-navigating. Preserves all Build 119 fixes and the stable EPUB reader. -->
 <!-- Build 119 PDF Reveal-When-Ready: the rendered page image was staying hidden behind its own white "loading" cover until the invisible text-selection and highlight layers also finished, even though the picture itself was ready earlier. The picture now shows the moment it's actually rendered; the invisible layers finish loading behind it. Fixes zoom (and general page load) feeling much slower than the actual rendering time. Preserves all Build 118 fixes and the stable EPUB reader. -->
 <!-- Build 118 PDF Zoom Render Priority: when zoom changes, the visible page now renders first (and is waited on) before its off-screen neighbors start rendering, instead of all nearby pages competing for render time simultaneously. Fixes slow/stuck-feeling page reappearance after pinch or button zoom. Preserves all Build 117 fixes and the stable EPUB reader. -->
 <!-- Build 117 PDF Wider Page: raises the PDF page's width cap from a fixed 920px to min(94vw,1400px), so it uses more of the available screen on wider/landscape displays. The render pipeline's existing pixel cap automatically compensates by lowering oversampling at larger widths, so this doesn't change memory usage or crash risk — a portrait page still can't fill an unrelated aspect ratio without cropping or distortion, so some cream margin at the sides remains inherent to the format. Preserves all Build 116 fixes and the stable EPUB reader. -->
@@ -5079,9 +5080,11 @@ function watchPdfLayoutSettle(isCurrent,place,duration=3200){
   const root=document.getElementById('pdf-original-body');
   if(!root||!('ResizeObserver' in window))return;
   let done=false;
-  const ro=new ResizeObserver(()=>{if(done||!isCurrent())return;place();});
+  const stop=()=>{if(done)return;done=true;try{ro.disconnect();}catch(_){}};
+  const ro=new ResizeObserver(()=>{if(done||!isCurrent())return;place();if(pdfNavigationTargetSettled())stop();});
   try{ro.observe(root);}catch(_){return;}
-  setTimeout(()=>{done=true;try{ro.disconnect();}catch(_){}},duration);
+  if(pdfNavigationTargetSettled())stop();
+  setTimeout(stop,duration);
 }
 function setPdfNavigationTarget(book,chapterId,page,anchorOffset=76,kind='resume'){
   if(!book)return null;const pos=commitPdfPositionLocal(book,pdfPositionForTarget(book.id,chapterId,page,anchorOffset));_pdfNavigationTarget={...pos,kind:String(kind||'resume'),startedAt:Date.now()};return _pdfNavigationTarget;
