@@ -1,4 +1,4 @@
-/* ReadPlanner PWA service worker — build 110 */
+/* ReadPlanner PWA service worker — build 122 */
 const BUILD = '122';
 const CACHE_PREFIX = 'readplanner-shell-';
 const CACHE_NAME = CACHE_PREFIX + 'v' + BUILD;

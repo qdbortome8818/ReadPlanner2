@@ -1,0 +1,24 @@
+ReadPlanner Build 122 — PDF Viewport Authority + Zoom Efficiency
+
+Scope: only the reported PDF original-view issues were changed. EPUB/text reading, library behavior, plans, highlights, notes, vocabulary, speech outside the PDF runtime, and import/storage schemas were not redesigned.
+
+Fixes
+1. PDF backward bounce / snap-back
+   - A restore or search/TOC navigation transaction becomes inert as soon as its target is successfully reached.
+   - Genuine user scroll input cancels any still-pending PDF navigation authority and its delayed retries.
+   - Layout-settle observers stop when their navigation transaction is no longer current.
+
+2. Immediate-exit reading position
+   - User scrolling gets a prompt synchronous local checkpoint instead of relying only on the old debounce window.
+   - pagehide / visibility lifecycle checkpoints force-sample the visible PDF viewport after the user has taken control, so a stale resume target cannot overwrite the page already on screen.
+
+3. Slow zoom rendering
+   - Zoom no longer destroys every rendered PDF page at once.
+   - The already-rendered page remains visible, scaled immediately, while the visible page is refreshed at the new quality in a separate canvas and swapped in when ready.
+   - Other pages are refreshed only when they become current, reducing competing PDF.js work.
+   - Pinch movement no longer writes/restores the reading position on every touch frame.
+   - The existing iOS 4.2-million-pixel raster budget is now genuinely enforced at very high zoom by allowing render DPR below 1 when necessary.
+   - Zoom refresh work participates in the existing render-settlement/cancellation lifecycle so backgrounding or leaving the PDF does not leave expensive rendering behind.
+
+Deployment
+- Service-worker cache build bumped from 121 to 122 so the corrected shell can be installed.

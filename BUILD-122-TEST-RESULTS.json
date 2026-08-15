@@ -1,0 +1,16 @@
+{
+  "build": 122,
+  "scope": "PDF original-view bounce, immediate resume checkpoint, zoom rendering",
+  "checks": {
+    "inline_javascript_syntax": "pass",
+    "service_worker_syntax": "pass",
+    "restore_transaction_stops_after_finalize": "pass",
+    "lifecycle_checkpoint_prefers_visible_page_after_user_control": "pass",
+    "zoom_does_not_release_all_pages": "pass",
+    "zoom_does_not_start_restore_transaction": "pass",
+    "ios_high_zoom_pixel_budget": "pass",
+    "stable_epub_and_reader_function_hashes": "pass",
+    "only_original_files_modified": ["index.html", "sw.js"]
+  },
+  "device_note": "Final iOS Safari/PWA feel must still be verified on the owner's device because WebKit scrolling, momentum and PDF canvas performance cannot be fully reproduced by static/container tests."
+}
