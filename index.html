@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <title>ReadPlanner</title>
+<!-- Build 122 PDF Stuck Resume-Target Fix: the destination set when opening/resuming a PDF was protected from being overwritten until it was confirmed on-screen, with no timeout — if you scrolled away before that confirmation happened (e.g. fast-scrolling away right after opening), every save afterward, including the emergency exit-save, kept returning that original stale page instead of your real position. It now gives the target ~3.4s to settle before treating it as abandoned and saving the real current position. Preserves all Build 121 fixes and the stable EPUB reader. -->
 <!-- Build 121 PDF Bounce Fix: removes content-visibility/contain-intrinsic-size from page cards. That browser-level auto-virtualization guessed a fixed 1160px placeholder height for any page not yet measured, then swapped in the real height the instant it scrolled into view — an abrupt height change happening mid-fling, which is what iOS was showing as a "bounce back." Our own render/release virtualization already handles the expensive part (actual page rendering), so this redundant browser layer wasn't needed and was actively causing the glitch — independent of Build 120's fix, which addressed a different mechanism. Preserves all Build 120 fixes and the stable EPUB reader. -->
 <!-- Build 120 PDF Scroll-Back Fix: after opening/resuming a PDF, the layout-settle watcher used to keep listening for up to 3.2 seconds no matter what, so if you scrolled away fast during that window, any unrelated page finishing its own render nearby could re-trigger a snap back to the original resume position. It now stops watching the moment the target position is confirmed on-screen (typically near-instant), instead of always waiting out the full window — closing the gap that let ordinary reading scroll get treated as if it were re-navigating. Preserves all Build 119 fixes and the stable EPUB reader. -->
 <!-- Build 119 PDF Reveal-When-Ready: the rendered page image was staying hidden behind its own white "loading" cover until the invisible text-selection and highlight layers also finished, even though the picture itself was ready earlier. The picture now shows the moment it's actually rendered; the invisible layers finish loading behind it. Fixes zoom (and general page load) feeling much slower than the actual rendering time. Preserves all Build 118 fixes and the stable EPUB reader. -->
@@ -5117,10 +5118,16 @@ function pdfCardLocalPage(card){return Math.max(1,Number(card&&card.dataset.pdfL
 function currentPdfOriginalCard(){const cards=[...document.querySelectorAll('.pdf-page-card')];if(!cards.length)return null;const anchorY=Math.min(Math.max(115,(window.innerHeight||700)*.30),300);let best=cards[0],bestDist=Infinity;cards.forEach(card=>{const r=card.getBoundingClientRect(),inside=r.top<=anchorY&&r.bottom>=anchorY,dist=inside?0:Math.min(Math.abs(r.top-anchorY),Math.abs(r.bottom-anchorY));if(dist<bestDist){best=card;bestDist=dist;}});return best;}
 function savePdfOriginalPosition({force=false}={}){
   if(state.view!=='pdf'||!state.activeBookId)return null;
-  const book=(state.books||[]).find(row=>String(row.id)===String(state.activeBookId)),authoritative=pdfNavigationTargetFor(state.activeBookId);
+  const book=(state.books||[]).find(row=>String(row.id)===String(state.activeBookId));
+  let authoritative=pdfNavigationTargetFor(state.activeBookId);
   // A requested thumbnail/search/resume destination is authoritative until the matching
-  // page is actually on screen. Never let a transient page-1 layout overwrite it.
-  if(authoritative&&!pdfNavigationTargetSettled(authoritative))return {...authoritative};
+  // page is actually on screen. Never let a transient page-1 layout overwrite it — but
+  // if it never gets a chance to settle (the person moved on quickly), stop protecting
+  // a stale target forever and fall through to the real current position instead.
+  if(authoritative&&!pdfNavigationTargetSettled(authoritative)){
+    if(Date.now()-Number(authoritative.startedAt||0)<3400)return {...authoritative};
+    _pdfNavigationTarget=null;authoritative=null;
+  }
   if(authoritative)finalizePdfNavigationTarget(state.activeBookId);
   if(!force&&Date.now()<_pdfPositionSaveSuppressedUntil)return (_pdfLastStablePosition&&String(_pdfLastStablePosition.bookId)===String(state.activeBookId))?_pdfLastStablePosition:readPdfOriginalPosition(state.activeBookId);
   const metrics=documentReadingScrollMetrics(),active=currentPdfOriginalCard();
