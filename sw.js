@@ -1,5 +1,5 @@
-/* ReadPlanner PWA service worker — build 122 */
-const BUILD = '122';
+/* ReadPlanner PWA service worker — build 110 */
+const BUILD = '124';
 const CACHE_PREFIX = 'readplanner-shell-';
 const CACHE_NAME = CACHE_PREFIX + 'v' + BUILD;
 const scopeUrl = path => new URL(path, self.registration.scope).href;
